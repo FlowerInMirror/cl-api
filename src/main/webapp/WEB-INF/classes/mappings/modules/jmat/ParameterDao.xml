@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.jmat.dao.ParameterDao">
+    
+	<sql id="parameterColumns">
+		a.para_id AS "paraId",
+		a.para_name AS "paraName",
+		a.para_code AS "paraCode",
+		a.para_unit AS "paraUnit",
+		a.para_unitname AS "paraUnitname",
+		a.para_type AS "paraType",
+		a.para_fixedstate AS "paraFixedstate",
+		a.para_muststate AS "paraMuststate",
+		a.para_jincheng AS "paraJincheng",
+		a.para_createtime AS "paraCreatetime",
+		a.para_updatetime AS "paraUpdatetime"
+	</sql>
+	
+	<sql id="parameterJoins">
+	</sql>
+    
+	<select id="get" resultType="Parameter">
+		SELECT 
+			<include refid="parameterColumns"/>
+		FROM v_parameter a
+		<include refid="parameterJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="Parameter">
+		SELECT 
+			<include refid="parameterColumns"/>
+		FROM v_parameter a
+		<include refid="parameterJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="Parameter">
+		SELECT 
+			<include refid="parameterColumns"/>
+		FROM v_parameter a
+		<include refid="parameterJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO v_parameter(
+			para_id,
+			para_name,
+			para_code,
+			para_unit,
+			para_unitname,
+			para_type,
+			para_fixedstate,
+			para_muststate,
+			para_jincheng,
+			para_createtime,
+			para_updatetime
+		) VALUES (
+			#{paraId},
+			#{paraName},
+			#{paraCode},
+			#{paraUnit},
+			#{paraUnitname},
+			#{paraType},
+			#{paraFixedstate},
+			#{paraMuststate},
+			#{paraJincheng},
+			#{paraCreatetime},
+			#{paraUpdatetime}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE v_parameter SET 	
+			para_id = #{paraId},
+			para_name = #{paraName},
+			para_code = #{paraCode},
+			para_unit = #{paraUnit},
+			para_unitname = #{paraUnitname},
+			para_type = #{paraType},
+			para_fixedstate = #{paraFixedstate},
+			para_muststate = #{paraMuststate},
+			para_jincheng = #{paraJincheng},
+			para_createtime = #{paraCreatetime},
+			para_updatetime = #{paraUpdatetime}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM v_parameter
+		WHERE id = #{id}
+	</update>
+	
+	<!--获取全部材料参数
+	public List<Parameter> getAllParameter(); -->
+	<select id="getAllParameter" resultType="Parameter" >
+		SELECT <include refid="parameterColumns"/>
+		FROM V_Parameter a
+		WHERE a.para_jincheng = 0
+		ORDER BY a.para_createTime
+	</select>
+	
+</mapper>

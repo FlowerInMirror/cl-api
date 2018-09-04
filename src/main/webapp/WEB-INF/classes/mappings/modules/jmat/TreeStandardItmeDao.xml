@@ -1,0 +1,321 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.jmat.dao.TreeStandardItmeDao">
+    
+	<sql id="treeStandardItmeColumns">
+		a.tsi_id AS "tsiId",
+		a.tsi_treefour AS "tsiTreefour",
+		a.tsi_tsid AS "tsiTsid",
+		a.tsi_type AS "tsiType",
+		a.tsi_name AS "tsiName",
+		a.tsi_unit AS "tsiUnit",
+		a.tsi_unitname AS "tsiUnitname",
+		a.tsi_value AS "tsiValue",
+		a.tsi_standardmin AS "tsiStandardmin",
+		a.tsi_standardmax AS "tsiStandardmax",
+		a.tsi_specialclaim AS "tsiSpecialclaim",
+		a.tsi_detectmethod AS "tsiDetectmethod",
+		a.tsi_exteriorname AS "tsiExteriorname",
+		a.tsi_exteriorsc AS "tsiExteriorsc",
+		a.tsi_exteriordm AS "tsiExteriordm",
+		a.tsi_jincheng AS "tsiJincheng",
+		a.tsi_createtime AS "tsiCreatetime",
+		a.tsi_updatetime AS "tsiUpdatetime",
+		a.tsi_parentid AS "tsiParentid",
+		a.tsi_apppush AS "tsiApppush",
+		a.tsi_matlevel AS "tsiMatlevel"
+	</sql>
+	
+	<sql id="treeStandardItmeJoins">
+	</sql>
+    
+	<select id="get" resultType="TreeStandardItme">
+		SELECT 
+			<include refid="treeStandardItmeColumns"/>
+		FROM v_treestandarditme a
+		<include refid="treeStandardItmeJoins"/>
+		WHERE a.tsi_id = #{id}
+	</select>
+	
+	<select id="findList" resultType="TreeStandardItme">
+		SELECT 
+			<include refid="treeStandardItmeColumns"/>
+		FROM v_treestandarditme a
+		<include refid="treeStandardItmeJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="TreeStandardItme">
+		SELECT 
+			<include refid="treeStandardItmeColumns"/>
+		FROM v_treestandarditme a
+		<include refid="treeStandardItmeJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO v_treestandarditme(
+			tsi_id,
+			tsi_treefour,
+			tsi_tsid,
+			tsi_type,
+			tsi_name,
+			tsi_unit,
+			tsi_unitname,
+			tsi_value,
+			tsi_standardmin,
+			tsi_standardmax,
+			tsi_specialclaim,
+			tsi_detectmethod,
+			tsi_exteriorname,
+			tsi_exteriorsc,
+			tsi_exteriordm,
+			tsi_jincheng,
+			tsi_createtime,
+			tsi_updatetime,
+			tsi_parentid,
+			tsi_apppush,
+			tsi_matlevel
+		) VALUES (
+			#{tsiId},
+			#{tsiTreefour},
+			#{tsiTsid},
+			#{tsiType},
+			#{tsiName},
+			#{tsiUnit},
+			#{tsiUnitname},
+			#{tsiValue},
+			#{tsiStandardmin},
+			#{tsiStandardmax},
+			#{tsiSpecialclaim},
+			#{tsiDetectmethod},
+			#{tsiExteriorname},
+			#{tsiExteriorsc},
+			#{tsiExteriordm},
+			#{tsiJincheng},
+			#{tsiCreatetime},
+			#{tsiUpdatetime},
+			#{tsiParentid},
+			#{tsiApppush},
+			#{tsiMatlevel}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE v_treestandarditme SET 	
+			tsi_id = #{tsiId},
+			tsi_treefour = #{tsiTreefour},
+			tsi_tsid = #{tsiTsid},
+			tsi_type = #{tsiType},
+			tsi_name = #{tsiName},
+			tsi_unit = #{tsiUnit},
+			tsi_unitname = #{tsiUnitname},
+			tsi_value = #{tsiValue},
+			tsi_standardmin = #{tsiStandardmin},
+			tsi_standardmax = #{tsiStandardmax},
+			tsi_specialclaim = #{tsiSpecialclaim},
+			tsi_detectmethod = #{tsiDetectmethod},
+			tsi_exteriorname = #{tsiExteriorname},
+			tsi_exteriorsc = #{tsiExteriorsc},
+			tsi_exteriordm = #{tsiExteriordm},
+			tsi_jincheng = #{tsiJincheng},
+			tsi_createtime = #{tsiCreatetime},
+			tsi_updatetime = #{tsiUpdatetime},
+			tsi_parentid = #{tsiParentid},
+			tsi_apppush = #{tsiApppush},
+			tsi_matlevel = #{tsiMatlevel}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM v_treestandarditme
+		WHERE id = #{id}
+	</update>
+		
+	<!--通过类型与四级科目ID,查找材料标准结果集. 	
+	public List<TreeStandardItme> findTreeStandardItmesByTypeAndTreeFourID(@Param("type")Integer type,@Param("treeFourID") String treeFourID); -->
+	<select id="findTreeStandardItmesByTypeAndTreeFourID" resultType="TreeStandardItme" >
+		SELECT <include refid="treeStandardItmeColumns"/>
+        FROM V_TreeStandardItme a
+        WHERE a.tsi_TreeFour = #{treeFourID}
+        -- 		AND ISNULL(a.tsi_MatLevel, 0) = 0
+        AND ISNULL(tsi_ParentID,'00000000-0000-0000-0000-000000000000')='00000000-0000-0000-0000-000000000000'
+        AND a.tsi_Type = #{type}
+        AND a.tsi_jincheng = 0
+        ORDER BY a.tsi_MatLevel,a.tsi_createTime
+	</select>
+		
+	<!--移除材料标准信息. 	
+	public int deleteTreeStandardItmeByStandardID(String standardID); -->
+	<update id="deleteTreeStandardItmeByStandardID" >
+	  exec sp_executesql N'
+	    DECLARE @zxCount INT
+	    UPDATE V_TreeStandardItme
+	    SET tsi_jincheng=1,tsi_updateTime=GETDATE()
+	    WHERE tsi_ID=@tsi_ID
+	    SET @zxCount=@@ROWCOUNT
+	    SELECT @zxCount
+	  ',N'@tsi_ID uniqueidentifier',@tsi_ID=#{standardID}
+	</update>
+		
+	<!--新增or更新or删除,材料标准信息. 	
+	public int saveOrUpdate(PlatformStandardInfo platformStandardInfo); -->
+	<update id="saveOrUpdate" parameterType="PlatformStandardInfo" >
+	  exec sp_executesql N'
+	    DECLARE @zxCount INT
+	
+	    IF(EXISTS(SELECT 1 FROM V_TreeStandardItme WHERE tsi_ID=@tsi_ID))
+	    BEGIN
+	
+	    --更新
+	    UPDATE V_TreeStandardItme
+	    SET tsi_Name=@tsi_Name,tsi_Unit=@tsi_Unit,tsi_UnitName=@tsi_UnitName
+	    ,tsi_Value=@tsi_Value,tsi_StandardMin=@tsi_StandardMin,tsi_StandardMax=@tsi_StandardMax
+	    ,tsi_SpecialClaim=@tsi_SpecialClaim,tsi_DetectMethod=@tsi_DetectMethod
+	    ,tsi_ExteriorName=@tsi_ExteriorName,tsi_ExteriorSC=@tsi_ExteriorSC,tsi_ExteriorDM=@tsi_ExteriorDM
+	    ,tsi_ParentID=@tsi_ParentID,tsi_AppPush=@tsi_AppPush,tsi_MatLevel=@tsi_MatLevel
+	    ,tsi_updateTime=GETDATE()
+	    WHERE tsi_ID=@tsi_ID
+	    SET @zxCount=@@ROWCOUNT
+	
+	    END
+	    ELSE
+	    BEGIN
+	
+	    --添加
+	    INSERT INTO V_TreeStandardItme
+	    (tsi_ID,tsi_TreeFour,tsi_TSID,tsi_Type
+	    ,tsi_Name,tsi_Unit,tsi_UnitName,tsi_Value,tsi_StandardMin,tsi_StandardMax
+	    ,tsi_SpecialClaim,tsi_DetectMethod
+	    ,tsi_ExteriorName,tsi_ExteriorSC,tsi_ExteriorDM
+	    ,tsi_ParentID,tsi_AppPush,tsi_MatLevel)
+	    VALUES
+	    (@tsi_ID,@tsi_TreeFour,@tsi_TSID,@tsi_Type
+	    ,@tsi_Name,@tsi_Unit,@tsi_UnitName,@tsi_Value,@tsi_StandardMin,@tsi_StandardMax
+	    ,@tsi_SpecialClaim,@tsi_DetectMethod
+	    ,@tsi_ExteriorName,@tsi_ExteriorSC,@tsi_ExteriorDM
+	    ,@tsi_ParentID,@tsi_AppPush,@tsi_MatLevel)
+	    SET @zxCount=@@ROWCOUNT
+	
+	    END
+	
+	    SELECT @zxCount
+	  ',N'
+	  @tsi_AppPush int,
+	  @tsi_DetectMethod nvarchar(4000),
+	  @tsi_ExteriorDM nvarchar(4000),
+	  @tsi_ExteriorName nvarchar(4000),
+	  @tsi_ExteriorSC nvarchar(4000),
+	  @tsi_ID uniqueidentifier,
+	  @tsi_MatLevel int,
+	  @tsi_Name nvarchar(4000),
+	  @tsi_ParentID uniqueidentifier,
+	  @tsi_SpecialClaim nvarchar(4000),
+	  @tsi_StandardMax nvarchar(4000),
+	  @tsi_StandardMin nvarchar(4000),
+	  @tsi_TreeFour uniqueidentifier,
+	  @tsi_TSID uniqueidentifier,
+	  @tsi_Type int,
+	  @tsi_Unit int,
+	  @tsi_UnitName nvarchar(4000),
+	  @tsi_Value nvarchar(4000)',
+	  
+	  @tsi_AppPush=#{tsiApppush},
+	  @tsi_DetectMethod=#{tsiDetectmethod},
+	  @tsi_ExteriorDM=#{tsiExteriordm},
+	  @tsi_ExteriorName=#{tsiExteriorname},
+	  @tsi_ExteriorSC=#{tsiExteriorsc},
+	  @tsi_ID=#{tsiId},
+	  @tsi_MatLevel=#{tsiMatlevel},
+	  @tsi_Name=#{tsiName},
+	  @tsi_ParentID=#{tsiParentid},
+	  @tsi_SpecialClaim=#{tsiSpecialclaim},
+	  @tsi_StandardMax=#{tsiStandardmax},
+	  @tsi_StandardMin=#{tsiStandardmin},
+	  @tsi_TreeFour=#{tsiTreefour},
+	  @tsi_TSID=#{tsiTsid},
+	  @tsi_Type=#{tsiType},
+	  @tsi_Unit=#{tsiUnit},
+	  @tsi_UnitName=#{tsiUnitname},
+	  @tsi_Value=#{tsiValue}
+	</update>
+
+    <!-- 查找档次质量标准结果集,通过四级科目ID和档次标识.
+    List<TreeStandardItme> findLevelQualityStandardItemsByTreeFourIDAndLevelFlag(@Param("treeFourID") String treeFourID,@Param("levelFalg") Integer levelFalg);	-->
+    <select id="findLevelQualityStandardItemsByTreeFourIDAndLevelFlag" resultType="TreeStandardItme" >
+     -- 子库地区'档次' - 获取针对'档次'相关质量标准
+        WITH K AS (
+        SELECT 1 MLevel
+        UNION ALL SELECT 2
+        UNION ALL SELECT 4
+        ), LevelStaLoop AS (
+        -- 子库地区'档次' - 获取针对'档次'相关质量标准
+        SELECT
+        T2.tsi_ID AS tsiId --ID
+        ,T2.tsi_Value AS tsiValue --属性值
+        ,T2.tsi_StandardMin AS tsiStandardmin --范围：最小
+        ,T2.tsi_StandardMax AS tsiStandardmax --范围：最大
+        ,T2.tsi_AppPush AS tsiApppush --是否推送：1推送   （默认0）
+        ,T1.tsi_TreeFour AS tsiTreefour --四级ID（规格）
+        ,T2.tsi_MatLevel AS tsiMatlevel --档次（1:A档，2:B档，4:C档）
+        ,T1.tsi_Name AS tsiName --属性名称
+        ,T1.tsi_Unit AS tsiUnit --属性单位ID
+        ,T1.tsi_UnitName AS tsiUnitname --属性单位名称
+        ,T1.tsi_SpecialClaim AS tsiSpecialclaim --特殊要求
+        ,T1.tsi_DetectMethod AS tsiDetectmethod --检测方法
+        ,T1.tsi_ID  tsiParentid --继承ID（质量继承）
+        ,T1.tsi_createTime AS tsiCreatetime --创建时间    （默认getdate()）
+        --属性一，属性二
+        ,T1.tsi_ExteriorName AS tsiExteriorname --外观
+        ,T1.tsi_ExteriorSC AS tsiExteriorsc --外观-特殊要求
+				,T1.tsi_MatLevel AS platformStaLevel --标准总档次标识
+        FROM V_TreeStandardItme T1
+        LEFT JOIN K ON 1= 1
+        LEFT JOIN V_TreeStandardItme T2
+        ON T2.tsi_ParentID=T1.tsi_ID
+        AND T2.tsi_jincheng=0
+        AND T2.tsi_MatLevel = MLevel
+        WHERE T1.tsi_jincheng=0
+        AND T1.tsi_Type=1
+        AND T1.tsi_MatLevel=0
+        AND ISNULL(T1.tsi_ParentID,'00000000-0000-0000-0000-000000000000')='00000000-0000-0000-0000-000000000000'
+        UNION ALL
+        --档次 标准
+        SELECT T1.tsi_ID,T1.tsi_Value,T1.tsi_StandardMin,T1.tsi_StandardMax
+        ,T1.tsi_AppPush,T1.tsi_TreeFour,T1.tsi_MatLevel
+        ,T1.tsi_Name,T1.tsi_Unit,T1.tsi_UnitName,T1.tsi_SpecialClaim,T1.tsi_DetectMethod
+        ,T1.tsi_ParentID,T1.tsi_createTime
+        --属性一，属性二
+        ,T1.tsi_ExteriorName,T1.tsi_ExteriorSC
+        ,T1.tsi_MatLevel AS platformLevel --标准总档次标识
+        FROM V_TreeStandardItme T1
+        WHERE  T1.tsi_jincheng=0
+        AND T1.tsi_Type=1
+        AND T1.tsi_MatLevel>=1
+        AND ISNULL(T1.tsi_ParentID,'00000000-0000-0000-0000-000000000000')='00000000-0000-0000-0000-000000000000'
+        )
+        SELECT * FROM LevelStaLoop
+        WHERE tsiTreefour = #{treeFourID} AND tsiMatlevel = #{levelFalg}
+    </select>
+
+
+
+</mapper>

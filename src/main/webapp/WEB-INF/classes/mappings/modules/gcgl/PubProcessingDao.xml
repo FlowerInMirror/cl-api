@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.gcgl.dao.PubProcessingDao">
+    
+	<sql id="pubProcessingColumns">
+		a.p_id AS "pId",
+		a.p_type AS "pType",
+		a.p_mainid AS "pMainid",
+		a.p_otherid AS "pOtherid",
+		a.p_title AS "pTitle",
+		a.p_remark AS "pRemark",
+		a.p_summary AS "pSummary",
+		a.p_createusername AS "pCreateusername",
+		a.p_createuserno AS "pCreateuserno",
+		a.p_status AS "pStatus",
+		a.p_createtime AS "pCreatetime",
+		a.p_updatetime AS "pUpdatetime
+		
+	</sql>
+	 
+	<sql id="pubProcessingJoins">
+	</sql>
+	
+	<!--  <select id="getPaymentTypeReturned"  resultType="PubProcessing"> 
+	     SELECT 
+	        <include refid="pubProcessingColumns"/> 
+	    FROM  pub_processing a
+	   WHERE a.p_type=#{pType} AND a.p_status=1 ;
+	  </select>
+	   -->
+	 
+	<!--  <select id="getPaymentTypeReturned"   resultType="PubProcessing">
+			
+			 SELECT  
+			       a.p_id AS "pId",
+			       a.p_mainid AS "pMainid",
+			       a.p_type AS "pType",
+			       a.p_title AS "pTitle",
+			       a.p_remark AS "pRemark",
+			       a.p_summary AS "pSummary",
+			       a.p_createtime AS "pCreatetime"
+			     
+			    
+			  FROM pub_processing a 
+			    
+			   WHERE   
+			      a.p_type =#{pType}
+			   AND a.p_status = 1
+			
+			   <if test="pCreateuserno !=null and pCreateuserno != ''">
+			     AND  a.p_CreateUserNo=#{pCreateuserno}
+			   </if> 
+			   
+			  <if test="start != null ">
+			     AND a.p_CreateTime &gt;= #{start}
+			  </if>
+			 <if test="stop!=null">
+			     AND a.p_CreateTime &lt;= #{stop}
+			  </if> 
+			     ORDER BY a.p_CreateTime desc;
+			
+			union all   
+			
+			select 
+	           a.user_name AS "userName",
+		       a.mobile AS "mobile",
+		       a.induction_area AS "inductionArea"
+		   from  pm_userinfo a
+		 
+		   where a.user_type=#{userType}
+			
+			 
+			 
+			</select>   -->
+				
+	   
+	  <select id="getPaymentTypeReturned"   resultType="PubProcessing">
+			
+			 SELECT  
+			       a.p_id AS "pId",
+			       a.p_mainid AS "pMainid",
+			       a.p_type AS "pType",
+			       a.p_title AS "pTitle",
+			       a.p_remark AS "pRemark",
+			       a.p_summary AS "pSummary",
+			       a.p_createtime AS "pCreatetime",
+			       isnull( p.pe_executestate,0)  AS "peExecutestate"
+			   FROM pub_processing a  left join pub_processingexecute p on
+			   
+			   a.p_id=p.pe_pid
+			   
+			   WHERE   
+			       
+			    
+			     a.p_type =2
+			     
+			    AND  a.p_status = 1
+			   <if test="pCreateuserno !=null and pCreateuserno != ''">
+			     AND  a.p_CreateUserNo=#{pCreateuserno}
+			   </if> 
+			   
+			  <if test="start != null ">
+			     AND a.p_CreateTime &gt;= #{start}
+			  </if>
+			 <if test="stop!=null">
+			     AND a.p_CreateTime &lt;= #{stop}
+			  </if> 
+			     ORDER BY a.p_CreateTime desc;
+			</select>
+			
+		 
+			 
+	
+	  
+    
+	<select id="get" resultType="PubProcessing">
+		SELECT 
+			<include refid="pubProcessingColumns"/>
+		FROM pub_processing a
+		<include refid="pubProcessingJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	
+	
+	<select id="findList" resultType="PubProcessing">
+		SELECT 
+			<include refid="pubProcessingColumns"/>
+		FROM pub_processing a
+		<include refid="pubProcessingJoins"/>
+		<where>
+			
+			<if test="pType != null and pType != ''">
+				AND a.p_type LIKE 
+					<if test="dbName == 'oracle'">'%'||#{pType}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{pType}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{pType},'%')</if>
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="PubProcessing">
+		SELECT 
+			<include refid="pubProcessingColumns"/>
+		FROM pub_processing a
+		<include refid="pubProcessingJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO pub_processing(
+			p_id,
+			p_type,
+			p_mainid,
+			p_otherid,
+			p_title,
+			p_remark,
+			p_summary,
+			p_createusername,
+			p_createuserno,
+			p_status,
+			p_createtime,
+			p_updatetime
+		) VALUES (
+			#{pId},
+			#{pType},
+			#{pMainid},
+			#{pOtherid},
+			#{pTitle},
+			#{pRemark},
+			#{pSummary},
+			#{pCreateusername},
+			#{pCreateuserno},
+			#{pStatus},
+			#{pCreatetime},
+			#{pUpdatetime}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE pub_processing SET 	
+			p_id = #{pId},
+			p_type = #{pType},
+			p_mainid = #{pMainid},
+			p_otherid = #{pOtherid},
+			p_title = #{pTitle},
+			p_remark = #{pRemark},
+			p_summary = #{pSummary},
+			p_createusername = #{pCreateusername},
+			p_createuserno = #{pCreateuserno},
+			p_status = #{pStatus},
+			p_createtime = #{pCreatetime},
+			p_updatetime = #{pUpdatetime}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM pub_processing
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

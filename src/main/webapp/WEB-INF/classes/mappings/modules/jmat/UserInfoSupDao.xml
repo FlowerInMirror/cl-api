@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.jmat.dao.UserInfoSupDao">
+    
+	<sql id="userInfoSupColumns">
+		a.uid AS "uid",
+		a.comp_usercount AS "compUsercount",
+		a.comp_area AS "compArea",
+		a.comp_ci AS "compCi",
+		a.comp_management AS "compManagement",
+		a.inspection_state AS "inspectionState",
+		a.inspection_description AS "inspectionDescription",
+		a.inspection_time AS "inspectionTime",
+		a.back_remark AS "backRemark",
+		a.update_time AS "updateTime",
+		a.z_one AS "zOne",
+		a.z_two AS "zTwo",
+		a.z_three AS "zThree",
+		a.z_onetime AS "zOnetime",
+		a.z_twotime AS "zTwotime",
+		a.z_threetime AS "zThreetime",
+		a.z_one_remark AS "zOneRemark",
+		a.z_two_remark AS "zTwoRemark",
+		a.z_three_remark AS "zThreeRemark",
+		a.z_four AS "zFour",
+		a.z_five AS "zFive",
+		a.z_fourtime AS "zFourtime",
+		a.z_fivetime AS "zFivetime",
+		a.z_four_remark AS "zFourRemark",
+		a.z_five_remark AS "zFiveRemark",
+		a.z_six AS "zSix",
+		a.z_sixtime AS "zSixtime",
+		a.z_six_remark AS "zSixRemark",
+		a.z_train_state AS "zTrainState"
+	</sql>
+	
+	<sql id="userInfoSupJoins">
+	</sql>
+    
+	<select id="get" resultType="UserInfoSup">
+		SELECT 
+			<include refid="userInfoSupColumns"/>
+		FROM pm_userinfo_sup a
+		<include refid="userInfoSupJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="UserInfoSup">
+		SELECT 
+			<include refid="userInfoSupColumns"/>
+		FROM pm_userinfo_sup a
+		<include refid="userInfoSupJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="UserInfoSup">
+		SELECT 
+			<include refid="userInfoSupColumns"/>
+		FROM pm_userinfo_sup a
+		<include refid="userInfoSupJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO pm_userinfo_sup(
+			uid,
+			comp_usercount,
+			comp_area,
+			comp_ci,
+			comp_management,
+			inspection_state,
+			inspection_description,
+			inspection_time,
+			back_remark,
+			update_time,
+			z_one,
+			z_two,
+			z_three,
+			z_onetime,
+			z_twotime,
+			z_threetime,
+			z_one_remark,
+			z_two_remark,
+			z_three_remark,
+			z_four,
+			z_five,
+			z_fourtime,
+			z_fivetime,
+			z_four_remark,
+			z_five_remark,
+			z_six,
+			z_sixtime,
+			z_six_remark,
+			z_train_state
+		) VALUES (
+			#{uid},
+			#{compUsercount},
+			#{compArea},
+			#{compCi},
+			#{compManagement},
+			#{inspectionState},
+			#{inspectionDescription},
+			#{inspectionTime},
+			#{backRemark},
+			#{updateTime},
+			#{zOne},
+			#{zTwo},
+			#{zThree},
+			#{zOnetime},
+			#{zTwotime},
+			#{zThreetime},
+			#{zOneRemark},
+			#{zTwoRemark},
+			#{zThreeRemark},
+			#{zFour},
+			#{zFive},
+			#{zFourtime},
+			#{zFivetime},
+			#{zFourRemark},
+			#{zFiveRemark},
+			#{zSix},
+			#{zSixtime},
+			#{zSixRemark},
+			#{zTrainState}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE pm_userinfo_sup SET 	
+			uid = #{uid},
+			comp_usercount = #{compUsercount},
+			comp_area = #{compArea},
+			comp_ci = #{compCi},
+			comp_management = #{compManagement},
+			inspection_state = #{inspectionState},
+			inspection_description = #{inspectionDescription},
+			inspection_time = #{inspectionTime},
+			back_remark = #{backRemark},
+			update_time = #{updateTime},
+			z_one = #{zOne},
+			z_two = #{zTwo},
+			z_three = #{zThree},
+			z_onetime = #{zOnetime},
+			z_twotime = #{zTwotime},
+			z_threetime = #{zThreetime},
+			z_one_remark = #{zOneRemark},
+			z_two_remark = #{zTwoRemark},
+			z_three_remark = #{zThreeRemark},
+			z_four = #{zFour},
+			z_five = #{zFive},
+			z_fourtime = #{zFourtime},
+			z_fivetime = #{zFivetime},
+			z_four_remark = #{zFourRemark},
+			z_five_remark = #{zFiveRemark},
+			z_six = #{zSix},
+			z_sixtime = #{zSixtime},
+			z_six_remark = #{zSixRemark},
+			z_train_state = #{zTrainState}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM pm_userinfo_sup
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

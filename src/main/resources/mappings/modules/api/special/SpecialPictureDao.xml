@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.api.special.dao.SpecialPictureDao">
+    
+	<sql id="specialPictureColumns">
+		a.sdp_id AS "sdpId",
+		a.spd_spid AS "spdSpid",
+		a.spd_type AS "spdType",
+		a.spd_url AS "spdUrl",
+		a.spd_status AS "spdStatus",
+		a.spd_createtime AS "spdCreatetime",
+		a.spd_updatetime AS "spdUpdatetime"
+	</sql>
+	
+	<sql id="specialPictureJoins">
+	</sql>
+    
+	<select id="get" resultType="SpecialPicture">
+		SELECT 
+			<include refid="specialPictureColumns"/>
+		FROM s_specialpicture a
+		<include refid="specialPictureJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="SpecialPicture">
+		SELECT 
+			<include refid="specialPictureColumns"/>
+		FROM s_specialpicture a
+		<include refid="specialPictureJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="SpecialPicture">
+		SELECT 
+			<include refid="specialPictureColumns"/>
+		FROM s_specialpicture a
+		<include refid="specialPictureJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO s_specialpicture(
+			sdp_id,
+			spd_spid,
+			spd_type,
+			spd_url,
+			spd_status,
+			spd_createtime,
+			spd_updatetime
+		) VALUES (
+			#{sdpId},
+			#{spdSpid},
+			#{spdType},
+			#{spdUrl},
+			#{spdStatus},
+			#{spdCreatetime},
+			#{spdUpdatetime}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE s_specialpicture SET 	
+			sdp_id = #{sdpId},
+			spd_spid = #{spdSpid},
+			spd_type = #{spdType},
+			spd_url = #{spdUrl},
+			spd_status = #{spdStatus},
+			spd_createtime = #{spdCreatetime},
+			spd_updatetime = #{spdUpdatetime}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM s_specialpicture
+		WHERE id = #{id}
+	</update>
+
+    <!--// "=========================C U D=============================="-->
+
+    <!--// 添加专项产品照片 @author ljc @Depict 添加内容:专项产品ID/专项图片类型:1主图/图片地址 @createTime 2018-8-20 11:34:53-->
+    <!--int addSpecialPictureByEntityVo(SpecialPictureVo specialPictureVo);-->
+    <insert id="addSpecialPictureByEntityVo" useGeneratedKeys="true" keyProperty="sdpId">
+        INSERT INTO s_specialpicture(
+            sdp_id,
+            spd_spid,
+            spd_type,
+            spd_url
+        ) VALUES (
+            NEWID(),
+            #{spdSpid},
+            #{spdType},
+            #{spdUrl}
+        )
+    </insert>
+
+    <!--// 添加:专项产品主图集(专项产品ID/图片类型/图片地址)-->
+    <!--int addSpecialPicturesByEntitys(List<SpecialPicture> specialPictures);-->
+    <insert id="addSpecialPicturesByEntitys">
+        INSERT INTO s_specialpicture
+          (sdp_id,spd_spid,spd_type,spd_url)
+        VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+          ( NEWID(),#{item.spdSpid},#{item.spdType},#{item.spdUrl})
+        </foreach>
+    </insert>
+
+    <!--// 更新-专项产品照片 @author ljc @createTime 2018-8-20 11:42:27-->
+    <!--int updateSpecialPictureByEntityVo(SpecialPictureVo specialPictureVo);-->
+    <update id="updateSpecialPictureByEntityVo" parameterType="SpecialPictureVo">
+		UPDATE s_specialpicture
+        <set>
+            spd_updatetime = GETDATE(),
+            <if test="spdSpid != null">
+                spd_spid = #{spdSpid},
+            </if>
+            <if test="spdType != null">
+                spd_type = #{spdType},
+            </if>
+            <if test="spdUrl != null">
+                spd_url = #{spdUrl},
+            </if>
+        </set>
+		WHERE sdp_id = #{sdpId}
+    </update>
+
+    <!--// 删除-专项产品照片 @author ljc @createTime 2018-8-20 11:42:39-->
+    <!--int deleteSpecialPictureByEntityVo(SpecialPictureVo specialPictureVo);-->
+    <update id="deleteSpecialPictureByEntityVo" parameterType="SpecialPictureVo">
+		UPDATE s_specialpicture
+		SET    spd_status = 1,spd_createtime = GETDATE()
+		WHERE  sdp_id = #{sdpId}
+    </update>
+
+    <!--// "=========================FIND=============================="-->
+
+    <!--// 专项图片图集,通过产品ID以及类型检索 @author ljc @createTime 2018-8-26 21:27:56-->
+    <!--List<SpecialPicture> findSpecialPicturesByProIDAndType(String proID,Integer type);-->
+    <select id="findSpecialPicturesByProIDAndType" resultType="SpecialPicture">
+        SELECT
+          <include refid="specialPictureColumns"/>
+        FROM s_specialpicture a
+        <include refid="specialPictureJoins"/>
+        WHERE spd_Status = 0
+        AND   spd_Type = #{type}
+        AND   spd_SPID = #{proID}
+    </select>
+
+	
+</mapper>

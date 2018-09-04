@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.jmat.dao.ParameterItemDao">
+    
+	<sql id="parameterItemColumns">
+		a.paraitem_id AS "paraitemId",
+		a.paraitem_paraid AS "paraitemParaid",
+		a.paraitem_name AS "paraitemName",
+		a.paraitem_sort AS "paraitemSort",
+		a.paraitem_jincheng AS "paraitemJincheng",
+		a.paraitem_createtime AS "paraitemCreatetime",
+		a.paraitem_updatetime AS "paraitemUpdatetime"
+	</sql>
+	
+	<sql id="parameterItemJoins">
+	</sql>
+    
+	<select id="get" resultType="ParameterItem">
+		SELECT 
+			<include refid="parameterItemColumns"/>
+		FROM v_parameteritem a
+		<include refid="parameterItemJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="ParameterItem">
+		SELECT 
+			<include refid="parameterItemColumns"/>
+		FROM v_parameteritem a
+		<include refid="parameterItemJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="ParameterItem">
+		SELECT 
+			<include refid="parameterItemColumns"/>
+		FROM v_parameteritem a
+		<include refid="parameterItemJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO v_parameteritem(
+			paraitem_id,
+			paraitem_paraid,
+			paraitem_name,
+			paraitem_sort,
+			paraitem_jincheng,
+			paraitem_createtime,
+			paraitem_updatetime
+		) VALUES (
+			#{paraitemId},
+			#{paraitemParaid},
+			#{paraitemName},
+			#{paraitemSort},
+			#{paraitemJincheng},
+			#{paraitemCreatetime},
+			#{paraitemUpdatetime}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE v_parameteritem SET 	
+			paraitem_id = #{paraitemId},
+			paraitem_paraid = #{paraitemParaid},
+			paraitem_name = #{paraitemName},
+			paraitem_sort = #{paraitemSort},
+			paraitem_jincheng = #{paraitemJincheng},
+			paraitem_createtime = #{paraitemCreatetime},
+			paraitem_updatetime = #{paraitemUpdatetime}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM v_parameteritem
+		WHERE id = #{id}
+	</update>
+
+    <!-- 获取全部参数项,通过材料参数ID.
+    List<Map<String,Object>> findParamItemsByParamID(Integer paramID);-->
+    <select id="findParamItemsByParamID" parameterType="Integer" resultType="java.util.Map">
+        -- 全部参数项,通过材料参数ID.
+        ;SELECT
+            a.paraitem_ID AS paraItemID,
+            a.paraitem_Name AS paraItemName,
+            a.paraitem_paraID AS paraID
+        FROM
+            V_ParameterItem a
+        WHERE
+            a.paraitem_paraID = #{paramID}
+        AND a.paraitem_jincheng = 0
+    </select>
+	
+</mapper>

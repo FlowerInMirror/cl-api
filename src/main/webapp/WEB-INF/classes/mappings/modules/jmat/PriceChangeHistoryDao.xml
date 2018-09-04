@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.jmat.dao.PriceChangeHistoryDao">
+    
+	<sql id="priceChangeHistoryColumns">
+		a.pch_id AS "pchId",
+		a.pch_matid AS "pchMatid",
+		a.pch_userid AS "pchUserid",
+		a.pch_oldprice AS "pchOldprice",
+		a.pch_newprice AS "pchNewprice",
+		a.pch_class AS "pchClass",
+		a.pch_status AS "pchStatus",
+		a.pch_type AS "pchType",
+		a.pch_time AS "pchTime",
+		a.pch_changetime AS "pchChangetime",
+		a.pch_remark AS "pchRemark",
+		a.pch_checkremark AS "pchCheckremark"
+	</sql>
+	
+	<sql id="priceChangeHistoryJoins">
+	</sql>
+    
+	<select id="get" resultType="PriceChangeHistory">
+		SELECT 
+			<include refid="priceChangeHistoryColumns"/>
+		FROM v_pricechangehistory a
+		<include refid="priceChangeHistoryJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="PriceChangeHistory">
+		SELECT 
+			<include refid="priceChangeHistoryColumns"/>
+		FROM v_pricechangehistory a
+		<include refid="priceChangeHistoryJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="PriceChangeHistory">
+		SELECT 
+			<include refid="priceChangeHistoryColumns"/>
+		FROM v_pricechangehistory a
+		<include refid="priceChangeHistoryJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO v_pricechangehistory(
+			pch_id,
+			pch_matid,
+			pch_userid,
+			pch_oldprice,
+			pch_newprice,
+			pch_class,
+			pch_status,
+			pch_type,
+			pch_time,
+			pch_changetime,
+			pch_remark,
+			pch_checkremark
+		) VALUES (
+			#{pchId},
+			#{pchMatid},
+			#{pchUserid},
+			#{pchOldprice},
+			#{pchNewprice},
+			#{pchClass},
+			#{pchStatus},
+			#{pchType},
+			#{pchTime},
+			#{pchChangetime},
+			#{pchRemark},
+			#{pchCheckremark}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE v_pricechangehistory SET 	
+			pch_id = #{pchId},
+			pch_matid = #{pchMatid},
+			pch_userid = #{pchUserid},
+			pch_oldprice = #{pchOldprice},
+			pch_newprice = #{pchNewprice},
+			pch_class = #{pchClass},
+			pch_status = #{pchStatus},
+			pch_type = #{pchType},
+			pch_time = #{pchTime},
+			pch_changetime = #{pchChangetime},
+			pch_remark = #{pchRemark},
+			pch_checkremark = #{pchCheckremark}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM v_pricechangehistory
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

@@ -1,0 +1,108 @@
+.wrapper{background: #eee;}
+.breadcrumb{background: #fff;}
+.dailylft{width: 250px;background: #fff;}
+.dailylft .tractive td{background: #eaf4fe;}
+.uiTab7Con{overflow: hidden;}
+.dailylftScroll,.meansScroll,.BlessingScroll,.smsrecordScroll,.uiTab7ConScroll,.problemScroll,.notesScroll,.visiterecord-rgt-scroll,.questionshow{overflow: hidden;overflow-y: auto;}
+.dailyrgt{margin-left: 260px;overflow: auto;}
+.dailyrgt-left{width: 440px;}
+.dailyrgt-right{margin-left: 450px;overflow: hidden;}
+
+.uiTab7Con,.uiTab7 li{background: #fff;}
+/*分析*/
+.nobg{background: #eee;}
+.analyItem{display: table;width: 100%;min-height: 50px;margin-top:5px;background: #fff;}
+.analyItem .analyItemTit{display: table-cell;vertical-align: middle;width: 20px;line-height: 18px;background: #ddd;padding: 0 5px;}
+.analyItem .analyItemCon{display: table-cell;vertical-align: middle;}
+.nomargintop{margin-top: 0;}
+/*资料*/
+
+.meansBottom{border-top: 10px solid #eee;background: #fff;}
+.messagesend{width: 60px;margin: 0 auto;display: block;}
+.messagesend i{width: 36px;height:36px;background:url(../images/pic/op_ico_15.png) no-repeat;display:block;margin: 0 auto;}
+.Blessing,.smsrecord{position: absolute;left: 0;bottom:-100%;width:100%;background: #fff;}
+.Blessing .BlessingClose,.smsrecord .smsrecordClose{background: url(../images/pic/op_ico_17.png) no-repeat;width: 24px;height: 24px;background-size: 24px 24px;}
+.mt3{margin-top: 3px;}
+.BlessingBlock{width: 170px;height: 205px;overflow: hidden;font-size: 12px;margin: 0 auto;cursor: default;}
+.BlessingSend{position: absolute;left: 0;top: 0;width: 100%;height: 100%;}
+.BlessingSendBg{position: absolute;left: 0;top: 0;width: 100%;height: 100%;background: #000;opacity: 0.2;filter:alpha(opacity=20);}
+.BlessingSendIco{background: url(../images/pic/op_ico_16.png) no-repeat;width: 45px;height: 45px;position: absolute;left: 50%;top: 50%;margin: -22px 0 0 -22px;}
+.Blessingtype{display:inline-block;background: #0099ff;color: #fff;height: 25px;line-height: 25px;padding: 0 10px;border-top-left-radius: 4px;border-bottom-left-radius: 4px;}
+.Blessingtype i{background: url(../images/pic/op_ico_18.png) no-repeat;width:13px;height: 25px;line-height: 25px;margin-right: -12px;}
+/*问题*/
+.problem-active td{background: #eaf4fe;}
+.questionshow{position: absolute;right:-100%;top:0;background:#fff;width: 100%;height: 100%;z-index: 4;}
+.questionbtn,.visiterecordpicbtn{position:absolute;width: 18px;height: 30px;overflow: hidden;}
+.questionbtn{top:70px;}
+.questionprev,.visiterecordpicprev{background: url(../images/ico/uiLeft03_off.png) no-repeat;}
+.questionprev{left: 0;}
+.questioncon{height: 150px;overflow: hidden;margin: 0 auto;}
+.questioncon li{float: left;width: 150px;height: 150px;overflow: hidden;margin:0 10px;position: relative;}
+.questioncon li img{display: block;width: 100%;height: 100%;}
+.questionnext,.visiterecordpicnext{background: url(../images/ico/uiRight03_off.png) no-repeat;}
+.questionnext{right: 0;}
+/*记录*/
+.noteslist-lft{width: 30px;}
+.noteslist-lft .noteslist-span{border-radius: 50%;border: 1px solid #d6d6d6;font-size: 12px;width:20px;height:20px;line-height:18px;text-align:center;display:inline-block;}
+.noteslist-rgt{margin-left: 30px;overflow: hidden;}
+.noteslist-time{color: #999;font-size: 12px;}
+.noteslist-status{background: #33cc66;color: #fff;min-width: 46px;height: 24px;line-height: 24px;text-align: center;font-size: 12px;border-radius: 4px;}
+
+/*右块样式*/
+.dailyrgt-top{overflow: hidden;}
+.dailyrgt-top,.dailyrgt-bottom{background: #fff;}
+.dailyrgt-bottom{height: 180px;overflow: hidden;}
+.noteslist-state{background: #0099ff;color: #fff;padding: 2px 4px;border-radius: 4px;}
+.dailyrgt-menu a{height: 25px;line-height: 25px;color: #fff;background:#bcbcbc;padding: 0 10px;border-radius: 5px;}
+.dailyrgt-menu a:hover,.dailyrgt-menu .a-acitve{background: #0099ff;}
+.Fillreturn{padding-top:40px;}
+.Fillreturncon{background: #f2f2f2;border: 1px solid #e8e8e8;}
+.dailyrgt-bottom-fixedbtn{position: absolute;right: -100%;top: 5px;}
+.dailyrgt-bottom-fixedbtn input{width: 60px;text-align: center;padding: 0;}
+.visiterecord-lft{width: 100px;}
+.visiterecord-rgt{margin-left: 110px;overflow: hidden;}
+.waringlink{background: rgba(255,0,0,0.5);width:100%;height: 25px;line-height: 25px;text-align:center;border: 1px solid #ff0000;color: #fff; font-size: 12px;display: block;}
+.waringlink em{background: #ff0000;font-style: normal;color: #fff;width: 20px;height: 20px;line-height:20px;border-radius: 50%;text-align: center;margin-top: 2px;margin-right: 2px;}
+/*发起事件*/
+.initiaevent,.waring{width: 100%;height: 100%;position: absolute;right:-100%;top: 0;background: #fff;}
+.initiaevent-lft{width: 120px;}
+.uiImgUpload{width: 100px;height: 100px;margin:10px auto 0;}
+.uiImgUpload-name{position: absolute;left: 0;bottom: 0;width: 100%;text-align: center;}
+.initiaevent-rgt{margin-left: 120px;overflow: hidden;}
+.initiaevent-rgt textarea{height: 54px;}
+.ml100{margin-left: 100px;overflow: hidden;}
+.visiterecord-hide{position: absolute;right: -100%;top: 0;background: #fff;width: 100%;height: 100%;overflow: hidden;overflow-y: auto;border: 1px solid #ccc;}
+.visiterecord-hide-tit{background: #eee;line-height: 30px;}
+.visiterecord-hide-tit .close{background: url(../images/pic/op_ico_12.png) no-repeat;width: 20px;height: 20px;}
+.visiterecordpicscroll{width: 150px;height: 100px;margin-left: 30px;}
+.visiterecordpiccon{width:150px;height: 100px;overflow: hidden;}
+.visiterecordpiccon li{float: left;width: 150px;height: 100px;overflow: hidden;position: relative;}
+.visiterecordpiccon li img{display: block;width: 100%;height: 100%;}
+.visiterecordpicbtn{top: 35px;}
+.visiterecordpicprev{left:-28px;}
+.visiterecordpicnext{right: -28px;}
+.resolvedbtn{margin-top: 72px;margin-left: 60px;}
+
+/*集团外部人事*/
+.meansTopScroll,.projectScroll,.project-show,.capitalScroll,.mattersScroll,.frozenHistoryScroll,.recordHistoryScroll{overflow: hidden;overflow-y: auto;}
+/*项目*/
+.project-show,.recordHistory{position: absolute;right:-100%;top:0;background:#fff;width: 100%;height: 100%;z-index: 4;}
+.project-show tbody tr{cursor: pointer;}
+.projectScroll tbody .project-show-active td{background: #eaf4fe;}
+.dailyrgt-menu-second{position: absolute;left: 0;top: 35px;}
+.fz13{font-size: 13px;}
+.font-normal{font-weight: normal;}
+/*人事*/
+.frozenHistory{position: absolute;left: 0;bottom: -100%;display:none;background: #fff;z-index: 5;width: 100%;box-shadow: 0 0 20px -5px rgba(0,0,0,.8);}
+.Evidence{position: absolute;left: 0;top: 0;margin-right: 280px;overflow: hidden;}
+.Evidence-tit{width: 70px;}
+.Evidence-con{margin-left: 70px;overflow: hidden;}
+.noteslist-rgt a:hover,.noteslist-rgt .noteslist-rgt-pactive a{background: #eee;}
+.noteslist-rgt a:hover .noteslist-rgt-ico,.noteslist-rgt .noteslist-rgt-pactive a .noteslist-rgt-ico{display: block;}
+.noteslist-rgt-ico{background: url(../images/pic/wr_page.png) no-repeat;width: 16px;height: 16px;background-size: 16px 16px;}
+.mt7{margin-top: 7px;}
+.recordHistory-close{background: url(../images/pic/op_ico_17.png) no-repeat;width: 20px;height: 20px;background-size: 20px 20px;}
+.xiangmu-span i,.zijin-span i,.renshi-span i{width: 20px;height: 20px;background-size: 20px 20px;background-repeat: no-repeat;}
+.xiangmu-span i{background-image: url(../images/pic/u28239.png);}
+.zijin-span i{background-image: url(../images/pic/u28244.png);}
+.renshi-span i{background-image: url(../images/pic/u28249.png);}

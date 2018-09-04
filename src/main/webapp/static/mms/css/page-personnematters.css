@@ -1,0 +1,123 @@
+.overflowX{overflow-x: auto;}
+.minwidth1300{min-width: 1160px;}
+/*人事列表样式*/
+.borbdoubleline{border-bottom: 2px solid #0066ff;}
+.p-checkbox-c1{width: 14px;height: 14px;overflow:hidden;background-image: url(../images/pic/checboxbg.png);background-repeat:no-repeat;background-position:0 0;cursor: pointer;display: inline-block;}
+.p-checkbox-c1.on{background-position: 0 -14px;}
+.p-checkbox-c1 input{display:block;width:14px;height:14px;overflow:hidden;cursor:pointer;opacity: 0;filter: alpha(opacity=0);-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";}
+/*人事-详情*/
+.m-navgation{border-bottom: 2px solid #0066ff;}
+.m-navgation ul{padding-left: 1px;}
+.m-navgation li{float: left;font-size:12px;width: 84px;height: 30px;line-height:28px;border: 1px solid #d7d7d7;margin-left: -1px;text-align: center;color: #666;border-radius: 1px;cursor: pointer;}
+.m-navgation .active{background: #3394f5;color: #fff;}
+.m-navgation .m-goback{background: url(../images/pic/goback-ico1.png) no-repeat left center;padding-left: 25px;color: #333;line-height: 30px;}
+.m-tabdetail,.m-subtabdetail{overflow: hidden;}
+.hasscroll{overflow: hidden;overflow-y: auto;}
+/*人事-详情-基本信息*/
+.m-information{}
+.m-information-top{border-bottom: 2px dashed #ccc;}
+.m-information-top-l{width: 164px;padding-left: 12px;}
+.m-information-top-l p{width:20px;color:#a1a1a1;text-align: center;line-height: 22px;}
+.m-information-top-l .m-photo{width: 80px;height: 100px;border: 1px solid #ccc;}
+.pt34{padding-top: 34px;}
+.pt18{padding-top: 18px;}
+.m-information-top-r{margin-left: 164px;overflow: hidden;color: #1E1E1E;}
+.m-information-list{line-height: 20px;}
+.mb7{margin-bottom: 7px;}
+.m-information-tit{color:#6699CC;}
+.m-information-tit span{width: 50px;}
+.m-information-middle{color: #1E1E1E;border-bottom: 2px dashed #ccc;}
+.m-information-middle-l{width: 164px;}
+.m-information-middle-r{margin-left: 164px;overflow: hidden;}
+.m-information-bottom{}
+.m-information-bottom .m-data{width: 100px;margin-right: 8px;}
+.m-information-bottom h4{font-size: 14px;color: #333;line-height: 20px;background: url(../images/pic/u1033.png) no-repeat left center;padding-left: 10px;/*margin-top: 28px;*/}
+.m-information-bottom p{color: #999;line-height: 18px;margin-bottom: 10px;padding-left: 10px;}
+.m-data-pic{width: 92px;height: 112px;overflow: hidden;}
+.m-data-pic img{display: block;width: 100%;height: 100%;overflow: hidden;}
+.m-data-pic2{height: 55px;overflow: hidden;}
+.mb2{margin-bottom: 2px;}
+.m-data-pic .uiImgUpload-mark-link{height: 20px;margin-top: -10px;}
+.m-data-pic .enlarge_link{width: 20px;height: 20px;background: url(../images/pic/forlargeico.png) no-repeat;background-size: 20px 20px;}
+/*主要材料列表*/
+.m-materialist-span{color: #aeaeae;}
+.m-material-first{}
+.m-material-first span{width: 145px;height: 38px;line-height: 36px;text-align: center;border-radius:4px;border: 1px solid #ccc;}
+.m-material-first-exist{color: #000;background: #bcbcbc;cursor: pointer;}
+.m-material-first-nonentity{color: #aeaeae;background: #fff;}
+.m-material-first .active{background: #999;}
+.m-material-second{}
+.m-material-second span{width: 95px;height: 38px;line-height: 36px;border-radius: 10px;border: 1px solid #ccc;text-align: center;}
+.m-material-second-exist{color: #333;}
+.m-material-second-nonentity{color: #bcbcbc;}
+.m-material-second .m-material-second-nochosed{border-color: #ccc;color:#bcbcbc;}
+.m-material-second-exist.m-material-second-chosed{background: #d7d7d7;color: #000;}
+
+/*APP信息*/
+.m-subnav{width: 86px;border-right: 1px solid #ccc;}
+.m-subnav a{display:block;text-align:center;color:#666;width: 100%;height: 30px;line-height: 30px;font-size: 14px;margin-bottom: 20px;}
+.m-subnav .on{color: #3394f5;border-right:2px solid #3394f5;}
+.m-subnavconbox{margin-left:86px;overflow: hidden;}
+.lh20{line-height: 20px;}
+.pt7{padding-top: 7px;}
+.cBlack{color: #000;}
+.fontweightnormal{font-weight: normal;}
+.tr-active td{background: #cce0ff;}
+.pointertable tr{cursor: pointer;}
+.bottomtable{overflow: hidden;overflow-y: auto;}
+.loadingdata{background: url(../images/pic/loading.gif) no-repeat center top;padding-top: 100px;background-size: 80px 80px;}
+.h200{max-height: 316px;}
+.dropdarrow{background: url(../images/pic/dropdarrow.png) no-repeat right center;padding-right: 20px;cursor: pointer;}
+/*状态跟踪*/
+.mt4{margin-top: 4px;}
+/*订单管理*/
+.m-ordermanage-left{width:430px;}
+.m-ordermanage-right{margin-left: 460px;overflow: hidden;}
+.m-ordermanage-list{}
+.m-ordermanage-list p{min-width: 220px;margin-bottom: 14px;}
+/*账务管理*/
+.FrozenAlertBox .alertCon p{min-width: 205px;}
+.width60{width: 60px;}
+.ml60{margin-left: 60px;overflow: hidden;}
+.phone{color: #333;}
+/*系统评价*/
+.appraise-span{background: url(../images/pic/hico.png) no-repeat left center;padding-left: 10px;color: #333;}
+.pa15{padding: 15px;}
+.c949494{color: #949494;}
+.appraise-bottom .appraise-span{min-width: 186px;color: #333;}
+.appraise-bottom .appraise-star{width:18px;height: 18px;}
+.appraise-bottom .appraise-star-chosed{background: url(../images/ico/stars_checked2.png) no-repeat;}
+.appraise-bottom .appraise-star-default{background: url(../images/ico/stars_default2.png) no-repeat;}
+.appraise-mark{min-width: 172px;}
+.appraise-item{width: 96px;height: 30px;line-height: 30px;border: 1px solid #ffcccc;color: #bcbcbc;}
+.appraise-item i{width: 14px;height: 15px;overflow: hidden;}
+.appraise-item .powerful{background: url(../images/pic/powerful.png) no-repeat;}
+.appraise-item .inferior{background: url(../images/pic/inferior.png) no-repeat;}
+.mr8{margin-right: 8px;}
+.mt7{margin-top: 7px;}
+.appraise-text{color: #333;width: 76px;}
+/*事件处理*/
+.minwidth270{min-width: 270px;}
+.affair-block{overflow: hidden;overflow-y: auto;color: #333;}
+.affair-title{width: 84px;background: url(../images/pic/hico.png) no-repeat left center;padding-left: 10px;background-size: 6px 6px;}
+.affair-title span{width: 60px;}
+.affair-describe{margin-left: 84px;overflow: hidden;}
+.affair-ul{}
+.affair-ul li{float:left;width: 245px;height: 184px;overflow: hidden;margin:0 20px 20px 10px;position: relative;}
+.affair-ul li img{display: block;width: 245px;height: 184px;overflow: hidden;}
+.affair-ul li .uiImgUpload-mark-link{height: 40px;margin-top: -20px;}
+.affair-ul li .enlarge_link{background: url(../images/pic/forlargeico.png) no-repeat;width: 40px;height: 40px;background-size: 40px 40px;}
+
+
+
+.uiPage-value, #btnJumpPage {
+    margin-top: -3px;
+}
+
+
+
+
+
+.arrow{width: 16px;height: 16px;overflow: hidden;}
+.arrowTop{background: url(../images/pic/arrowTop.png) no-repeat;}
+.arrowDown { background: url(../images/pic/arrowDown.png) no-repeat;}

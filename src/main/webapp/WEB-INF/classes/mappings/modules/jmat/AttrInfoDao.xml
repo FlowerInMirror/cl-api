@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.jmat.dao.AttrInfoDao">
+    
+	<sql id="attrInfoColumns">
+		a.attr_infoid AS "attrInfoid",
+		a.attr_modelid AS "attrModelid",
+		a.attr_stage AS "attrStage",
+		a.user_type AS "userType",
+		a.major AS "major",
+		a.contract_type AS "contractType",
+		a.attr_server_url AS "attrServerUrl",
+		a.attr_file_url AS "attrFileUrl",
+		a.attr_file_type AS "attrFileType",
+		a.isdelete AS "isdelete",
+		a.createtime AS "createtime",
+		a.createuser AS "createuser",
+		a.updatetime AS "updatetime",
+		a.updateuser AS "updateuser",
+		a.uid AS "uid",
+		a.attr_qualified_state AS "attrQualifiedState",
+		a.attr_qualified_remark AS "attrQualifiedRemark",
+		a.attr_old_attrid AS "attrOldAttrid"
+	</sql>
+	
+	<sql id="attrInfoJoins">
+	</sql>
+    
+	<select id="get" resultType="AttrInfo">
+		SELECT 
+			<include refid="attrInfoColumns"/>
+		FROM pm_attr_info a
+		<include refid="attrInfoJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="AttrInfo">
+		SELECT 
+			<include refid="attrInfoColumns"/>
+		FROM pm_attr_info a
+		<include refid="attrInfoJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="AttrInfo">
+		SELECT 
+			<include refid="attrInfoColumns"/>
+		FROM pm_attr_info a
+		<include refid="attrInfoJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO pm_attr_info(
+			attr_infoid,
+			attr_modelid,
+			attr_stage,
+			user_type,
+			major,
+			contract_type,
+			attr_server_url,
+			attr_file_url,
+			attr_file_type,
+			isdelete,
+			createtime,
+			createuser,
+			updatetime,
+			updateuser,
+			uid,
+			attr_qualified_state,
+			attr_qualified_remark,
+			attr_old_attrid
+		) VALUES (
+			#{attrInfoid},
+			#{attrModelid},
+			#{attrStage},
+			#{userType},
+			#{major},
+			#{contractType},
+			#{attrServerUrl},
+			#{attrFileUrl},
+			#{attrFileType},
+			#{isdelete},
+			#{createtime},
+			#{createuser},
+			#{updatetime},
+			#{updateuser},
+			#{uid},
+			#{attrQualifiedState},
+			#{attrQualifiedRemark},
+			#{attrOldAttrid}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE pm_attr_info SET 	
+			attr_infoid = #{attrInfoid},
+			attr_modelid = #{attrModelid},
+			attr_stage = #{attrStage},
+			user_type = #{userType},
+			major = #{major},
+			contract_type = #{contractType},
+			attr_server_url = #{attrServerUrl},
+			attr_file_url = #{attrFileUrl},
+			attr_file_type = #{attrFileType},
+			isdelete = #{isdelete},
+			createtime = #{createtime},
+			createuser = #{createuser},
+			updatetime = #{updatetime},
+			updateuser = #{updateuser},
+			uid = #{uid},
+			attr_qualified_state = #{attrQualifiedState},
+			attr_qualified_remark = #{attrQualifiedRemark},
+			attr_old_attrid = #{attrOldAttrid}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM pm_attr_info
+		WHERE id = #{id}
+	</update>
+
+	<!-- 材料人事三段所需图片及其资料-->
+	<select id="findPmAttrInfo" resultType="PmAttrInfo">
+	;WITH K AS (
+    --新上传的未审核的资料
+    SELECT *
+    FROM dbo.pm_attr_info
+    WHERE uid=#{uid} AND user_type<![CDATA[<=4]]> AND isdelete=2
+    UNION ALL
+    --人事资料
+    SELECT *
+    FROM dbo.pm_attr_info
+    WHERE uid=#{uid} AND user_type<![CDATA[<=4]]> AND isdelete=0
+    AND NOT EXISTS (SELECT 1 FROM pm_attr_info T1 WHERE T1.uid=#{uid} AND T1.user_type<![CDATA[<=4]]> AND T1.isdelete=2
+    AND pm_attr_info.attr_modelid=T1.attr_old_attrid )
+    )
+    SELECT K.attr_infoid as attrInfoid,K.attr_modelid as attrModelid,K.attr_stage as attrStage,K.user_type as userType,
+    major,K.contract_type as contractType,K.attr_server_url as attrServerUrl,attr_file_url as attrFileUrl,K.attr_file_type as attrFileType
+    ,K.isdelete,K.createtime,K.createuser,K.updatetime,K.updateuser,K.uid,K.attr_qualified_state as attrQualifiedState,K.attr_qualified_remark as attrQualifiedRemark
+    ,K.attr_old_attrid as attrOldAttrid
+    ,pm_attr_typename as pmAttrTypeName,attr_name as attrName,remark
+    FROM K
+    LEFT JOIN pm_attr_model ON attr_modelid=pm_attr_mode_id
+    ORDER BY attr_modelid
+	</select>
+
+
+</mapper>

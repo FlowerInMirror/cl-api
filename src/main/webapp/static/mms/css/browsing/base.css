@@ -1,0 +1,60 @@
+@charset "utf-8";
+/* CSS Document */
+body,div,ul,ol,li,dl,dd,h1,h2,h3,h4,h5,h6,p,form,a,input{ margin:0;padding: 0;box-sizing: border-box}
+ul,ol{ padding:0; list-style:none;}
+img{ border:none;}
+.tx_center{ text-align:center;}
+.tx_right {text-align: right;}
+/*清除浮动*/
+.clearfix {zoom:1;}
+.clearfix:after {content:""; display:block; height:0; visibility:visible; clear:both;}
+.clear{
+    clear:both;
+}
+/*行高*/
+.lh20{ line-height:20px; height: 20px;}
+.lh24{ line-height:24px; height: 24px;}
+.lh26{ line-height:26px; height: 26px;}
+.lh28{ line-height:28px; height: 28px;}
+.lh30{ line-height:30px; height: 30px;}
+.lh32{ line-height:32px; height: 32px;}
+.lh34{ line-height:34px; height: 34px;}
+.lh36{ line-height:36px; height: 36px;}
+.fz12{font-size: 12px;}
+.fz13{font-size: 13px;}
+.fz14{font-size: 14px;}
+.fz16{font-size: 16px;}
+.fz18{
+    font-size: 18px;
+}
+/*A标签样式*/
+a{ text-decoration:none;}
+a:focus{ outline:none;}
+.hover_line:hover{ text-decoration:underline;}
+.under_line{ text-decoration:underline;}
+/* 设置浮动，减少浮动带来的 bug */
+.fl ,.fr{display:inline;}
+.fl{ float:left;}
+.fr{ float:right;}
+.relative{position: relative;}
+::selection {background: #009688;color: #fff;}
+body,textarea,input,select{font: 12px "microsoft yahei";line-height:20px;color: #666; background: #fff;height: 100%;}
+textarea{
+    resize: none;
+    padding: 3px 6px;
+}
+a{line-height:20px;color: #666;}
+/*背景色*/
+.col-md-12 {width: 100%;}
+.col-md-11 {width: 91.66666667%;}
+.col-md-10 {width: 83.33333333%;}
+.col-md-9 {width: 75%;}
+.col-md-8 {width: 66.66666667%;}
+.col-md-7 {width: 58.33333333%;}
+.col-md-6 {width: 50%;}
+.col-md-5 {width: 41.66666667%;}
+.col-md-4 {width: 33.33333333%;}
+.col-md-3 {width: 25%;}
+.col-md-2 {width: 16.66666667%;}
+.col-md-1 {width: 8.33333333%;}
+.hide {display:none;}

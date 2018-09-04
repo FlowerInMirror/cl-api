@@ -1,0 +1,19 @@
+﻿.labelSpan2 {
+    display: inline-block;
+    width: 60px;
+    height: 24px;
+    background: #3c9;
+    color: #fff;
+    text-align: center;
+    line-height: 24px;
+    margin-right: 5px;
+    border-radius: 3px;
+    margin-bottom: 5px;
+    cursor: pointer;
+}
+.ver_t {
+    vertical-align: top;
+}
+.uiTable-borderNone {
+    border: none;
+}

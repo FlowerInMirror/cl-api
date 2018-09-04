@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.jmat.dao.MaterialToSuppliersDao">
+    
+	<sql id="materialToSuppliersColumns">
+		a.ms_id AS "msId",
+		a.ms_matid AS "msMatid",
+		a.ms_userid AS "msUserid",
+		a.ms_price AS "msPrice",
+		a.ms_jincheng AS "msJincheng",
+		a.ms_createtime AS "msCreatetime",
+		a.ms_updatetime AS "msUpdatetime"
+	</sql>
+	
+	<sql id="materialToSuppliersJoins">
+	</sql>
+    
+	<select id="get" resultType="MaterialToSuppliers">
+		SELECT 
+			<include refid="materialToSuppliersColumns"/>
+		FROM v_materialtosuppliers a
+		<include refid="materialToSuppliersJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="MaterialToSuppliers">
+		SELECT 
+			<include refid="materialToSuppliersColumns"/>
+		FROM v_materialtosuppliers a
+		<include refid="materialToSuppliersJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="MaterialToSuppliers">
+		SELECT 
+			<include refid="materialToSuppliersColumns"/>
+		FROM v_materialtosuppliers a
+		<include refid="materialToSuppliersJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO v_materialtosuppliers(
+			ms_id,
+			ms_matid,
+			ms_userid,
+			ms_price,
+			ms_jincheng,
+			ms_createtime,
+			ms_updatetime
+		) VALUES (
+			#{msId},
+			#{msMatid},
+			#{msUserid},
+			#{msPrice},
+			#{msJincheng},
+			#{msCreatetime},
+			#{msUpdatetime}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE v_materialtosuppliers SET 	
+			ms_id = #{msId},
+			ms_matid = #{msMatid},
+			ms_userid = #{msUserid},
+			ms_price = #{msPrice},
+			ms_jincheng = #{msJincheng},
+			ms_createtime = #{msCreatetime},
+			ms_updatetime = #{msUpdatetime}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM v_materialtosuppliers
+		WHERE id = #{id}
+	</update>
+
+	<!--获取材料商（我的材料） -->
+	<select id="suppliersToMyMaterialById" resultType="Materials">
+		--材料的配送量
+		SELECT pod_MatID,SUM(pod_AlreadyCount) pod_AlreadyCount
+		INTO #TempTab
+		FROM V_ProInfoOrder
+		LEFT JOIN V_ProInfoOrderDetail ON po_ID=pod_poID
+		WHERE po_UserID=#{uid} AND po_jincheng=0  AND pod_jincheng=0 AND pod_AlreadyCount>=0.01
+		GROUP BY pod_MatID
+
+		SELECT m_ID AS matID,m_TSID AS brandID,m_Level AS matLevel
+		,m_Code AS matCode,m_BrandName AS brandName,m_BrandType AS brandType
+		,m_TreeOne treeOneID,m_TreeTwo treeTwoID,m_TreeThree treeThreeID,m_TreeFour treeFourID
+		,T1.tree_Name treeOneName,T2.tree_Name treeTwoName,MatName as matName,MatSpec as matSpec,UnitName as unitName
+		,T1.tree_createTime createTime
+		,m_CostPrice+m_InstallPrice costPrice
+		,ms_Price AS matPrice
+		--已配送量
+		,pod_AlreadyCount AS alreadyCount
+		--固定材料
+		,1 AS matType
+		FROM View_Two_Materials
+		LEFT JOIN V_Tree T1 ON T1.tree_ID=m_TreeOne
+		LEFT JOIN V_Tree T2 ON T2.tree_ID=m_TreeTwo
+		LEFT JOIN V_MaterialToSuppliers ON m_ID=ms_MatID
+		LEFT JOIN #TempTab ON m_ID=pod_MatID
+		WHERE ms_UserID=#{uid} AND m_jincheng=0 AND ms_jincheng=0 AND ms_Price>=0.01
+		<if test="treeOneID!=null and treeOneID!=''">AND m_TreeOne = #{treeOneID}</if>
+		<if test="treeTwoID!=null and treeTwoID!=''">AND m_TreeTwo = #{treeTwoID}</if>
+		DROP TABLE #TempTab
+	</select>
+	<!--获取材料商（我的材料-临时配送产生的材料） -->
+	<select id="suppliersToMyMaterialToTempById" resultType="MaterialItemsToTemp">
+		WITH K AS (
+		SELECT ROW_NUMBER() OVER(PARTITION BY pod_MatID ORDER BY pod_createTime DESC ) RowNum
+		,pod_MatID MatID,pod_MatCode AS MatCode,pod_MatName AS MatName,pod_MatSpec AS MatSpec
+		,pod_MatBrand AS MatBrand,pod_MatBrandType AS MatBrandType,pod_UnitName AS UnitName
+		,pod_MatPrice AS MatPrice
+		,pod_Type AS MatType
+		FROM V_ProInfoOrder
+		LEFT JOIN V_ProInfoOrderDetail ON po_ID=pod_poID
+		WHERE po_UserID=#{uid} AND po_OrderType=2 AND po_jincheng=0 AND pod_jincheng=0 AND pod_AlreadyCount>=0.01
+		AND NOT EXISTS (SELECT 1 FROM V_MaterialToSuppliers WHERE pod_MatID=ms_MatID AND ms_UserID=#{uid} AND ms_jincheng=0)
+		),A AS(
+		SELECT pod_MatID
+		,SUM(pod_AlreadyCount*pod_MatPrice) AS TotalMoney--小计
+		,SUM(pod_AlreadyCount) AS AlreadyCount
+		FROM V_ProInfoOrder
+		LEFT JOIN V_ProInfoOrderDetail ON po_ID=pod_poID
+		WHERE po_UserID=#{uid} AND po_OrderType=2 AND po_jincheng=0 AND pod_jincheng=0 AND pod_AlreadyCount>=0.01
+		AND NOT EXISTS (SELECT 1 FROM V_MaterialToSuppliers WHERE pod_MatID=ms_MatID AND ms_UserID=#{uid} AND ms_jincheng=0)
+		GROUP BY pod_MatID
+		)
+		SELECT MatID, MatCode, MatName, MatSpec
+		, MatBrand, MatBrandType, UnitName
+		, MatPrice, AlreadyCount, TotalMoney
+		,m_Level AS MatLevel,m_CostPrice+m_InstallPrice CostPrice
+		,MatType
+		FROM K
+		LEFT JOIN A ON pod_MatID=MatID AND RowNum=1
+		LEFT JOIN V_Material ON m_ID=MatID
+	</select>
+	<!--材料商：获取主营材料分类 -->
+	<select id="findMaterialTreeClassById" resultType="TreeTwo">
+		WITH K AS (
+		--获取二级材料下：材料种类
+		SELECT ms_UserID,m_TreeTwo,COUNT(1) MatCount
+		FROM V_MaterialToSuppliers
+		LEFT JOIN V_Material ON m_ID=ms_MatID
+		WHERE ms_UserID=#{uid} AND ms_jincheng=0 AND ms_Price>=0.01
+		GROUP BY ms_UserID,m_TreeTwo
+		)
+		SELECT T1.tree_Name TreeOneName,T2.tree_Name TreeTwoName
+		,T1.tree_ID TreeOneID,T2.tree_ID TreeTwoID
+		,(CASE WHEN ts_UserId>=0 THEN 1 ELSE 0 END) PerfectState
+		,ts_createTime AS CreateTime
+		,MatCount
+		FROM V_Tree T2
+		LEFT JOIN V_Tree T1 ON T1.tree_ID=T2.tree_ParentID
+		LEFT JOIN V_TreeToSuppliers ON T2.tree_ID=ts_TreeID AND ts_UserID=#{uid} AND ts_jincheng=0
+		LEFT JOIN K ON T2.tree_ID=m_TreeTwo
+		WHERE T2.tree_Level=2 AND T2.tree_jincheng=0
+		ORDER BY T1.tree_createTime,T2.tree_createTime
+	</select>
+</mapper>

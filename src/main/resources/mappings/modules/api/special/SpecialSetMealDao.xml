@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.api.special.dao.SpecialSetMealDao">
+    
+	<sql id="specialSetMealColumns">
+		a.ssm_id AS "ssmID",
+		a.ssm_spid AS "ssmSPID",
+		a.ssm_mealname AS "ssmMealName",
+		a.ssm_mealdepict AS "ssmMealDepict",
+		a.ssm_mealtype AS "ssmMealType",
+		a.ssm_mealprice AS "ssmMealPrice",
+		a.ssm_chargeunit AS "ssmChargeUnit",
+		a.ssm_mealphotourl AS "ssmMealPhotoURL",
+		a.ssm_pushtype AS "ssmPushType",
+		a.ssm_status AS "ssmStatus",
+		a.ssm_createtime AS "ssmCreateTime",
+		a.ssm_updatetime AS "ssmUpdateTtime"
+	</sql>
+	
+	<!--<sql id="specialSetMealJoins">-->
+	<!--</sql>-->
+    <!---->
+	<!--<select id="get" resultType="SpecialSetMeal">-->
+		<!--SELECT-->
+			<!--<include refid="specialSetMealColumns"/>-->
+		<!--FROM s_specialsetmeal a-->
+		<!--<include refid="specialSetMealJoins"/>-->
+		<!--WHERE a.id = #{id}-->
+	<!--</select>-->
+
+	<!--<select id="findList" resultType="SpecialSetMeal">-->
+		<!--SELECT-->
+			<!--<include refid="specialSetMealColumns"/>-->
+		<!--FROM s_specialsetmeal a-->
+		<!--<include refid="specialSetMealJoins"/>-->
+		<!--<where>-->
+
+		<!--</where>-->
+		<!--<choose>-->
+			<!--<when test="page !=null and page.orderBy != null and page.orderBy != ''">-->
+				<!--ORDER BY ${page.orderBy}-->
+			<!--</when>-->
+			<!--<otherwise>-->
+			<!--</otherwise>-->
+		<!--</choose>-->
+	<!--</select>-->
+
+	<!--<select id="findAllList" resultType="SpecialSetMeal">-->
+		<!--SELECT-->
+			<!--<include refid="specialSetMealColumns"/>-->
+		<!--FROM s_specialsetmeal a-->
+		<!--<include refid="specialSetMealJoins"/>-->
+		<!--<where>-->
+
+		<!--</where>-->
+		<!--<choose>-->
+			<!--<when test="page !=null and page.orderBy != null and page.orderBy != ''">-->
+				<!--ORDER BY ${page.orderBy}-->
+			<!--</when>-->
+			<!--<otherwise>-->
+			<!--</otherwise>-->
+		<!--</choose>-->
+	<!--</select>-->
+
+	<!--<insert id="insert">-->
+		<!--INSERT INTO s_specialsetmeal(-->
+			<!--ssm_id,-->
+			<!--ssm_spid,-->
+			<!--ssm_mealname,-->
+			<!--ssm_mealdepict,-->
+			<!--ssm_mealtype,-->
+			<!--ssm_mealprice,-->
+			<!--ssm_chargeunit,-->
+			<!--ssm_mealphotourl,-->
+			<!--ssm_pushtype,-->
+			<!--ssm_status,-->
+			<!--ssm_createtime,-->
+			<!--ssm_updatetime-->
+		<!--) VALUES (-->
+			<!--#{ssmID},-->
+			<!--#{ssmSPID},-->
+			<!--#{ssmMealName},-->
+			<!--#{ssmMealDepict},-->
+			<!--#{ssmMealType},-->
+			<!--#{ssmMealPrice},-->
+			<!--#{ssmChargeUnit},-->
+			<!--#{ssmMealPhotoURL},-->
+			<!--#{ssmPushType},-->
+			<!--#{ssmStatus},-->
+			<!--#{ssmCreateTime},-->
+			<!--#{ssmUpdateTtime}-->
+		<!--)-->
+	<!--</insert>-->
+
+	<!--<update id="update">-->
+		<!--UPDATE s_specialsetmeal SET-->
+			<!--ssm_id = #{ssmID},-->
+			<!--ssm_spid = #{ssmSPID},-->
+			<!--ssm_mealname = #{ssmMealName},-->
+			<!--ssm_mealdepict = #{ssmMealDepict},-->
+			<!--ssm_mealtype = #{ssmMealType},-->
+			<!--ssm_mealprice = #{ssmMealPrice},-->
+			<!--ssm_chargeunit = #{ssmChargeUnit},-->
+			<!--ssm_mealphotourl = #{ssmMealPhotoURL},-->
+			<!--ssm_pushtype = #{ssmPushType},-->
+			<!--ssm_status = #{ssmStatus},-->
+			<!--ssm_createtime = #{ssmCreateTime},-->
+			<!--ssm_updatetime = #{ssmUpdateTtime}-->
+		<!--WHERE id = #{id}-->
+	<!--</update>-->
+
+	<!--<update id="delete">-->
+		<!--DELETE FROM s_specialsetmeal-->
+		<!--WHERE id = #{id}-->
+	<!--</update>-->
+
+    <!--  专项: 添加专项套餐集(ID/专项产品ID/套餐名称/套餐价格/套餐图片地址/是否主推)
+    int addSpecialSetMealByEntitys(List<SpecialSetMeal> ssms);-->
+    <insert id="addSpecialSetMealByEntitys">
+        INSERT INTO s_specialsetmeal
+          (ssm_id,ssm_spid,ssm_mealname,ssm_mealprice,ssm_mealphotourl,ssm_pushtype)
+        VALUES
+        <foreach collection="list" item="item" separator=",">
+            (newid(), #{item.ssmSPID}, #{item.ssmMealName}, #{item.ssmMealPrice}, #{item.ssmMealPhotoURL}, #{item.ssmPushType})
+        </foreach>
+    </insert>
+
+    <!--  专项: 添加专项套餐(ID/专项产品ID/套餐名称/套餐价格/套餐图片地址/是否主推)
+    int addSpecialSetMealOneByEntity(SpecialSetMealVo ssm);-->
+    <insert id="addSpecialSetMealOneByEntity">
+        INSERT INTO s_specialsetmeal
+        (ssm_id,ssm_spid,ssm_mealname,ssm_mealprice,ssm_mealphotourl,ssm_pushtype)
+        VALUES
+        (newid(), #{ssmSPID}, #{ssmMealName}, #{ssmMealPrice}, #{ssmMealPhotoURL}, #{ssmPushType})
+    </insert>
+
+    <!-- 专项茶品套餐All 进程：0正常、1删除、2下架  （默认0）
+    List<SpecialSetMeal> findSSMAllByEntity(SpecialSetMeal specialSetMeal);-->
+    <select id="findSSMAllByEntity" parameterType="SpecialSetMeal" resultType="SpecialSetMeal">
+        SELECT
+            <include refid="specialSetMealColumns"/>
+        FROM s_specialsetmeal a
+        WHERE a.ssm_status IN (0,2)
+        <if test="ssmSPID != null">
+            AND a.ssm_spid = #{ssmSPID}
+        </if>
+        ORDER BY a.ssm_createtime
+    </select>
+
+    <!--  专项: 删除套餐
+    int deleteSetMealByEntityVo(SpecialSetMeal specialSetMeal);-->
+    <update id="deleteSetMealByEntityVo" parameterType="SpecialSetMealVo">
+        UPDATE s_specialsetmeal SET
+            ssm_status = 1,
+            ssm_updatetime = GETDATE()
+        WHERE ssm_id = #{ssmID}
+    </update>
+
+    <!-- 专项: 更新套餐(更新字段/下架功能)
+    int updateSetMealByEntityVo(SpecialSetMealVo specialSetMealVo);-->
+    <update id="updateSetMealByEntityVo" parameterType="SpecialSetMealVo">
+        UPDATE s_specialsetmeal
+        <set>
+            ssm_updatetime = GETDATE(),
+            <if test="ssmMealName != null">
+                ssm_mealname = #{ssmMealName},
+            </if>
+            <if test="ssmMealDepict != null">
+                ssm_mealdepict = #{ssmMealDepict},
+            </if>
+            <if test="ssmMealType != null">
+                ssm_mealtype = #{ssmMealType},
+            </if>
+            <if test="ssmMealPrice != null">
+                ssm_mealprice = #{ssmMealPrice},
+            </if>
+            <if test="ssmChargeUnit != null">
+                ssm_chargeunit = #{ssmChargeUnit},
+            </if>
+            <if test="ssmMealPhotoURL != null">
+                ssm_mealphotourl = #{ssmMealPhotoURL},
+            </if>
+            <if test="ssmPushType != null">
+                ssm_pushtype = #{ssmPushType},
+            </if>
+        </set>
+        WHERE ssm_id = #{ssmID}
+    </update>
+
+</mapper>

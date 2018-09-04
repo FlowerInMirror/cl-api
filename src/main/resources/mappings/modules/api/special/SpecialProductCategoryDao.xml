@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.api.special.dao.SpecialProductCategoryDao">
+
+    <sql id="specialProductCategoryColumns">
+		a.spc_id AS "spcId",
+		a.spc_spid AS "spcSpid",
+		a.spc_mctid AS "spcMctid",
+		a.spc_MCTName AS "spcMctname"
+		a.spc_itemid AS "spcItemid",
+		a.spc_type AS "spcType",
+		a.spc_status AS "spcStatus",
+		a.spc_createtime AS "spcCreatetime",
+		a.spc_updatetime AS "spcUpdatetime"
+	</sql>
+
+    <sql id="specialProductCategoryJoins">
+    </sql>
+
+    <select id="get" resultType="SpecialProductCategory">
+        SELECT
+        <include refid="specialProductCategoryColumns"/>
+        FROM s_specialproductcategory a
+        <include refid="specialProductCategoryJoins"/>
+        WHERE a.id = #{id}
+    </select>
+
+    <select id="findList" resultType="SpecialProductCategory">
+        SELECT
+        <include refid="specialProductCategoryColumns"/>
+        FROM s_specialproductcategory a
+        <include refid="specialProductCategoryJoins"/>
+        <where>
+
+        </where>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+            </otherwise>
+        </choose>
+    </select>
+
+    <select id="findAllList" resultType="SpecialProductCategory">
+        SELECT
+        <include refid="specialProductCategoryColumns"/>
+        FROM s_specialproductcategory a
+        <include refid="specialProductCategoryJoins"/>
+        <where>
+
+        </where>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+            </otherwise>
+        </choose>
+    </select>
+
+    <insert id="insert">
+		INSERT INTO s_specialproductcategory(
+			spc_id,
+			spc_spid,
+			spc_mctid,
+			spc_MCTIDName,
+			spc_itemid,
+			spc_type,
+			spc_status,
+			spc_createtime,
+			spc_updatetime
+		) VALUES (
+			#{spcId},
+			#{spcSpid},
+			#{spcMctid},
+			#{spcMctname},
+			#{spcItemid},
+			#{spcType},
+			#{spcStatus},
+			#{spcCreatetime},
+			#{spcUpdatetime}
+		)
+	</insert>
+
+    <update id="update">
+		UPDATE s_specialproductcategory SET 	
+			spc_id = #{spcId},
+			spc_spid = #{spcSpid},
+			spc_mctid = #{spcMctid},
+			spc_itemid = #{spcItemid},
+			spc_type = #{spcType},
+			spc_status = #{spcStatus},
+			spc_createtime = #{spcCreatetime},
+			spc_updatetime = #{spcUpdatetime}
+		WHERE id = #{id}
+	</update>
+
+    <update id="delete">
+		DELETE FROM s_specialproductcategory
+		WHERE id = #{id}
+	</update>
+
+    <!--// "=========================C U D=============================="-->
+
+    <!--// 添加-类别集(产品ID/类别ID/类别名称/类别项ID) @author ljc @createTime 2018-8-26 17:43:00-->
+    <!--int addSpecialProductCategorysByEntitys(List<SpecialProductCategory> specialProductCategorys);-->
+    <insert id="addSpecialProductCategorysByEntitys">
+        INSERT INTO s_specialproductcategory
+          (spc_spid,spc_mctid,spc_MCTName,spc_itemid,spc_type)
+        VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+          (#{item.spcSpid},#{item.spcMctid},#{item.spcMctname},#{item.spcItemid},#{item.spcType})
+        </foreach>
+    </insert>
+
+
+    <!--// "=========================FIND=============================="-->
+
+    <!--// 浏览页面:类别集 @author ljc @createTime 2018-8-26 21:40:28-->
+    <!--List<SpecialProductCategoryVo> findSpecialProductCategoryVosByProID(String proID);-->
+    <select id="findSpecialProductCategoryVosByProID" resultType="SpecialProductCategoryVo">
+        SELECT
+            DISTINCT spc_MCTID AS spcMctid,
+            spc_MCTName AS spcMctname
+        FROM
+            S_SpecialProductCategory
+        WHERE
+            spc_Status = 0
+        AND spc_SPID = #{proID}
+    </select>
+
+</mapper>

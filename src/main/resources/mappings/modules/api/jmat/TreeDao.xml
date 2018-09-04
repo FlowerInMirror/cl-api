@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.api.jmat.dao.TreeDao">
+    
+	<sql id="treeColumns">
+		a.tree_id AS "treeId",
+		a.tree_code AS "treeCode",
+		a.tree_name AS "treeName",
+		a.tree_parentid AS "treeParentid",
+		a.tree_level AS "treeLevel",
+		a.tree_perfectstate AS "treePerfectstate",
+		a.tree_jincheng AS "treeJincheng",
+		a.tree_createtime AS "treeCreatetime",
+		a.tree_updatetime AS "treeUpdatetime",
+		a.tree_order AS "treeOrder",
+		a.tree_PerfectState AS "treeParfectState"
+	</sql>
+	
+	<sql id="treeJoins">
+	</sql>
+    
+	<select id="get" resultType="Tree">
+		SELECT 
+			<include refid="treeColumns"/>
+		FROM v_tree a
+		<include refid="treeJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="Tree">
+		SELECT 
+			<include refid="treeColumns"/>
+		FROM v_tree a
+		<include refid="treeJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="Tree">
+		SELECT 
+			<include refid="treeColumns"/>
+		FROM v_tree a
+		<include refid="treeJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO v_tree(
+			tree_id,
+			tree_code,
+			tree_name,
+			tree_parentid,
+			tree_level,
+			tree_perfectstate,
+			tree_jincheng,
+			tree_createtime,
+			tree_updatetime,
+			tree_order
+		) VALUES (
+			#{treeId},
+			#{treeCode},
+			#{treeName},
+			#{treeParentid},
+			#{treeLevel},
+			#{treePerfectstate},
+			#{treeJincheng},
+			#{treeCreatetime},
+			#{treeUpdatetime},
+			#{treeOrder}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE v_tree SET 	
+			tree_id = #{treeId},
+			tree_code = #{treeCode},
+			tree_name = #{treeName},
+			tree_parentid = #{treeParentid},
+			tree_level = #{treeLevel},
+			tree_perfectstate = #{treePerfectstate},
+			tree_jincheng = #{treeJincheng},
+			tree_createtime = #{treeCreatetime},
+			tree_updatetime = #{treeUpdatetime},
+			tree_order = #{treeOrder}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM v_tree
+		WHERE id = #{id}
+	</update>
+
+	<!--通过城市ID查找子库地区一段
+	public List<SubLibraryCityOneSection> findCityOneSectionByMap(Map<String, Object> map); -->
+	<select id="findCityOneSectionByMap"  resultType="SubLibraryCityOneSection">
+		SELECT
+			T1.tree_Name treeOneName,
+			T2.tree_Name treeTwoName,
+			T3.tree_Name matName,
+			T4.tree_Name matSpec,
+			T1.tree_ID treeOneID,
+			T2.tree_ID treeTwoID,
+			T3.tree_ID treeThreeID,
+			T4.tree_ID treeFourID,
+			T4.tree_Order treeOrder
+		FROM
+			V_Tree T4
+		LEFT JOIN V_Tree T3 ON T4.tree_ParentID = T3.tree_ID
+		LEFT JOIN V_Tree T2 ON T3.tree_ParentID = T2.tree_ID
+		LEFT JOIN V_Tree T1 ON T2.tree_ParentID = T1.tree_ID
+		LEFT JOIN V_MaterialPerfectState ON mps_TreeFour = T4.tree_ID
+		<where>
+		<if test="null != treeFourID">
+			T4.tree_ID = #{treeFourID}
+		</if>
+		AND	T4.tree_Level = 4
+		AND T4.tree_jincheng = 0
+		AND T4.tree_PerfectState >= 1
+		<if test="null != city">
+			AND mps_CityID = #{city}
+		</if>
+		AND mps_jincheng = 0
+		</where>
+		ORDER BY T4.tree_Order
+	</select>
+
+	<!--通过参数Map,查找文本框内相关内容 	 
+	public List<CityNewlyIncreasedCorrelationEcho> findRelevantContentByParaMap(Map<String, Object> paraMap); -->
+	<select id="findRelevantContentByParaMap"   resultType="CityNewlyIncreasedCorrelationEcho"> 
+		SELECT
+			  a.tree_ID AS treeID,
+			  a.tree_Name AS treeName,
+			  a.tree_Level AS treeLevel,
+			  a.tree_Code AS treeCode,
+			  a.tree_ParentID AS treeParentID
+		FROM  
+				V_Tree a
+		WHERE a.tree_Name LIKE '%${treeName}%'
+		AND   a.tree_Level = #{treeLevel}
+		<if test="null != treeParentID">
+		AND   a.tree_ParentID = #{treeParentID}
+		</if>
+		AND   a.tree_jincheng = 0
+		ORDER BY a.tree_createTime DESC
+    </select>
+	    
+	<!-- 通过 科目数父级ID,查找降序第一条科目数编码.     
+	public String findDESCTop1TreeCodeByTreeParentID(String treeParentID); -->
+	<select id="findDESCTop1TreeCodeByTreeParentID"  parameterType="String"  resultType="String">
+		SELECT TOP 1 a.tree_Code AS "treeCode"
+		FROM         V_Tree a
+		WHERE        a.tree_ParentID = #{treeParentID}
+		ORDER BY     a.tree_createTime DESC
+	</select>
+		
+	<!--保存 地区新增标准 科目树 	
+	public void saveCityNewlyIncreased(TreeVo treeOne); -->
+	<insert id="saveCityNewlyIncreased" parameterType="TreeVo" useGeneratedKeys="true" keyProperty="treeId" keyColumn="tree_id" >
+		INSERT INTO v_tree(
+			tree_id, --ID
+			tree_code, --编号
+			tree_name, --名称
+			tree_parentid, --父级ID
+			tree_level,--级别
+			tree_perfectstate --基础信息(针对规格)
+		) VALUES (
+			#{treeId},
+			#{treeCode},
+			#{treeName},
+			#{treeParentid},
+			#{treeLevel},
+			#{treePerfectstate}
+		)
+	</insert>
+		
+	<!--校验科目树是否存在,通过科目树名称与科目树级别 	
+	public Integer verificationTreeExistByTreeNameAndTreeLevel(@Param("treeName")String treeName,@Param("treeLevel")Integer treeLevel); -->
+	<select id="verificationTreeExistByTreeNameAndTreeLevelAndParentID" resultType="Integer" >
+		SELECT COUNT (1)
+		FROM V_Tree a
+		WHERE a.tree_Name = #{treeName}
+		AND a.tree_Level = #{treeLevel}
+		<if test="null != parentID">
+		    AND a.tree_ParentID = #{parentID}
+		</if>
+	</select>
+	
+	<!-- 获取全部科目树名称，通过四级科目ID， 	
+	public SubLibraryCityOneSection findAllTreeNnameByTreeFourID(String treeFourID); -->
+	<select id="findAllTreeNnameByTreeFourID" parameterType="String"  resultType="SubLibraryCityOneSection" >
+		;WITH t AS (
+   		 SELECT
+			T1.tree_Name treeOneName,
+			T2.tree_Name treeTwoName,
+			T3.tree_Name matName,
+			T4.tree_Name matSpec,
+			T1.tree_ID treeOneID,
+			T2.tree_ID treeTwoID,
+			T3.tree_ID treeThreeID,
+			T4.tree_ID treeFourID,
+			T4.tree_Order treeOrder
+		FROM
+			V_Tree T4
+		LEFT JOIN V_Tree T3 ON T4.tree_ParentID = T3.tree_ID
+		LEFT JOIN V_Tree T2 ON T3.tree_ParentID = T2.tree_ID
+		LEFT JOIN V_Tree T1 ON T2.tree_ParentID = T1.tree_ID
+		WHERE T4.tree_Level = 4)
+		SELECT * FROM t WHERE t.treeFourID = #{treeFourID};
+	</select>
+
+    <!--获取科目树名称集,通过科目树父级ID
+    public List<Map<String,String>> findTreeNamesByParentID(@Param("treeParentID")String treeParentID);-->
+    <select id="findTreeNamesByParentID" parameterType="String"  resultType="java.util.LinkedHashMap" >
+        SELECT  a.tree_Name AS treeName, a.tree_ID AS treeID
+        FROM   V_Tree a
+        WHERE    a.tree_jincheng = 0
+        <if test="null != treeParentID">
+            AND  a.tree_ParentID = #{treeParentID}
+        </if>
+        <if test="null == treeParentID">
+            AND  a.tree_Level = 1
+        </if>
+        ORDER BY a.tree_Code
+    </select>
+
+    <!--  集团联盟:获取全部二级分类
+    List<Map<String,Object>> getAllTreeTwoData();-->
+    <select id="getAllTreeTwoData" parameterType="String"  resultType="java.util.LinkedHashMap" >
+        SELECT
+            tree_ID AS treeTwoID,
+            tree_Name AS treeName,
+            tree_ParentID AS treeParentID,
+            tree_Code AS treeCode
+        FROM
+            V_Tree a
+        WHERE a.tree_jincheng = 0
+        AND a.tree_Level = 2
+        ORDER BY tree_Code
+    </select>
+
+</mapper>

@@ -1,0 +1,154 @@
+@charset "UTF-8";
+/*头部*/
+.mallHead {
+  width: 100%;
+  background-color: #efefef;height:26px;line-height:26px; }
+.icon_bg{background-image:url(../../images/browsing/basicIcon.png);background-repeat:no-repeat;}
+.mallHead .headConL {
+    position: relative; }
+  .mallHead .headConL .icon_bg_1 {
+    width: 9px;
+    height: 13px;
+    background-position: 0 0;
+    overflow:hidden;
+  }
+    .mallHead .headConL .selCity {
+      display: inline-block;
+      height: 26px;
+      line-height: 26px;
+      text-align: center; }
+      .mallHead .headConL .selCity a {
+        color: #888; }
+      .mallHead .headConL .selCity .tran_top {
+        width: 0;
+        height: 0;
+        margin-top: 11px;
+        border-left: 5px solid transparent;
+        border-right: 5px solid transparent;
+        border-top: 6px solid #b8b8b8;
+        -webkit-transition: all .2s;
+        -o-transition: all .2s;
+        -moz-transition: all .2s;
+        margin-left:8px;
+
+      }
+  .mallHead .headConL:hover .tran_top {
+    transform: rotate(180deg);
+    -ms-transform: rotate(180deg);
+    /* IE 9 */
+    -moz-transform: rotate(180deg);
+    /* Firefox */
+    -webkit-transform: rotate(180deg);
+    /* Safari 和 Chrome */
+    -o-transform: rotate(180deg); }
+  .mallHead .selBox_city {
+    display: none;
+    position: absolute;
+    left: 0;
+    top: 30px;
+    width: 80px;
+    height: 375px;
+    overflow-y: auto;
+    background-color: #fff;
+    border-top: 0;
+    box-shadow: 0 2px 4px 1px #ddd;
+    z-index: 11; }
+    .mallHead .selBox_city li {
+      width: 100%;
+      height: 26px;
+      line-height: 26px;
+      text-align: center; }
+  .mallHead .selBox_city::-webkit-scrollbar {
+    width: 0; }
+  .mallHead .headConL .headLine{color:#ccc;padding:0 22px;}
+  .mallHead .headConL .gotoindex{color:#888;}
+.headLogin {color: #ce2222;line-height: 26px;}
+  .headLogin em{background-position:-11px 0;width:28px;height:12px;overflow:hidden;margin-right:4px;}
+  /*.mallHead .headConR .icon_bg_2 {
+    width: 12px;
+    height: 14px;
+    background-position: -11px 0; }
+  .mallHead .headConR .icon_bg_3 {
+    width: 16px;
+    height: 14px;
+    background-position: -23px 0; }
+  .mallHead .headConR .myOffice:hover .icon_bg_3 {
+    background-position: -39px 0; }
+  .mallHead .headConR .myOffice:hover span {
+    color: #f93; }*/
+
+/*搜索框*/
+.mallSeach{padding:18px 0 20px;}
+.mallSeachLeft{width:394px;line-height:32px;}
+.mallSeachLeft .logo{width:136px;height:32px;margin-right:18px;}
+.mallSeachLeft .logo img{display:block;width:136px;height:32px;}
+.mallSeachLeft .span{color:#555;}
+.mallSeachLeft .mallSeachLine{color:#ccc;margin-right:14px;}
+.mallSeachCenter{width:420px;padding-top:1px;}
+.mallSeachCenter .searchBox{width:360px;}
+.mallSeachCenter .searchBox .form-control {height: 30px;width: 100%;padding:0 10px;line-height: 30px;border: 1px solid #ce2222;border-right:none;color:#aaaaaa; border-top-left-radius: 2px;border-bottom-left-radius:2px;}
+.mallSeachCenter .searchSubmit{width:60px;height:30px;line-height:30px;color:#fff;text-align:center;font-size:14px;background:#ce2222;border:none;}
+.mallSeachRight{padding-top:1px;}
+.mallSeachRight .mallSeachPhone{color:#555555;font-size:14px;line-height:30px;margin-right:12px;}
+.mallSeachRight .mallSeachPhone em{background-position:-78px 0;width:21px;height:21px;margin-right:6px;margin-top:4px;}
+.mallSeachRight .goingIn{width:70px;height:30px;line-height:30px;color:#fff;background:#ce2222;text-align:center;}
+/*.mallBtm {
+  margin-top: 30px;
+  width: 100%;
+  height: 144px;
+  background-color: #f8f7f6; }
+  .mallBtm .mallCon {
+    overflow: hidden; }
+  .mallBtm .btmMain {
+    width: 1340px; }
+    .mallBtm .btmMain .f2d2b29 {
+      color: #2d2b29; }
+    .mallBtm .btmMain .f47 {
+      color: #474747; }
+    .mallBtm .btmMain li {
+      width: 215px;
+      margin-right: 120px; }
+      .mallBtm .btmMain li .icon_btm_1 {
+        background-position: 0 0; }
+      .mallBtm .btmMain li .icon_btm_2 {
+        background-position: -64px 0; }
+      .mallBtm .btmMain li .icon_btm_3 {
+        background-position: -128px 0; }
+      .mallBtm .btmMain li .icon_btm_4 {
+        background-position: -192px 0; }
+      .mallBtm .btmMain li .btmLiR {
+        margin-top: 50px;
+        line-height: 22px; }*/
+/*轮播图*/
+.swiper-container {height: 440px;z-index: 0;position: relative;}
+.swiper-container .swiper-slide {text-align: center;display: none;width: 100%;opacity: 0;}
+.swiper-container .swiper-slide img{display:block;height: 440px;}
+.swiper-container .swiper-pagination {position: absolute;left: 0;bottom: 10px;z-index: 3;width: 100%;text-align: center;}
+.swiper-container .swiper-pagination-switch {width: 30px;height: 30px;line-height:30px;display: inline-block;margin: 0 5px;border-radius: 50px;cursor: pointer;background: rgba(0,0,0,0.4);color:#fff;font-size:14px;/*text-indent: -9999px;*/}
+.swiper-container .active {background: #ff9900;color:#fff;}
+
+/*footer*/
+.mallFooter {width: 100%;border-top:1px solid #eeeeee;padding:22px 0;}
+.mallFooterLeft{color:#555656;line-height:21px;}
+.mallFooterLeft .CompanyAdress{margin-right:40px;}
+.mallFooterLeft em{width:16px;height:16px;overflow:hidden;margin-top:3px;margin-right:10px;}
+.mallFooterLeft .CompanyAdress em{background-position:-40px 0;}
+.mallFooterLeft .CompanyPhone{margin-right:40px;}
+.mallFooterLeft .CompanyPhone em{background-position:-58px 0;}
+.mallFooterRight{width:204px;height:21px;}
+.mallFooterRight img{display:block;}
+.ml26{margin-left:26px;}
+
+
+
+
+
+
+  /*.mallFooter .comName a {
+    line-height: 60px;
+    display: inline-block;
+    margin-right: 20px;
+    color: #fff;
+    font-size: 14px; }*/
+/*列表页样式*/
+.mallWrap{border-top:1px solid #f3f3f3}

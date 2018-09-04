@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.api.jmat.dao.CityToMatCityDao">
+    
+	<sql id="cityToMatCityColumns">
+		a.cc_id AS "ccId",
+		a.cc_city AS "ccCity",
+		a.cc_citytomat AS "ccCitytomat",
+		a.cc_status AS "ccStatus",
+		a.cc_createtime AS "ccCreatetime",
+		a.cc_updatetime AS "ccUpdatetime"
+	</sql>
+	
+	<sql id="cityToMatCityJoins">
+	</sql>
+    
+	<select id="get" resultType="CityToMatCity">
+		SELECT 
+			<include refid="cityToMatCityColumns"/>
+		FROM citytomatcity a
+		<include refid="cityToMatCityJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="CityToMatCity">
+		SELECT 
+			<include refid="cityToMatCityColumns"/>
+		FROM citytomatcity a
+		<include refid="cityToMatCityJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="CityToMatCity">
+		SELECT 
+			<include refid="cityToMatCityColumns"/>
+		FROM citytomatcity a
+		<include refid="cityToMatCityJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO citytomatcity(
+			cc_id,
+			cc_city,
+			cc_citytomat,
+			cc_status,
+			cc_createtime,
+			cc_updatetime
+		) VALUES (
+			#{ccId},
+			#{ccCity},
+			#{ccCitytomat},
+			#{ccStatus},
+			#{ccCreatetime},
+			#{ccUpdatetime}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE citytomatcity SET 	
+			cc_id = #{ccId},
+			cc_city = #{ccCity},
+			cc_citytomat = #{ccCitytomat},
+			cc_status = #{ccStatus},
+			cc_createtime = #{ccCreatetime},
+			cc_updatetime = #{ccUpdatetime}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM citytomatcity
+		WHERE id = #{id}
+	</update>
+	
+	<!--获取全部地区关联数据 	
+	public List<CityToMatCity> getAllCityToMatCity(); -->
+	<select id="getAllCityToMatCity" resultType="CityToMatCity">
+		SELECT <include refid="cityToMatCityColumns"/>
+		FROM CityToMatCity a
+		WHERE a.cc_Status = 1
+	</select>
+
+    <!--// 查找材料系统城市ID通过入参城市ID @author ljc @createTime 2018-8-29 15:08:59-->
+    <!--Integer findMatCityIDByCityID(Integer cityID);-->
+    <select id="findMatCityIDByCityID" resultType="java.lang.Integer">
+        SELECT cc_CityToMat
+        FROM   CityToMatCity
+        WHERE  cc_City = #{cityID}
+        AND    cc_Status = 1
+    </select>
+	
+</mapper>

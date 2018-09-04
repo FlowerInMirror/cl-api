@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.api.jmat.dao.StandardParaDao">
+    
+	<sql id="standardParaColumns">
+		a.sp_id AS "spId",
+		a.sp_treefour AS "spTreefour",
+		a.sp_tsid AS "spTsid",
+		a.sp_class AS "spClass",
+		a.sp_paraid AS "spParaid",
+		a.sp_paravalue AS "spParavalue",
+		a.sp_jincheng AS "spJincheng",
+		a.sp_createtime AS "spCreatetime",
+		a.sp_updatetime AS "spUpdatetime",
+		a.sp_matlevel AS "spMatlevel",
+		a.sp_apppush AS "spApppush"
+	</sql>
+	
+	<sql id="standardParaJoins">
+		INNER JOIN V_Parameter b ON a.sp_ParaID = b.para_ID 
+	</sql>
+    
+	<select id="get" resultType="StandardPara">
+		SELECT 
+			<include refid="standardParaColumns"/>
+		FROM v_standardpara a
+		<include refid="standardParaJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="StandardPara">
+		SELECT 
+			<include refid="standardParaColumns"/>
+		FROM v_standardpara a
+		<include refid="standardParaJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="StandardPara">
+		SELECT 
+			<include refid="standardParaColumns"/>
+		FROM v_standardpara a
+		<include refid="standardParaJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO v_standardpara(
+			sp_id,
+			sp_treefour,
+			sp_tsid,
+			sp_class,
+			sp_paraid,
+			sp_paravalue,
+			sp_jincheng,
+			sp_createtime,
+			sp_updatetime,
+			sp_matlevel,
+			sp_apppush
+		) VALUES (
+			#{spId},
+			#{spTreefour},
+			#{spTsid},
+			#{spClass},
+			#{spParaid},
+			#{spParavalue},
+			#{spJincheng},
+			#{spCreatetime},
+			#{spUpdatetime},
+			#{spMatlevel},
+			#{spApppush}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE v_standardpara SET 	
+			sp_id = #{spId},
+			sp_treefour = #{spTreefour},
+			sp_tsid = #{spTsid},
+			sp_class = #{spClass},
+			sp_paraid = #{spParaid},
+			sp_paravalue = #{spParavalue},
+			sp_jincheng = #{spJincheng},
+			sp_createtime = #{spCreatetime},
+			sp_updatetime = #{spUpdatetime},
+			sp_matlevel = #{spMatlevel},
+			sp_apppush = #{spApppush}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM v_standardpara
+		WHERE id = #{id}
+	</update>
+		
+	<!--通过四级科目ID,查找材料参数. 	
+	public Map<String, Object> findMaterialParameterByTreeFourID(String treeFourID); -->
+	<select id="findMaterialParameterByTreeFourID" resultType="java.util.Map">
+		SELECT
+			b.para_ID AS 'paraID',
+			b.para_Name AS 'paraName',
+			a.sp_ParaValue AS 'paraValue',
+			b.para_UnitName AS 'unitName',
+            b.para_Type AS 'paraType'
+		FROM V_StandardPara a
+		<include refid="standardParaJoins"/>
+		WHERE a.sp_TreeFour = #{treeFourID}
+		AND a.sp_jincheng = 0
+		AND b.para_jincheng = 0
+        AND a.sp_Class =  1
+	</select>
+		
+	<!--通过参数ID与四级科目ID,移除材料参数. 	
+	public int deleteStandardParaByParaID(@Param("paraID")Integer paraID,@Param("treeFourID")String treeFourID,@Param("updateTime")Date updateTime); -->
+	<update id="deleteStandardParaByParaID" >
+		UPDATE v_standardpara SET 
+		 sp_jincheng = 1,
+		 sp_updatetime = #{updateTime}
+		WHERE sp_paraid = #{paraID}
+		AND sp_TreeFour = #{treeFourID}
+	</update>
+		
+	<!--新增或更新,标准材料参数. 	
+	public void saveOrUpdate(String sql, String treeFourID); -->
+	<update id="saveOrUpdate">
+		EXEC sp_executesql N'
+		    DECLARE @zxCount INT=1
+		    --1:更新项(参数信息)
+		    ;WITH K as(
+		    	${sql}
+		    )
+		    UPDATE V_StandardPara
+		    SET sp_ParaValue=paraValue,sp_updateTime=GETDATE()
+		    FROM V_StandardPara
+		    LEFT JOIN K ON paraID=sp_ParaID
+		    WHERE sp_TreeFour=@TreeID AND sp_jincheng=0 AND sp_Class=1 AND paraValue>=''''
+		    --2:添加项(参数信息)
+		    ;WITH K as(
+		    	${sql}
+		    )
+		    INSERT INTO V_StandardPara
+		    (sp_TreeFour,sp_Class,sp_ParaID,sp_ParaValue)
+		    SELECT @TreeID,1,paraID,paraValue
+		    FROM K
+		    WHERE NOT EXISTS (SELECT 1 FROM V_StandardPara WHERE sp_TreeFour=@TreeID AND sp_jincheng=0 AND sp_Class=1 AND sp_ParaID=paraID)
+		        SELECT @zxCount
+		  ',
+		 N'@TreeID uniqueidentifier' ,@TreeID = #{treeFourID}
+	</update>
+	
+	
+</mapper>

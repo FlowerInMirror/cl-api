@@ -1,0 +1,118 @@
+.redcircle{width: 10px;height: 10px;background: red;border-radius: 50%;display: inline-block;}
+.pointertable tbody tr{cursor: pointer;}
+
+.bgeee{background: #eee;}
+.breadcrumb{background: #fff;}
+.dailylft{width: 250px;background: #fff;}
+.dailylft .tractive td{
+    background:#aedeff !important;
+}
+.dailylft .tractive td:last-child {
+    border-right: 2px solid #027ccf;
+}
+.uiTab1Con{overflow: hidden;}
+.dailylftScroll,.uiTab1ConScroll{overflow: hidden;overflow-y: auto;}
+.dailyrgt{margin-left: 260px;overflow: hidden;}
+.dailyrgt-left{width: 440px;background: #fff;}
+.dailyrgt-nav {border-bottom:1px solid #009dda;height:33px;}
+.dailyrgt-nav li{padding: 0 16px;border:1px solid #f2f2f2;margin-right:3px;border-bottom:none;height:29px;line-height:29px;margin-top:3px;}
+.dailyrgt-nav li a{display:block;}
+.dailyrgt-nav .uiTab7-active{border-top-color:#0099ff;color:#0099ff;border-top:4px solid #009dda;background:#fff;border-bottom-color:#fff;height:33px;margin-top:0;}
+.dailyrgt-nav .uiTab7-active a{color:#0099ff;}
+.addMaterial{position:absolute;right:4px;top:4px;}
+
+
+
+.dailyrgt-right{margin-left: 450px;overflow: hidden;}
+
+/*基本资料*/
+.analyItem{display: table;width: 100%;min-height: 60px;/*border:1px solid #ccc;*/box-shadow: 0 2px 4px rgba(0,0,0,.06), 0 2px 4px rgba(0,0,0,.06);}
+.analyItem .analyItemTit{display: table-cell;vertical-align: middle;width: 20px;line-height: 18px;padding: 0 5px;}
+.analyItem .analyItemTit{background: #ddd;}
+.tuimessage .tuimessageTit{background: #199ed8;color: #fff;}
+.analyItem .analyItemCon{display: table-cell;vertical-align: middle;}
+.nomargintop{margin-top: 0;}
+
+.baic-edit{position:absolute;right:5px;top:5px;background: url(../images/pic/u7589.png) no-repeat;width: 20px;height: 20px;background-size: 20px 20px;}
+.basic-left{width: 240px;}
+.basic-right{margin-left:240px;overflow: hidden;}
+.photoupload{width: 110px;height: 146px; margin: 10px auto 0;}
+.photoupload img{display: block;width: 100%;height: 100%;}
+
+.paperinfo{width: 120px;height: 80px;overflow: hidden;position: relative;}
+.paperinfo img{display: block;width: 100%;height: 100%;}
+.erweimainfo{width: 100px;margin: 6px auto 0;}
+.erweimainfo img{display: block;width: 100px;height: 100px;}
+
+.preslayer{position:absolute;left:45px;bottom:22px;background: url(../images/pic/preslayer.png) no-repeat;width: 173px;height: 124px;padding:30px 25px;overflow: hidden;z-index: 5;}
+/*配送总账*/
+.DeliveryOrderScroll{overflow: hidden;overflow-y: auto;}
+.particulars,.checklist,.voucherbox,.Materialstandard{position: absolute;left: 100%;top: 0;width: 100%;height: 100%;background: #fff;border: 1px solid #ccc;}
+.particulars-tit,.checklist-tit,.voucherbox .voucherbox-tit,.Materialstandard-tit{background: #f1f1f1;height: 30px;line-height: 30px;}
+.particulars-tit .close,.checklist-tit .close,.voucherbox-tit .close,.Materialstandard-tit .close{background: url(../images/pic/pic_wrong.png) no-repeat;width: 20px;height: 20px;}
+.particulars-con,.checklist-con,.voucherbox-con,.Materialstandard-con{overflow: hidden;overflow-y: auto;}
+.pingzAlert .edit_money{width: 100%;}
+.pingzAlert .edit_summary{width: 100%;}
+.pingzAlert .edit_subject{width: 100%;}
+.tractive td{background: #ffe0c2;}
+/*我的材料*/
+.mt3{margin-top: 3px;}
+.selectdiv select{padding:4px;}
+.selectdiv .form-control{width: 112px;}
+.MyMaterialtip{position:absolute;right: 25px;bottom: 10px;background: url(../images/pic/MyMaterialtip-small.png) no-repeat;width: 116px;height: 123px;padding: 10px;overflow: hidden;z-index: 5;}
+.MyMaterialScroll{overflow: hidden;overflow-y: auto;}
+.Materialstandard-type-l{width: 120px;}
+.Materialstandard-type-r{margin-left: 130px;overflow: hidden;}
+.Materialstandard-type-list{width: 300px;}
+.Materialstandard-type-list img{display: block;width: 300px;height: 300px;overflow: hidden;}
+.MaterialSpec,.AddMaterialSpec{position: absolute;left: 100%;top: 0;width: 100%;height: 100%;background: #fff;overflow: hidden;overflow-y: auto;}
+/*添加材料*/
+.AddMaterialInfoScroll{overflow: hidden;overflow-y: auto;}
+
+/*右块样式*/
+.dailyrgt-top{overflow: hidden;}
+.dailyrgt-top-goback a i{background:url(../images/pic/gobck.png) no-repeat;width:20px;height:20px;background-size:20px 20px;}
+.visiterecord-lft{width: 100px;}
+.visiterecord-rgt{margin-left: 110px;overflow: hidden;}
+.dailyrgt-top,.dailyrgt-bottom{background: #fff;}
+.dailyrgt-bottom{height: 180px;overflow: hidden;}
+.dailyrgt-top .notesScroll{overflow: hidden;overflow-y: auto;}
+.dailyrgt-top .userInfor .bophone,.dailyrgt-top .userInfor .guaphone{width: 30px;height: 30px;background-size: 30px 30px;background-repeat: no-repeat;}
+.dailyrgt-top .userInfor .bophone{background-image: url(../images/pic/bo.png);}
+.dailyrgt-top .userInfor .guaphone{background-image: url(../images/pic/gua.png);}
+.dailyrgt-top .notesScroll{overflow:hidden;overflow-y: auto;}
+.dailyrgt-top .noteslist-lft{width: 30px;}
+.dailyrgt-top .noteslist-lft .noteslist-span{border-radius: 50%;border: 1px solid #d6d6d6;font-size: 12px;width:20px;height:20px;line-height:18px;text-align:center;display:inline-block;}
+.dailyrgt-top .noteslist-rgt{margin-left: 30px;overflow: hidden;}
+.dailyrgt-top .noteslist-time{color: #999;font-size: 12px;}
+.dailyrgt-bottom .question-div{height: 32px;}
+.dailyrgt-bottom .question-ul li{float: left;}
+.dailyrgt-bottom .question-ul li a{min-width: 68px;height:28px;line-height:28px;margin:0 10px 6px 0;/*padding: 5px;*/display: block;color: #999;background: #f4f4f4;border-radius: 3px;cursor: pointer;text-align: center;}
+.dailyrgt-bottom .question-ul li a:hover,.dailyrgt-bottom .question-ul .active a{background: #0099ff;color:#fff;}
+.dailyrgt-bottom .Fillreturn{padding-top:50px;}
+.dailyrgt-bottom .Fillreturncon{background: #f2f2f2;border: 1px solid #e8e8e8;width: 460px;margin: 20px auto 0;}
+.Visitdiv textarea{width:88%;border: 0;padding:0;}
+.question-div{height:32px;}
+
+
+
+
+/*配送总账*/
+.breadcrumb-pszz { background: #ebeaea; height: 40px; line-height: 40px;  position: relative;}
+.breadcrumb-pszz a { color: #6b6b6b;}
+.item-info { background: url(../images/pic/item-info-bg.png) no-repeat right center; display: inline-block; padding-right: 15px; color: #6b6b6b;}
+.colBtn{ margin-top: 2px;}
+.schedule_btn{ background-color: red;color: #fff;}
+.Already_btn{ background-color: #ff6600; color: #fff;}
+.supplie_centerL{ width: 50%; height: 800px; border-right: 1px dashed #ccc;}
+.supplie_centerR{ width: 50%; height: 800px;}
+.supplie_centerRTab{ padding-top: 70px; overflow-y: auto;}
+.supplie_centerLTabH{ overflow-y: auto;}
+.supplie_centerLTit .uiTab3 li{ margin-right: 10px;}
+.supplie_centerLTit .uiTab3 li a{ padding: 0px 5px;}
+
+/*以下为集团材料样式*/
+.basicstuffScroll,.dispatchingScroll,.circumstanceScroll{overflow: hidden;overflow-y: auto;}
+.dailylft .h2tit,.dailyrgt .h2tit{background: #dedede;}
+.Returncord{position: absolute;width:100%;height:100%;left: 100%;top: 0;background: #fff;}
+.Returncord .Reclose{background: url(../images/pic/zu1.png) no-repeat;width: 20px;height: 20px;background-size: 20px 20px;cursor: pointer;}

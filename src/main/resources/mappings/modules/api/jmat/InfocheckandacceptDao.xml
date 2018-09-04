@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.api.jmat.dao.InfocheckandacceptDao">
+    
+	<sql id="infocheckandacceptColumns">
+		a.ica_id AS "icaId",
+		a.ica_treeid AS "icaTreeid",
+		a.ica_cityid AS "icaCityid",
+		a.ica_matid AS "icaMatid",
+		a.ica_object AS "icaObject",
+		a.ica_type AS "icaType",
+		a.ica_state AS "icaState",
+		a.ica_time AS "icaTime",
+		a.ica_checktime AS "icaChecktime",
+		a.ica_checkremark AS "icaCheckremark"
+	</sql>
+	
+	<sql id="infocheckandacceptJoins">
+	</sql>
+    
+	<select id="get" resultType="Infocheckandaccept">
+		SELECT 
+			<include refid="infocheckandacceptColumns"/>
+		FROM v_infocheckandaccept a
+		<include refid="infocheckandacceptJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="Infocheckandaccept">
+		SELECT 
+			<include refid="infocheckandacceptColumns"/>
+		FROM v_infocheckandaccept a
+		<include refid="infocheckandacceptJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="Infocheckandaccept">
+		SELECT 
+			<include refid="infocheckandacceptColumns"/>
+		FROM v_infocheckandaccept a
+		<include refid="infocheckandacceptJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO v_infocheckandaccept(
+			ica_id,
+			ica_treeid,
+			ica_cityid,
+			ica_matid,
+			ica_object,
+			ica_type,
+			ica_state,
+			ica_time,
+			ica_checktime,
+			ica_checkremark
+		) VALUES (
+			#{icaId},
+			#{icaTreeid},
+			#{icaCityid},
+			#{icaMatid},
+			#{icaObject},
+			#{icaType},
+			#{icaState},
+			#{icaTime},
+			#{icaChecktime},
+			#{icaCheckremark}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE v_infocheckandaccept SET 	
+			ica_id = #{icaId},
+			ica_treeid = #{icaTreeid},
+			ica_cityid = #{icaCityid},
+			ica_matid = #{icaMatid},
+			ica_object = #{icaObject},
+			ica_type = #{icaType},
+			ica_state = #{icaState},
+			ica_time = #{icaTime},
+			ica_checktime = #{icaChecktime},
+			ica_checkremark = #{icaCheckremark}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM v_infocheckandaccept
+		WHERE id = #{id}
+	</update>
+
+    <!-- 子库：重置审核验收状态未重新开始（审核过的重置）
+    int updateInfoCheckAndAcceptStateToReset(Infocheckandaccept infoCheckAndAccept);-->
+    <update id="updateInfoCheckAndAcceptStateToReset" parameterType="Infocheckandaccept">
+        DECLARE @zxCount INT
+
+        UPDATE V_InfoCheckAndAccept
+        SET ica_State=0,ica_Time=GETDATE()
+        WHERE ica_TreeID=#{icaTreeid} AND ica_CityID=#{icaCityid}
+        AND ica_Object=#{icaObject}
+        AND ica_MatID=#{icaMatid} AND ica_Type=#{icaType}
+        AND ica_State>=2
+        SET @zxCount=@@ROWCOUNT
+
+        IF(@zxCount>=1)
+        BEGIN
+        UPDATE V_InfoCheckAndAccept
+        SET ica_State=0
+        WHERE ica_TreeID=#{icaTreeid} AND ica_CityID=#{icaCityid}
+        AND ica_Object=#{icaObject} AND ica_Type=100
+        END
+
+        SELECT @zxCount
+    </update>
+
+    <!--子库：新加品牌重新开始（审核重置）
+    int updateInfoCheckToResetToAddNewBrand(Infocheckandaccept infoCheckAndAccept);-->
+    <update id="updateInfoCheckToResetToAddNewBrand" parameterType="Infocheckandaccept">
+        DECLARE @zxCount INT
+
+        --目前支持一审二审
+        UPDATE V_InfoCheckAndAccept
+        SET ica_State=0
+        WHERE ica_TreeID=#{icaTreeid} AND ica_CityID=#{icaCityid}
+        AND ica_Object|3=3 AND ica_Type=100
+        SET @zxCount=@@ROWCOUNT
+
+        SELECT @zxCount
+    </update>
+
+    <!--子库(品牌入库/)：重置材料验收状态为重新开始（审核过的重置）
+    int updateInfoCheckAndAcceptStateToResetMat(Infocheckandaccept matID);-->
+    <update id="updateInfoCheckAndAcceptStateToResetMat" parameterType="Infocheckandaccept">
+        -- 子库(品牌入库/)：重置材料验收状态为重新开始（审核过的重置）
+        DECLARE @zxCount INT
+        DECLARE @CityID INT
+        DECLARE @TreeID uniqueidentifier
+
+        UPDATE V_InfoCheckAndAccept
+        SET ica_State=0,ica_Time=GETDATE()
+        ,@TreeID=ica_TreeID,@CityID=ica_CityID
+        WHERE ica_MatID=#{icaMatid} AND ica_State>=2
+        SET @zxCount=@@ROWCOUNT
+
+        IF(@zxCount>=1)
+        BEGIN
+
+        UPDATE V_InfoCheckAndAccept
+        SET ica_State=0
+        WHERE ica_TreeID=@TreeID AND ica_CityID=@CityID
+        AND ica_Object|3=3 AND ica_Type=100
+
+        END
+
+        SELECT @zxCount
+    </update>
+
+
+
+
+
+	
+</mapper>

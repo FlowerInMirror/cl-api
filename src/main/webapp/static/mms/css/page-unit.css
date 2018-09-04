@@ -1,0 +1,19 @@
+.unit-lft{width: 80px;height:30px;line-height:30px;border: 1px solid #ccc;border-right:0;text-align: center;}
+.unit-lft .unit-p{height: 28px;line-height: 28px;}
+.unit-lft .unit-input{width: 78px;border-color: transparent;display: none;text-align: center;}
+.unit-mid{width:60px;height:30px;line-height:30px;border: 1px solid #ccc;border-right:0;display: none;}
+.unit-list select{display:block;border-color: transparent;width: 100%;}
+.unit-rgt{background: #999;height: 30px;}
+.unit-rgt a{height: 30px;width: 30px;text-align: center;padding-top:7px;}
+/*编辑和删除按钮*/
+.unit-edit{background: #ffb400;}
+.unit-dele{background: #f63131;}
+.unit-save{background: #0daed3;}
+.unit-edit i,.unit-dele i,.unit-save i{width: 16px;height: 16px;display: block;margin:0 auto;}
+.unit-edit i{background: url(../images/pic/op_ico_4.png) no-repeat;}
+.unit-dele i{background: url(../images/pic/op_ico_5.png) no-repeat;}
+.unit-save i{background: url(../images/pic/op_ico_6.png) no-repeat;}
+.width200{width: 200px;}
+/*下拉参数管理*/
+.drop-parameter .unit-lft{width: 120px;}
+.offerscroll{overflow:hidden;overflow-y:auto;}

@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.api.jmat.dao.MaterialComparedAttributesDao">
+    
+	<sql id="materialComparedAttributesColumns">
+		a.mca_id AS "mcaId",
+		a.mca_treeid AS "mcaTreeid",
+		a.mca_name AS "mcaName",
+		a.mca_type AS "mcaType",
+		a.mca_standardid AS "mcaStandardid",
+		a.mca_paraid AS "mcaParaid",
+		a.mca_status AS "mcaStatus",
+		a.mca_time AS "mcaTime",
+		a.mca_Key AS "mcaKey"
+	</sql>
+	
+	<sql id="materialComparedAttributesJoins">
+	</sql>
+
+    <!-- 通过主ID获取对象 -->
+	<select id="get" resultType="MaterialComparedAttributes">
+		SELECT 
+			<include refid="materialComparedAttributesColumns"/>
+		FROM v_materialcomparedattributes a
+		<include refid="materialComparedAttributesJoins"/>
+		WHERE a.mca_ID = #{id}
+	</select>
+	
+	<select id="findList" resultType="MaterialComparedAttributes">
+		SELECT 
+			<include refid="materialComparedAttributesColumns"/>
+		FROM v_materialcomparedattributes a
+		<include refid="materialComparedAttributesJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="MaterialComparedAttributes">
+		SELECT 
+			<include refid="materialComparedAttributesColumns"/>
+		FROM v_materialcomparedattributes a
+		<include refid="materialComparedAttributesJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO v_materialcomparedattributes(
+			mca_id,
+			mca_treeid,
+			mca_name,
+			mca_type,
+			mca_standardid,
+			mca_paraid,
+			mca_status,
+			mca_time
+		) VALUES (
+			#{mcaId},
+			#{mcaTreeid},
+			#{mcaName},
+			#{mcaType},
+			#{mcaStandardid},
+			#{mcaParaid},
+			#{mcaStatus},
+			#{mcaTime}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE v_materialcomparedattributes SET 	
+			mca_id = #{mcaId},
+			mca_treeid = #{mcaTreeid},
+			mca_name = #{mcaName},
+			mca_type = #{mcaType},
+			mca_standardid = #{mcaStandardid},
+			mca_paraid = #{mcaParaid},
+			mca_status = #{mcaStatus},
+			mca_time = #{mcaTime}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM v_materialcomparedattributes
+		WHERE id = #{id}
+	</update>
+		
+	<!--通过四级科目ID,查找材料对比属性结果集 	
+	public List<MaterialComparedAttributes> findEntitysByTreeFourID(String treeFourID); -->
+	<select id="findEntitysByTreeFourID" resultType="MaterialComparedAttributes" >
+        --通过四级科目ID,查找材料对比属性结果集
+        SELECT <include refid="materialComparedAttributesColumns"/>
+		FROM V_MaterialComparedAttributes a
+		WHERE a.mca_TreeID = #{treeFourID}
+		AND a.mca_Status = 0
+        AND a.mca_Type = 1
+	</select>
+		
+	<!--属性对比(对比图)对比名称,新增或更新. 	
+	public int saveOrUpdate(Map<String, Object> map); -->
+	<select id="saveOrUpdate" parameterType="java.util.Map" resultType="Integer" >
+        -- 属性对比(对比图)对比名称,新增或更新.
+        DECLARE @ID INT
+        -- 校验 是否存在
+        IF(EXISTS(SELECT 1 FROM V_MaterialComparedAttributes WHERE mca_ID=#{mcaID}))
+        --更新
+        BEGIN
+        UPDATE V_MaterialComparedAttributes
+        SET mca_Name=#{mcaName},mca_Time=GETDATE()
+        WHERE mca_ID=#{mcaID}
+        SELECT  @ID = #{mcaID}
+        END
+
+        ELSE
+
+        --添加
+        BEGIN
+        INSERT INTO V_MaterialComparedAttributes
+        (mca_TreeID,mca_Name,mca_Type)
+        VALUES
+        (#{treeFourID},#{mcaName},#{mcaType})
+        SET @ID = @@IDENTITY
+        END
+
+        -- 返回操作ID
+        SELECT @ID
+	</select>
+		
+	<!--移除对比标准属性API 	
+	public int deleteMaterialComparedAttributesByMcaID(Integer mcaID); -->
+	<update id="deleteMaterialComparedAttributesByMcaID" parameterType="Integer" >
+		exec sp_executesql N'
+	    DECLARE @zxCount INT
+	    UPDATE V_MaterialComparedAttributes
+	    SET mca_Status=1,mca_Time=GETDATE()
+	    WHERE mca_ID=@mca_ID AND mca_Status=0
+	    SET @zxCount=@@ROWCOUNT
+	    SELECT @zxCount
+	  ',N'@mca_ID int',@mca_ID=#{mcaID}
+	</update>
+
+    <!-- 查找对比项和对比图,通过城市ID/档次标识/四级科目ID(城市ID为null,返回'总标准'材料对比图)
+    List<ContrastItemWithPhoto> findContrastItemWithPhotoByCityIDAndLevelFlagAndTreeFourID(@Param("cityID")Integer cityID,@Param("levelFlag") Integer levelFlag,@Param("treeFourID") String treeFourID);-->
+    <select id="findContrastItemWithPhotoByCityIDAndLevelFlagAndTreeFourID" resultType="ContrastItemWithPhoto" >
+        WITH Consult AS(
+            -- 北京全国参考图
+            SELECT
+             mca_ID AS mcaID
+            ,a.mca_TreeID AS mcaTreeID -- 四级科目ID
+            ,tsp_PhotoURL AS consultPhotoURL -- 北京总对比参考图地址
+            FROM V_MaterialComparedAttributes a
+            LEFT JOIN V_TreeStandardPhoto p ON  p.tsp_ParaID = a.mca_ID
+            AND p.tsp_TreeFour = a.mca_TreeID
+            AND p.tsp_jincheng = 0
+            AND p.tsp_Type = 3
+            AND p.tsp_CityID = 12
+            AND p.tsp_MatLevel= #{levelFlag}
+
+            WHERE a.mca_Status = 0
+            AND   a.mca_Type = 1
+            AND   a.mca_TreeID = #{treeFourID}
+        )
+        --通过四级科目ID,查找材料对比属性结果集(囊括对比图片)
+        SELECT
+        -- 对比 a
+        #{levelFlag} AS levelFlag,
+        a.mca_ID AS mcaID,-- 对比ID
+        a.mca_Name AS mcaName,-- 对比名称
+        a.mca_Key AS mcaKey,-- KEY（用于审核存储）
+        a.mca_TreeID AS treeFourID, -- 四级科目ID
+        -- 图 p
+        p.tsp_ID AS tspID ,-- 材料照片ID
+        p.tsp_CityID AS tspCityID, -- 城市ID
+        p.tsp_PhotoURL AS mcaPhotoURL,-- 对比照片url
+        c.consultPhotoURL, -- 参考图片url
+        p.tsp_Title AS  mcaPara, -- 对比参数
+        p.tsp_Content1 AS mcaDescribe, --对比描述
+        p.tsp_TSID AS matID -- 材料ID
+        FROM V_MaterialComparedAttributes a
+        -- 关联辅显表:材料照片;关联条件:外键/四级科目ID/城市ID/进程/类型/档次
+        LEFT JOIN V_TreeStandardPhoto p ON p.tsp_ParaID = a.mca_ID
+        AND p.tsp_TreeFour = a.mca_TreeID
+        AND p.tsp_jincheng = 0
+        AND p.tsp_Type = 3
+        AND p.tsp_CityID = #{cityID}
+        AND p.tsp_MatLevel= #{levelFlag}
+        LEFT JOIN Consult AS c ON c.mcaTreeID = a.mca_TreeID AND c.mcaID = a.mca_ID
+        WHERE
+        a.mca_Status = 0
+        AND a.mca_Type = 1
+        AND a.mca_TreeID = #{treeFourID}
+        ORDER BY a.mca_ID
+    </select>
+	
+</mapper>

@@ -1,0 +1,228 @@
+.width400 {
+    width: 400px;
+}
+
+.tong-left {
+    width: 200px;
+}
+
+.tong-middle {
+    width: 350px;
+}
+
+.tong-right {
+    margin-left: 560px;
+    overflow: hidden;
+}
+
+.tong-Rh2 {
+    font-size: 12px;
+    line-height: 20px;
+    color: #199ed8;
+}
+
+.tong-Rdiv .tong-Rdiv01 {
+    width: 20%;
+    margin-right: 9px;
+    float: left;
+}
+
+.tong-Rdiv .tong-Rdiv02 {
+    width: 25%;
+    margin-right: 10px;
+    float: left;
+}
+
+.tong-Rdiv .tong-Rdiv03 {
+    width: 25%;
+    margin-right: 10px;
+    float: left;
+}
+
+.tong-Rdiv .tong-Rdiv04 {
+    width: 25%;
+    float: left;
+}
+
+.tong-RdivTit {
+    height: 33px;
+    line-height: 33px;
+    text-align: center;
+    background-color: #199ed8;
+    color: #fff;
+}
+
+.tong-RdivMain {
+    height: 300px;
+    border: 1px solid #ccc;
+    overflow-y: auto;
+}
+
+.tong-RDivBott {
+    height: 170px;
+    border: 1px solid #ccc;
+}
+
+.tong-RdivMain li {
+    line-height: 30px;
+    padding: 0px 4px;
+}
+
+.tong-RdivMain01 li {
+    cursor: pointer;
+}
+
+.RdivMain01_cur {
+    background-color: #e2ffff;
+}
+
+.tong-RdivMain02 ul, .tong-RdivMain03 ul, .tong-RdivMain04 ul {
+    display: none;
+}
+
+.tong_zp {
+    text-align: center;
+    font-size: 18px;
+    color: #d9cccc;
+    margin-top: 100%;
+}
+
+.RDivBottR {
+    width: 60px;
+    height: 140px;
+    position: absolute;
+    top: 0px;
+    right: 0px;
+}
+
+.RDivBottL {
+    margin-right: 60px;
+    height: 140px;
+    border: 1px solid #ccc;
+}
+
+.RDivBottR input {
+    margin-top: 100px;
+}
+
+.RDivBottL .uiRadio12-input {
+    margin: 3px 0 0 -18px;
+}
+
+.tong-Selected {
+    cursor: pointer;
+}
+
+.tong-SelectedDiv {
+    width: 480px;
+    height: 310px;
+    border: 1px solid #ccc;
+    background-color: #fff;
+    position: absolute;
+    top: -310px;
+    right: 30px;
+    display: none;
+}
+
+.SelectedDiv-title {
+    height: 28px;
+    line-height: 28px;
+    padding: 0px 10px;
+    background-color: #f4f4f4;
+}
+
+.select-close {
+    width: 13px;
+    height: 13px;
+    background: url(../images/ico/layer_close.png) no-repeat;
+    display: inline-block;
+    margin-top: 6px;
+    cursor: pointer;
+}
+
+.SelectedDiv-main {
+    height: 230px;
+    overflow-y: auto;
+}
+
+.region_span {
+    min-width: 55px;
+    text-align: right;
+    display: inline-block;
+}
+
+.tong-left-scroll, .tong-right-scroll {
+    overflow-y: auto;
+}
+
+.Rdiv01 {
+    width: 10px;
+    height: 10px;
+    background: url(../images/ico/icon_duig.png) no-repeat;
+    position: absolute;
+    left: 20%;
+    top: 50%;
+    margin-top: -5px;
+}
+
+.Rdiv02 {
+    width: 10px;
+    height: 10px;
+    background: url(../images/ico/icon_duig.png) no-repeat;
+    position: absolute;
+    left: 46.5%;
+    top: 50%;
+    margin-top: -5px;
+}
+
+.Rdiv03 {
+    width: 10px;
+    height: 10px;
+    background: url(../images/ico/icon_duig.png) no-repeat;
+    position: absolute;
+    left: 73%;
+    top: 50%;
+    margin-top: -5px;
+}
+
+.tong-RdivMain04 .uiRadio12 {
+    margin-right: 0px;
+    overflow: hidden;
+}
+
+.tong-Lname {
+    display: block;
+    height: 30px;
+    margin-right: 8px;
+    overflow: hidden;
+}
+
+.tong-jiant {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+}
+
+.tong-RdivMain .uiRadio12-input {
+    position: absolute;
+    top: 10px;
+    left: 0px;
+    padding: 0px;
+    float: none;
+    margin: 0px;
+}
+
+.tong-radio {
+    padding-left: 16px;
+    margin-right: 8px;
+    overflow: hidden;
+    height: 30px;
+    display: block;
+}
+.width78 {
+    width: 78px;
+}
+.ui-next, .ui-prev, .uiPage1-active, .uiPage1-page, .uiPage1-span{min-width:20px;padding:0;}
+.lh24 {
+    line-height: 24px;
+}

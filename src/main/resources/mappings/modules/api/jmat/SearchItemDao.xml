@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.api.jmat.dao.SearchItemDao">
+    
+	<sql id="searchItemColumns">
+		a.se_id AS "seId",
+		a.se_treefour AS "seTreefour",
+		a.se_tsid AS "seTsid",
+		a.se_content AS "seContent",
+		a.se_type AS "seType",
+		a.se_jincheng AS "seJincheng",
+		a.se_createtime AS "seCreatetime",
+		a.se_updatetime AS "seUpdatetime"
+	</sql>
+	
+	<sql id="searchItemJoins">
+	</sql>
+    
+	<select id="get" resultType="SearchItem">
+		SELECT 
+			<include refid="searchItemColumns"/>
+		FROM v_searchitem a
+		<include refid="searchItemJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="SearchItem">
+		SELECT 
+			<include refid="searchItemColumns"/>
+		FROM v_searchitem a
+		<include refid="searchItemJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="SearchItem">
+		SELECT 
+			<include refid="searchItemColumns"/>
+		FROM v_searchitem a
+		<include refid="searchItemJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO v_searchitem(
+			se_id,
+			se_treefour,
+			se_tsid,
+			se_content,
+			se_type,
+			se_jincheng,
+			se_createtime,
+			se_updatetime
+		) VALUES (
+			#{seId},
+			#{seTreefour},
+			#{seTsid},
+			#{seContent},
+			#{seType},
+			#{seJincheng},
+			#{seCreatetime},
+			#{seUpdatetime}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE v_searchitem SET 	
+			se_id = #{seId},
+			se_treefour = #{seTreefour},
+			se_tsid = #{seTsid},
+			se_content = #{seContent},
+			se_type = #{seType},
+			se_jincheng = #{seJincheng},
+			se_createtime = #{seCreatetime},
+			se_updatetime = #{seUpdatetime}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM v_searchitem
+		WHERE id = #{id}
+	</update>
+		
+	<!--通过四级科目ID,查找材料搜索或用途结果集. 	
+	public List<SearchItem> findSearchItemsByTreeFourID(@Param("treeFourID")String treeFourID,@Param("type")Integer type); -->
+	<select id="findSearchItemsByTreeFourID"   resultType="SearchItem">
+		SELECT  <include refid="searchItemColumns"/>
+		FROM    V_SearchItem a
+		WHERE   a.se_TreeFour = #{treeFourID}
+		AND     a.se_Type = #{type}
+		AND     a.se_jincheng = 0
+	</select>
+		
+	<!--搜索词编辑(删除|新增) 	
+	public int searchTermEdit(String treeFourID, Integer type); -->
+	<update id="searchTermEdit">
+	  exec sp_executesql N'
+	    --1:删除项(搜索|用途)
+	    ;WITH K AS (
+	   	    ${sql}
+	    )
+	    UPDATE V_SearchItem
+	    SET se_jincheng=1,se_updateTime=GETDATE()
+	    WHERE se_TreeFour=@TreeID AND se_jincheng=0  AND se_Type=@se_Type
+	    -- 校验内容:如何当前传入的检索内容 存在检索表中,那就把当前条记录设值为进程未启用状态
+	    AND NOT EXISTS (SELECT 1 FROM K WHERE sType=se_Type AND sContent=se_Content)
+	
+	    --2:恢复项(搜索|用途)
+	    ;WITH K AS (
+	   		${sql}
+	    )
+	    UPDATE V_SearchItem
+	    SET se_jincheng=0,se_updateTime=GETDATE()
+	    WHERE se_TreeFour=@TreeID AND se_jincheng=1  AND se_Type=@se_Type
+	    AND EXISTS (SELECT 1 FROM K WHERE sType=se_Type AND sContent=se_Content)
+	    
+	    --3:添加项(搜索|用途)
+	    ;WITH K AS (
+	     	${sql}
+	    )
+	    INSERT INTO V_SearchItem
+	    (se_TreeFour,se_Content,se_Type)
+	    SELECT @TreeID,sContent,sType
+	    FROM K
+	    WHERE NOT EXISTS (SELECT 1 FROM V_SearchItem WHERE se_TreeFour=@TreeID AND se_jincheng=0 AND sType=se_Type AND sContent=se_Content)
+	  ',N'
+		 @se_Type int -- 类型
+		,@TreeID uniqueidentifier'	
+		,@se_Type=#{type}
+		,@TreeID=#{treeFourID}
+		
+	</update>
+	
+</mapper>

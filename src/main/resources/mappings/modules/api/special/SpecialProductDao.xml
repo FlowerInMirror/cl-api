@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.api.special.dao.SpecialProductDao">
+    
+	<sql id="specialProductColumns">
+		a.sp_id AS "spID",
+		a.sp_dealerid AS "spDealerID",
+		a.sp_majortreetwoid AS "spMajorTreeTwoID",
+		a.sp_CityID AS "spCityID",
+		a.sp_proname AS "spProName",
+		a.sp_prounitid AS "spProUnitID",
+		a.sp_prodepict AS "spProDepict",
+		a.sp_protype AS "spProType",
+		a.sp_prodepictdata AS "spProDepictData",
+		a.sp_status AS "spStatus",
+		a.sp_createtime AS "spCreateTime",
+		a.sp_updatetime AS "spUpdateTime"
+	</sql>
+
+	<sql id="majorCampGroupMaxAndMin">
+        WITH MCG AS
+        (
+            SELECT
+                mcg_SPID,
+                MAX (mcg_Price) maxPrice,
+                MIN (mcg_Price) minPrice
+            FROM M_MajorCampGroup
+            GROUP BY mcg_SPID
+        )
+	</sql>
+
+
+    <!--  "=========================C U D=============================="  -->
+
+    <!--// 添加:专项产品基础信息(材料商ID/材料商城市/所属主营二级科目ID/产品名称/单位/产品详细) @author ljc @createTime 2018-8-26 17:25:45-->
+    <!--  int addSpecialProductByEntity(SpecialProduct specialProduct);-->
+    <insert id="addSpecialProductByEntity" parameterType="SpecialProduct">
+        INSERT INTO s_specialproduct
+          (sp_id,sp_dealerid,sp_majortreetwoid,sp_CityID,sp_proname,sp_prounitid,sp_prodepictdata)
+        VALUES
+          (#{spID},#{spDealerID}, #{spMajorTreeTwoID},#{spCityID}, #{spProName},#{spProUnitID},#{spProDepictData})
+    </insert>
+
+
+
+    <!-- 专项:添加产品(ID/主营二级科目ID/材料商ID/名称/单位/详情描述)
+    int addSProBySpecialProductVo(SpecialProduct specialProduct);-->
+    <insert id="addSProBySpecialProductVo" parameterType="SpecialProduct">
+        INSERT INTO s_specialproduct(
+            sp_id,
+            sp_dealerid,
+            sp_majortreetwoid,
+            sp_CityID,
+            sp_proname,
+            sp_prounitid,
+            sp_prodepictdata
+        ) VALUES (
+            #{spID},
+            #{spDealerID},
+            #{spMajorTreeTwoID},
+            #{spCityID},
+            #{spProName},
+            #{spProUnitID},
+            #{spProDepictData}
+        )
+    </insert>
+
+    <!-- 专项产品更新(产品字段更新/产品详情修改/产品上架/下架)
+    int updateSProBySpecialProductBo(SpecialProductBo SpecialProductBo);-->
+    <update id="updateSProBySpecialProductBo" parameterType="SpecialProductBo">
+        UPDATE s_specialproduct
+        <set>
+            sp_updatetime = GETDATE(),
+            <if test="spDealerID != null">
+                sp_dealerid = #{spDealerID},
+            </if>
+            <if test="spMajorTreeTwoID != null">
+                sp_majortreetwoid = #{spMajorTreeTwoID},
+            </if>
+            <if test="spProName != null">
+                sp_proname = #{spProName},
+            </if>
+            <if test="spProUnitID != null">
+                sp_prounitid = #{spProUnitID},
+            </if>
+            <if test="spProDepict != null">
+                sp_prodepict = #{spProDepict},
+            </if>
+            <if test="spProType != null">
+                sp_protype = #{spProType},
+            </if>
+            <if test="spProDepictData != null">
+                sp_prodepictdata = #{spProDepictData},
+            </if>
+            <if test="spStatus != null">
+                sp_status = #{spStatus},
+            </if>
+        </set>
+        WHERE sp_id = #{spID}
+    </update>
+
+    <!-- 专项产品删除
+    int deleteSProBySpecialProductBo(SpecialProductBo SpecialProductBo);-->
+    <update id="deleteSProBySpecialProductBo" parameterType="SpecialProductBo">
+        UPDATE s_specialproduct SET
+          sp_status = 1,
+          sp_updatetime = GETDATE()
+        WHERE sp_id = #{spID}
+    </update>
+
+    <!--"=========================GET FIND=============================="-->
+    <!-- 专项产品集
+   List<SpecialProductVo> findSpecialProductALLByEntity(SpecialProduct specialProduct);-->
+    <select id="findSpecialProductALLByEntity" resultType="java.util.LinkedHashMap">
+        <include refid="majorCampGroupMaxAndMin"/>
+        SELECT
+        sp_ID AS proID,
+        sp_MajorTreeTwoID AS treeTwoID,
+        sp_ProName AS proName,
+        sp_Status AS proStatus,
+        sp_DealerID AS zxUserID,
+        maxPrice,
+        minPrice
+        FROM S_SpecialProduct
+        LEFT JOIN MCG ON sp_ID = mcg_SPID
+        WHERE sp_Status IN (0, 2)
+        AND   sp_CityID = #{spCityID}
+        AND   sp_DealerID = #{spDealerID}
+        ORDER BY sp_createtime
+    </select>
+
+    <!-- 专项产品(通过ID查找)
+    SpecialProduct findSpecialProductOneByEntity(SpecialProduct specialProduct);-->
+    <select id="findSpecialProductOneByEntity" parameterType="SpecialProduct" resultType="SpecialProductVo">
+        <include refid="majorCampGroupMaxAndMin"/>
+        SELECT
+           <include refid="specialProductColumns"/>
+          ,unit_Name AS unitName
+          ,tree_Name AS  treeTwoName
+          ,maxPrice
+          ,minPrice
+        FROM s_specialproduct a
+        LEFT JOIN V_Unit ON a.sp_ProUnitID = unit_ID
+        LEFT JOIN V_Tree ON a.sp_MajorTreeTwoID = tree_ID
+        LEFT JOIN MCG ON a.sp_ID = mcg_SPID
+        <where>
+            <choose>
+                <when test="spStatus == 0">
+                   AND a.sp_status  = 0
+                </when>
+                <otherwise>
+                    AND a.sp_status  IN (0,2)
+                </otherwise>
+            </choose>
+            <if test="spID != null">
+                AND a.sp_id = #{spID}
+            </if>
+        </where>
+    </select>
+
+</mapper>

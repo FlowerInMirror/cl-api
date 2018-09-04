@@ -1,0 +1,442 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.jmat.dao.RsglUserhandstatusDao">
+
+	<resultMap id="BaseResultMap" type="RsglUserhandstatus" >
+		<id column="uhId" property="uhId" />
+		<result column="cardNo" property="cardNo" jdbcType="VARCHAR" />
+		<result column="normalState" property="normalState" jdbcType="INTEGER" />
+		<result column="reformState" property="reformState" jdbcType="INTEGER" />
+		<result column="reformDeadLine" property="reformDeadLine"  />
+		<result column="reformContent" property="reformContent"  />
+		<result column="sanctionState" property="sanctionState" jdbcType="INTEGER" />
+		<result column="sanctionMoney" property="sanctionMoney"  />
+		<result column="sanctionContent" property="sanctionContent" />
+		<result column="eliminateState" property="eliminateState" jdbcType="INTEGER" />
+		<result column="eliminateDeadLine" property="eliminateDeadLine"  />
+		<result column="eliminateContent" property="eliminateContent" />
+		<result column="createTime" property="createTime" />
+		<result column="createdBy" property="createdBy" jdbcType="VARCHAR" />
+		<result column="modifyTime" property="modifyTime" />
+		<result column="modifyBy" property="modifyBy" jdbcType="VARCHAR" />
+		<result column="reformType" property="reformType" jdbcType="INTEGER" />
+		<result column="reformTarget" property="reformTarget" jdbcType="INTEGER" />
+		<result column="normalContent" property="normalContent" />
+		<result column="handType" property="handType" jdbcType="INTEGER" />
+		<result column="uid" property="uid" jdbcType="INTEGER" />
+		<result column="affairType" property="affairType" jdbcType="INTEGER" />
+		<result column="integral" property="integral" jdbcType="INTEGER" />
+	</resultMap>
+	<sql id="rsglUserhandstatusColumns">
+		a.uhid AS "uhId",
+		a.cardno AS "cardNo",
+		a.normalstate AS "normalState",
+		a.reformstate AS "reformState",
+		a.reformdeadline AS "reformDeadLine",
+		a.reformcontent AS "reformContent",
+		a.sanctionstate AS "sanctionState",
+		a.sanctionmoney AS "sanctionMoney",
+		a.sanctioncontent AS "sanctionContent",
+		a.eliminatestate AS "eliminateState",
+		a.eliminatedeadline AS "eliminateDeadLine",
+		a.eliminatecontent AS "eliminateContent",
+		a.createtime AS "createTime",
+		a.createdby AS "createdBy",
+		a.modifytime AS "modifyTime",
+		a.modifyby AS "modifyBy",
+		a.reformtype AS "reformType",
+		a.reformtarget AS "reformTarget",
+		a.normalcontent AS "normalContent",
+		a.handtype AS "handType",
+		a.uid AS "uid",
+		a.affairtype AS "affairType"
+		a.integral as "integral"
+	</sql>
+	
+	<sql id="rsglUserhandstatusJoins">
+	</sql>
+    
+	<select id="get" resultType="RsglUserhandstatus">
+		SELECT 
+			<include refid="rsglUserhandstatusColumns"/>
+		FROM rsgl_userhandstatus a
+		<include refid="rsglUserhandstatusJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="RsglUserhandstatus">
+		SELECT 
+			<include refid="rsglUserhandstatusColumns"/>
+		FROM rsgl_userhandstatus a
+		<include refid="rsglUserhandstatusJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="RsglUserhandstatus">
+		SELECT 
+			<include refid="rsglUserhandstatusColumns"/>
+		FROM rsgl_userhandstatus a
+		<include refid="rsglUserhandstatusJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+
+
+	<insert id="insert">
+		INSERT INTO rsgl_userhandstatus(
+			uhid,
+			cardno,
+			normalstate,
+			reformstate,
+			reformdeadline,
+			reformcontent,
+			sanctionstate,
+			sanctionmoney,
+			sanctioncontent,
+			eliminatestate,
+			eliminatedeadline,
+			eliminatecontent,
+			createtime,
+			createdby,
+			modifytime,
+			modifyby,
+			reformtype,
+			reformtarget,
+			normalcontent,
+			handtype,
+			uid,
+			affairtype
+		) VALUES (
+			#{uhId},
+			#{cardNo},
+			#{normalState},
+			#{reformState},
+			#{reformDeadLine},
+			#{reformContent},
+			#{sanctionState},
+			#{sanctionMoney},
+			#{sanctionContent},
+			#{eliminateState},
+			#{eliminateDeadLine},
+			#{eliminateContent},
+			#{createTime},
+			#{createdBy},
+			#{modifyTime},
+			#{modifyBy},
+			#{reformType},
+			#{reformTarget},
+			#{normalContent},
+			#{handType},
+			#{uid},
+			#{affairType}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE rsgl_userhandstatus SET 	
+			uhid = #{uhId},
+			cardno = #{cardNo},
+			normalstate = #{normalState},
+			reformstate = #{reformState},
+			reformdeadline = #{reformDeadLine},
+			reformcontent = #{reformContent},
+			sanctionstate = #{sanctionState},
+			sanctionmoney = #{sanctionMoney},
+			sanctioncontent = #{sanctionContent},
+			eliminatestate = #{eliminateState},
+			eliminatedeadline = #{eliminateDeadLine},
+			eliminatecontent = #{eliminateContent},
+			createtime = #{createTime},
+			createdby = #{createdBy},
+			modifytime = #{modifyTime},
+			modifyby = #{modifyBy},
+			reformtype = #{reformType},
+			reformtarget = #{reformTarget},
+			normalcontent = #{normalContent},
+			handtype = #{handType},
+			uid = #{uid},
+			affairtype = #{affairType}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM rsgl_userhandstatus
+		WHERE id = #{id}
+	</update>
+
+	<!-- 添加材料商处理状态信息-->
+	<insert id="saveUserHandleInfo" parameterType="RsglUserhandstatus" >
+		insert into rsgl_userhandstatus
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="uhId != null" >
+				uhId,
+			</if>
+			<if test="cardNo != null" >
+				cardNo,
+			</if>
+			<if test="normalState != null" >
+				normalState,
+			</if>
+			<if test="reformState != null" >
+				reformState,
+			</if>
+			<if test="reformDeadLine != null" >
+				reformDeadLine,
+			</if>
+			<if test="reformContent != null" >
+				reformContent,
+			</if>
+			<if test="sanctionState != null" >
+				sanctionState,
+			</if>
+			<if test="sanctionMoney != null" >
+				sanctionMoney,
+			</if>
+			<if test="sanctionContent != null" >
+				sanctionContent,
+			</if>
+			<if test="eliminateState != null" >
+				eliminateState,
+			</if>
+			<if test="eliminateDeadLine != null" >
+				eliminateDeadLine,
+			</if>
+			<if test="eliminateContent != null" >
+				eliminateContent,
+			</if>
+			<if test="createTime != null" >
+				createTime,
+			</if>
+			<if test="createdBy != null" >
+				createdBy,
+			</if>
+			<if test="modifyTime != null" >
+				modifyTime,
+			</if>
+			<if test="modifyBy != null" >
+				modifyBy,
+			</if>
+			<if test="reformType != null" >
+				reformType,
+			</if>
+			<if test="reformTarget != null" >
+				reformTarget,
+			</if>
+			<if test="normalContent != null" >
+				normalContent,
+			</if>
+			<if test="handType != null" >
+				handType,
+			</if>
+			<if test="uid != null" >
+				uid,
+			</if>
+			<if test="affairType != null" >
+				affairType,
+			</if>
+			<if test="integral != null" >
+				integral,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides="," >
+			<if test="uhId != null" >
+				#{uhId},
+			</if>
+			<if test="cardNo != null" >
+				#{cardNo,jdbcType=VARCHAR},
+			</if>
+			<if test="normalState != null" >
+				#{normalState,jdbcType=INTEGER},
+			</if>
+			<if test="reformState != null" >
+				#{reformState,jdbcType=INTEGER},
+			</if>
+			<if test="reformDeadLine != null" >
+				#{reformDeadLine},
+			</if>
+			<if test="reformContent != null" >
+				#{reformContent},
+			</if>
+			<if test="sanctionState != null" >
+				#{sanctionState},
+			</if>
+			<if test="sanctionMoney != null" >
+				#{sanctionMoney},
+			</if>
+			<if test="sanctionContent != null" >
+				#{sanctionContent},
+			</if>
+			<if test="eliminateState != null" >
+				#{eliminateState,jdbcType=INTEGER},
+			</if>
+			<if test="eliminateDeadLine != null" >
+				#{eliminateDeadLine},
+			</if>
+			<if test="eliminateContent != null" >
+				#{eliminateContent},
+			</if>
+			<if test="createTime != null" >
+				#{createTime},
+			</if>
+			<if test="createdBy != null" >
+				#{createdBy},
+			</if>
+			<if test="modifyTime != null" >
+				#{modifyTime},
+			</if>
+			<if test="modifyBy != null" >
+				#{modifyBy,jdbcType=VARCHAR},
+			</if>
+			<if test="reformType != null" >
+				#{reformType,jdbcType=INTEGER},
+			</if>
+			<if test="reformTarget != null" >
+				#{reformTarget,jdbcType=INTEGER},
+			</if>
+			<if test="normalContent != null" >
+				#{normalContent},
+			</if>
+			<if test="handType != null" >
+				#{handType,jdbcType=INTEGER},
+			</if>
+			<if test="uid != null" >
+				#{uid,jdbcType=INTEGER},
+			</if>
+			<if test="affairType != null" >
+				#{affairType,jdbcType=INTEGER},
+			</if>
+			<if test="integral != null" >
+				#{integral,jdbcType=INTEGER},
+			</if>
+		</trim>
+	</insert>
+
+	<update id="updateUserHandleInfo" parameterType="RsglUserhandstatus" >
+		update rsgl_userhandstatus
+		<set >
+			<if test="cardNo != null" >
+				cardNo = #{cardNo,jdbcType=VARCHAR},
+			</if>
+			<if test="normalState != null" >
+				normalState = #{normalState,jdbcType=INTEGER},
+			</if>
+			<if test="reformState != null" >
+				reformState = #{reformState,jdbcType=INTEGER},
+			</if>
+			<if test="reformDeadLine != null" >
+				reformDeadLine = #{reformDeadLine},
+			</if>
+			<if test="reformContent != null" >
+				reformContent = #{reformContent},
+			</if>
+			<if test="sanctionState != null" >
+				sanctionState = #{sanctionState,jdbcType=INTEGER},
+			</if>
+			<if test="sanctionMoney != null" >
+				sanctionMoney = #{sanctionMoney},
+			</if>
+			<if test="sanctionContent != null" >
+				sanctionContent = #{sanctionContent},
+			</if>
+			<if test="eliminateState != null" >
+				eliminateState = #{eliminateState,jdbcType=INTEGER},
+			</if>
+			<if test="eliminateDeadLine != null" >
+				eliminateDeadLine = #{eliminateDeadLine},
+			</if>
+			<if test="eliminateContent != null" >
+				eliminateContent = #{eliminateContent},
+			</if>
+			<if test="createTime != null" >
+				createTime = #{createTime},
+			</if>
+			<if test="createdBy != null" >
+				createdBy = #{createdBy,jdbcType=VARCHAR},
+			</if>
+			<if test="modifyTime != null" >
+				modifyTime = #{modifyTime},
+			</if>
+			<if test="modifyBy != null" >
+				modifyBy = #{modifyBy,jdbcType=VARCHAR},
+			</if>
+			<if test="reformType != null" >
+				reformType = #{reformType,jdbcType=INTEGER},
+			</if>
+			<if test="reformTarget != null" >
+				reformTarget = #{reformTarget,jdbcType=INTEGER},
+			</if>
+			<if test="normalContent != null" >
+				normalContent = #{normalContent},
+			</if>
+			<if test="handType != null" >
+				handType = #{handType,jdbcType=INTEGER},
+			</if>
+			<if test="uid != null" >
+				uid = #{uid,jdbcType=INTEGER},
+			</if>
+			<if test="affairType != null" >
+				affairType = #{affairType,jdbcType=INTEGER},
+			</if>
+			<if test="integral != null" >
+				integral = #{integral,jdbcType=INTEGER},
+			</if>
+		</set>
+		where uhId = #{uhid}
+	</update>
+<!--	<insert id="saveUserHandleInfo">
+		INSERT INTO rsgl_userhandstatus(
+			createdby,
+			handtype,
+			uid,
+			affairtype
+		) VALUES (
+			#{createdBy},
+			#{handType},
+			#{uid},
+			#{affairType}
+		)
+	</insert>-->
+
+
+	<!--根据用户卡号，处理类型获取用户的处理事件-->
+	<select id="getUserHandStatusByCardNoAndHandType" resultType="RsglUserhandstatus">
+		SELECT
+			uhs.*
+		FROM
+		(
+			SELECT
+				v.*, row_number () OVER (
+			partition BY handType
+			ORDER BY createTime DESC
+		) AS rowNum
+		FROM
+			rsgl_userHandStatus v
+		WHERE
+			handType IN
+			<foreach collection="handTypes" item="handType" open="(" separator="," close=")">
+				#{handType}
+			</foreach>
+		AND uid = #{uid}
+		AND affairType = #{affairType}
+		) AS uhs
+		WHERE
+			uhs.rowNum = 1
+	</select>
+</mapper>

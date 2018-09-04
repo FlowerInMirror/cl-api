@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.api.jmat.dao.MaterialSmallSampleDao">
+    
+	<sql id="materialSmallSampleColumns">
+		a.mss_id AS "mssId",
+		a.mss_matid AS "mssMatid",
+		a.mss_samplestatus AS "mssSamplestatus",
+		a.mss_status AS "mssStatus",
+		a.mss_createtime AS "mssCreatetime",
+		a.mss_updatetime AS "mssUpdatetime",
+		a.mss_GroundingStatus AS "mssGroundingStatus"
+	</sql>
+	
+	<sql id="materialSmallSampleJoins">
+	</sql>
+    
+	<select id="get" resultType="MaterialSmallSample">
+		SELECT 
+			<include refid="materialSmallSampleColumns"/>
+		FROM v_materialsmallsample a
+		<include refid="materialSmallSampleJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="MaterialSmallSample">
+		SELECT 
+			<include refid="materialSmallSampleColumns"/>
+		FROM v_materialsmallsample a
+		<include refid="materialSmallSampleJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="MaterialSmallSample">
+		SELECT 
+			<include refid="materialSmallSampleColumns"/>
+		FROM v_materialsmallsample a
+		<include refid="materialSmallSampleJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert" keyProperty="mssId" useGeneratedKeys="true" parameterType="MaterialSmallSample">
+        -- 新增材料小样
+		INSERT INTO v_materialsmallsample(
+			mss_matid,
+			mss_samplestatus,
+			mss_GroundingStatus
+		) VALUES (
+			#{mssMatid},
+			#{mssSamplestatus},
+			#{mssGroundingStatus}
+		)
+
+	</insert>
+
+	<update id="update">
+        -- 更新材料小样
+		UPDATE v_materialsmallsample SET
+		    <if test="null != mssSamplestatus">
+                mss_samplestatus = #{mssSamplestatus},
+            </if>
+		    <if test="null != mssSamplestatus">
+                mss_GroundingStatus = #{mssGroundingStatus},
+            </if>
+		    <if test="null != mssStatus">
+                mss_status = #{mssStatus},
+            </if>
+            mss_updatetime = GETDATE()
+        WHERE mss_matid = #{mssMatid}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM v_materialsmallsample
+		WHERE id = #{id}
+	</update>
+
+    <!-- 材料样品状态 (子库>地区>档次>品牌项三段)
+    MaterialSmallSample getMaterialSampleByMatID(@Param("matID") String matID);-->
+    <select id="getMaterialSampleByMatID" parameterType="String" resultType="MaterialSmallSample">
+        SELECT <include refid="materialSmallSampleColumns"/>
+        FROM   V_MaterialSmallSample a
+        WHERE  a.mss_MatID = #{matID}
+    </select>
+
+    <!-- 获取 材料样品状态 (子库>地区>档次>品牌项三段)
+    int getMaterialSampleStatusByMatID(@Param("matID") String matID);-->
+    <select id="getMaterialSampleStatusByMatID" parameterType="String" resultType="Integer">
+        SELECT a.mss_SampleStatus
+        FROM   V_MaterialSmallSample a
+        WHERE  a.mss_MatID = #{matID}
+    </select>
+
+</mapper>

@@ -1,0 +1,542 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.api.jmat.dao.SublibraryDao">
+
+    <!--查找材料基础数据,通过四级科目ID.
+    public MatBaseData findMatBaseDataByTreeFourID(String treeFourID);-->
+    <select id="findMatBaseDataByTreeFourID" parameterType="String" resultType="MatBaseData">
+        SELECT
+            -- 一级/二级/材料名(三级)/规格名(四级) ID
+            T1.tree_ID AS treeOneID,T2.tree_ID AS treeTwoID,T3.tree_ID AS treeThreeID,T4.tree_ID AS treeFourID
+            -- 一级/二级/材料名(三级)/规格名(四级) NAME
+           ,T1.tree_Name treeOneName,T2.tree_Name treeTwoName,T3.tree_Name matName,T4.tree_Name matSpec
+            -- 类别(1成品，2非成品）
+            ,TS1.ts_TypeState classify
+            -- 单位(单位ID/单位名)
+            ,unit_Name unit
+            ,TS2.ts_ID AS specialID -- 专项ID
+        FROM V_Tree T4
+        LEFT JOIN V_Tree T3 ON T4.tree_ParentID=T3.tree_ID
+        LEFT JOIN V_Tree T2 ON T3.tree_ParentID=T2.tree_ID
+        LEFT JOIN V_Tree T1 ON T2.tree_ParentID=T1.tree_ID
+        LEFT JOIN V_TreeSst TS1 ON T4.tree_ID=TS1.ts_TreeID AND TS1.ts_Type=16 AND TS1.ts_jincheng=0--成品设置
+		LEFT JOIN V_TreeSst TS2 ON T3.tree_ID=TS2.ts_TreeID AND TS2.ts_Type=32 AND TS2.ts_jincheng=0--专项成品设置
+        LEFT JOIN V_TreeBaseInfo ON T4.tree_ID=tbi_TreeID AND tbi_Status=0
+        LEFT JOIN V_Unit ON unit_ID=tbi_unit
+        WHERE CAST (T4.tree_ID AS VARCHAR(50)) = #{treeFourID} AND T4.tree_Level=4 AND T4.tree_jincheng=0
+    </select>
+
+    <!--查找材料详细的基础数据,通过四级科目ID.
+    public MatBaseData findMatBaseDetailDataByTreeFourID(String treeFourID,Integer cityID);-->
+    <select id="findMatBaseDetailDataByTreeFourID"  resultType="MatBaseData">
+            SELECT
+             T1.tree_Name treeOneName
+            ,T2.tree_Name treeTwoName
+            ,T3.tree_Name matName
+            ,T4.tree_Name matSpec
+            ,T4.tree_Code matSpecCode
+            ,T4.tree_Order treeOrder
+            ,ts_TypeState classify--是否成品类
+            --置顶信息
+            ,tci_PageIndex AS topPageIndex,tci_PageNum AS topPageNum
+            --单位
+            ,tbi_unit unitID,unit_Name unit
+            --规格级信息
+            ,tbi_MatDescription AS matDescription
+            ,tbi_MatFunction AS matFunction
+            ,tbi_ExteriorName AS exteriorName
+            ,tbi_ExteriorSC AS exteriorSC
+            ,tbi_ExteriorDM AS exteriorDM
+            ,tbi_MockUpSamplingRemark AS mockUpSamplingRemark
+            ,tbi_PSType AS psType
+            ,tbi_PSMaterialQuality AS psMaterialQuality
+            ,tbi_PSPackageRemark AS psPackageRemark
+            ,tbi_PSMarkRemark AS psMarkRemark
+            FROM V_Tree T4
+            LEFT JOIN V_Tree T3 ON T4.tree_ParentID=T3.tree_ID
+            LEFT JOIN V_Tree T2 ON T3.tree_ParentID=T2.tree_ID
+            LEFT JOIN V_Tree T1 ON T2.tree_ParentID=T1.tree_ID
+            LEFT JOIN V_TreeSst ON T4.tree_ID=ts_TreeID AND ts_Type=16 AND ts_jincheng=0--成品设置
+            LEFT JOIN V_TreeCityInfo ON T4.tree_ID=tci_TreeID AND tci_CityID=#{cityID} AND tci_Status=0
+            LEFT JOIN V_TreeBaseInfo ON T4.tree_ID=tbi_TreeID AND tbi_Status=0
+            LEFT JOIN V_Unit ON unit_ID=tbi_unit AND unit_jincheng = 0
+            WHERE CAST (T4.tree_ID AS VARCHAR(50))=#{treeFourID} AND T4.tree_Level=4 AND T4.tree_jincheng=0
+    </select>
+
+
+    <!--获取子库一段列表,通过城市ID.
+    public List<SublibrariesAList> findSublibrariesAListsByCityID(Integer cityID);-->
+    <select id="findSublibrariesAListsByCityID" resultType="SublibrariesAList">
+        -- 获取平台-子库一段列表
+        EXEC PRO_MAT_GET_MMSLoop #{cityID}
+    </select>
+
+    <!--查找"计划"材料使用量集合,通过城市ID与数据量.
+    public List<CostMaterialApplicationAmount> findPlanMatApplicationAmountsByCityIDAndTopNum(@Param("cityID")Integer cityID, @Param("topNum") Integer topNum);-->
+    <select id="findPlanMatApplicationAmountsByCityIDAndTopNum" resultType="CostMaterialApplicationAmount" >
+        WITH K AS (
+        -- 获取 排名(针对城市)/城市ID/材料ID/总数量/平均价价
+        SELECT
+        --根据城市内分组,然后根据实际下单量总数排序(降序)
+        ROW_NUMBER () OVER (PARTITION BY m_cityID ORDER BY SUM (pm_TotalCount) DESC ) TopNum,
+        m_cityID,
+        m_ID,
+        SUM (pm_TotalCount) pod_AlreadyCount,
+        -- 材料实际下单量总数
+        CAST ( AVG (pm_MatPrice) AS DECIMAL (18, 2) ) pod_MatPrice -- 材料单价平均价
+        FROM V_ProInfoMaterial
+        LEFT JOIN V_Material ON pm_MatID = m_ID
+        WHERE
+        pm_jincheng = 0
+        AND m_jincheng = 0
+        GROUP BY
+        m_cityID,
+        m_ID -- 城市ID,订单材料ID分组.
+        ),
+        A AS (
+        -- 获得 材料ID/单量总数/分组行号/材料单价 = 条件topNum 使用量靠前的数据 小於等於 100 等效于 前 100 名
+        SELECT
+        m_ID AS pod_MatID,
+        pod_AlreadyCount,
+        TopNum,
+        pod_MatPrice
+        FROM
+        K
+        WHERE
+        TopNum &lt;= #{topNum}
+        AND m_cityID = #{cityID}
+        ),
+        AV AS (
+        --获取 规格ID/材料档次/档次下材料的平均价
+        SELECT
+        m_TreeFour TreeID,
+        m_Level MatLevel,
+        CAST (
+        AVG (m_CostPrice + m_InstallPrice) AS DECIMAL (18, 2)
+        ) CostPrice
+        FROM
+        V_Material
+        WHERE
+        m_jincheng = 0
+        AND m_updateState = 1
+        AND (m_CostPrice + m_InstallPrice) > 0
+        GROUP BY
+        m_TreeFour,
+        m_Level
+        ) SELECT
+        T1.tree_Name AS treeOneName,
+        T2.tree_name AS treeTwoName,
+        T3.tree_name AS treeThreeName,
+        T4.tree_name AS treeFourName,
+        unit_name AS unitName,
+        m_Code AS matCode,
+        m_brandName AS brandName,
+        m_brandType AS brandType,
+        m_CostPRice AS costPrice,
+        m_QuotesPrice AS quotesPrice,
+        m_InstallPrice AS installPrice,
+        pod_MatPrice AS matAvgPrice,
+        -- '此材料交易平均价'
+        CostPrice AS nationwideMatAvgPrice,
+        -- '全国平均成本价'
+        CASE m_level
+        WHEN 1 THEN
+        'A'
+        WHEN 2 THEN
+        'B'
+        WHEN 4 THEN
+        'C'
+        END AS matLevel,
+        TopNum,
+        pod_AlreadyCount AS totalSingleQuantity,
+        -- 总单"量"
+        m_ID AS matID
+        FROM
+        V_Material
+        LEFT JOIN V_Tree T4 ON T4.tree_ID = m_treeFour
+        LEFT JOIN V_Tree T3 ON T3.tree_ID = m_treeThree
+        LEFT JOIN V_Tree T2 ON T2.tree_ID = m_treeTwo
+        LEFT JOIN V_Tree T1 ON T1.tree_ID = m_treeOne
+        LEFT JOIN dbo.V_TreeBaseInfo ON tbi_TreeID = m_treeFour
+        LEFT JOIN dbo.V_Unit ON unit_id = tbi_unit
+        INNER JOIN A ON pod_MatID = m_ID
+        LEFT JOIN AV ON TreeID = m_treeFour
+        AND m_Level = MatLevel
+        WHERE
+        m_jincheng = 0
+        ORDER BY
+        m_cityID,
+        TopNum
+    </select>
+
+    <!-- 子库列表:查找二维码打印列表 通过 子库地区检索包装类
+    List<QRCodePrintList> findQRCodePrintListBySubLibraryCityQuery(SubLibraryCityQuery subLibraryCityQuery);-->
+    <select id="findQRCodePrintListBySubLibraryCityQuery" parameterType="SubLibraryCityQuery" resultType="QRCodePrintList">
+        -- 查找二维码打印列表(材料表/材料子库完善状态表-保存城市ID/材料基础信息-保存城市ID/单位表/科目树表-获取科目树名称)
+        WITH QRCodePrintList AS(
+            SELECT
+             ROW_NUMBER() OVER (ORDER BY tci_PageIndex,tci_PageNum,m_level,m_createTime) AS rowNum
+            ,m_ID AS matID
+            ,T3.tree_name AS matName
+            ,REPLACE(m_code,'-','.') AS matCode
+            ,CASE
+                WHEN m_Level=1 THEN 'A'
+                WHEN m_Level=2 THEN 'B'
+                ELSE 'C'
+             END AS matLevel
+            ,unit_Name AS matUnit
+            ,m_brandName AS matBrandName
+            ,upper(REPLACE(dbo.fn_GetPinyin(m_brandName),' ','')) AS matBrandNamePinYin
+            ,T4.tree_name AS matSpecName
+            ,'http://c.rxjyzx.com/SD/'+CAST(m_ID as VARCHAR(50))+'/'+CAST(m_cityID as VARCHAR(50)) AS matMallUrl
+            ,'￥'+CAST(m_quotesPrice AS VARCHAR(50)) AS matQuotedPrice
+            ,m_createTime AS matCreateTime
+            ,m_updateTime AS matUpdateTime
+            ,m_Level AS mLevel
+            ,m_CityID AS  mCityID
+            FROM V_Material
+            -- 单位名称
+            LEFT JOIN V_TreeBaseInfo ON tbi_TreeID = m_TreeFour LEFT JOIN V_Unit ON unit_ID = tbi_unit
+            -- 圈中置顶材料
+            LEFT JOIN V_TreeCityInfo ON m_cityID=tci_CityID AND m_treeFour=tci_TreeID
+            -- 材料名称
+            LEFT JOIN V_tree T3 ON T3.tree_ID=m_treeThree
+            -- 规格名称
+            LEFT JOIN V_tree T4 ON T4.tree_ID=m_treeFour
+            -- 基础过滤条件:完善的/报价不为0的/进程不为0的/给定城市下的
+            WHERE m_updateState=1 AND m_quotesPrice>=0.01 AND m_jincheng=0 AND m_CityID = #{cityID}
+            -- 检索过滤:0.获取圈中置顶 1.一级分类ID 2.二级分类ID 3.三级分类ID 4.四级分类ID 5.材料名称(模糊查询 )
+            <if test="9 == pageType">
+                AND tci_PageIndex > 0 AND tci_Status = 0
+            </if>
+            <if test="null != treeOneID">
+                AND m_TreeOne = #{treeOneID}
+            </if>
+            <if test="null != treeTwoID">
+                AND m_TreeTwo = #{treeTwoID}
+            </if>
+            <if test="null != treeThreeID">
+                AND m_TreeThree = #{treeThreeID}
+            </if>
+            <if test="null != treeFourID">
+                AND m_TreeFour = #{treeFourID}
+            </if>
+            <if test="null != beginPageNum and null != endPageNum">
+                AND rowNum BETWEEN #{beginPageNum} AND #{endPageNum}
+            </if>
+        ), fuzzyQuery AS  (
+            SELECT * FROM QRCodePrintList
+            <where>
+                <if test="null != matName">
+                    OR matName LIKE '%${matName}%' OR matBrandName LIKE '%${matName}%'
+                </if>
+                <if test="null != matNames">
+                    <foreach collection="matNames" item="matNameItem" separator="," open="OR matName in(" close=")">
+                        #{matNameItem}
+                    </foreach>
+                </if>
+                <if test="null != matNames">
+                    <foreach collection="matNames" item="matNameItem" separator="," open="OR matBrandName in(" close=")">
+                        #{matNameItem}
+                    </foreach>
+                </if>
+            </where>
+        )
+        SELECT * FROM fuzzyQuery
+        <where>
+            <if test="null != matIDs">
+                <foreach collection="matIDs" item="matid" separator="," open="AND matID in(" close=")">
+                    #{matid}
+                </foreach>
+            </if>
+            <if test="null != levelFlag">
+                AND mLevel = #{levelFlag}
+            </if>
+        </where>
+        -- 排序:材料名称/品牌名称/档次/更新时间/创建时间 新创建的排前
+        ORDER BY  matName,matBrandName,matLevel,matUpdateTime,matCreateTime DESC
+    </select>
+
+
+    <!-- 小样列表:子库地区平台 > 小样信息(三段弹出)
+    List<StorageRack> findSampleListByCityIDAndTreeFourID(Integer cityID, String treeFourID);-->
+    <select id="findSampleListByCityIDAndTreeFourID" resultType="StorageRack">
+        -- 小样列表 > 条件:1.正常进程/2.需要小样/3.入库/4.品牌与型号名称不为空/5.报价与成本都不为0/6.有LOGO图,至少一张主图,至少一张型号图
+         WITH brandLOGOPhoto AS (
+                --LOGO图
+                SELECT ROW_NUMBER() OVER(PARTITION BY tsp_TSID ORDER BY tsp_createTime ASC) topNum
+                ,tsp_TSID matID
+                ,tsp_PhotoURL AS brandLOGOPhotoURL
+                FROM V_TreeStandardPhoto
+                WHERE tsp_Type = 1 AND tsp_jincheng = 0 AND tsp_Class =2
+        )
+         , brandMainPhoto AS (
+                --产品主图
+                SELECT ROW_NUMBER() OVER(PARTITION BY tsp_TSID ORDER BY tsp_createTime ASC) topNum
+                ,tsp_TSID matID
+                ,tsp_PhotoURL AS brandMainPhotoURL
+                FROM V_TreeStandardPhoto
+                WHERE tsp_Type = 4 AND tsp_jincheng = 0 AND tsp_Class =2
+        )
+         , brandTypePhoto AS (
+                --型号图
+                SELECT ROW_NUMBER() OVER(PARTITION BY tsp_TSID ORDER BY tsp_createTime ASC) topNum
+                ,tsp_TSID matID
+                ,tsp_PhotoURL AS brandTypePhotoURL
+                FROM V_TreeStandardPhoto
+                WHERE tsp_Type = 2 AND tsp_jincheng = 0 AND tsp_Class =2
+        )
+        SELECT
+         m_ID AS matID
+        ,treeThree.tree_name AS matName
+        ,REPLACE(m_code,'-','.') AS matCode
+        ,CASE
+                WHEN m_Level=1 THEN 'A'
+                WHEN m_Level=2 THEN 'B'
+                ELSE 'C'
+         END AS matLevel
+        ,unit_Name AS matUnit
+        ,m_brandName AS matBrandName
+        ,upper(REPLACE(dbo.fn_GetPinyin(m_brandName),' ','')) AS matBrandNamePinYin
+        ,treeFour.tree_name AS matSpecName
+        ,'http://c.rxjyzx.com/SD/'+CAST(m_ID as VARCHAR(50))+'/'+CAST(m_cityID as VARCHAR(50)) AS matMallUrl
+        ,'￥'+CAST(m_quotesPrice AS VARCHAR(50)) AS matQuotedPrice
+        ,m_createTime AS matCreateTime
+        ,m_updateTime AS matUpdateTime
+        ,m_Level AS mLevel
+        ,m_SampleType AS sampleType
+        ,ISNULL(mss_SampleStatus, 0) AS sampleStatus
+        ,ISNULL(mss_GroundingStatus, 0) AS groundingStatus
+        FROM V_Material a
+        -- LOGO图
+        LEFT JOIN brandLOGOPhoto ON brandLOGOPhoto.matID=m_ID AND brandLOGOPhoto.topNum=1
+        -- 主图
+        LEFT JOIN brandMainPhoto ON brandMainPhoto.matID=m_ID AND brandMainPhoto.topNum=1
+        -- 型号图
+        LEFT JOIN brandTypePhoto ON brandTypePhoto.matID=m_ID AND brandTypePhoto.topNum=1
+        -- 材料名称
+        LEFT JOIN V_tree AS treeThree ON treeThree.tree_ID=m_treeThree
+        -- 规格名称
+        LEFT JOIN V_tree AS treeFour ON treeFour.tree_ID=m_treeFour
+        -- 单位名称
+        LEFT JOIN V_TreeBaseInfo ON tbi_TreeID = m_TreeFour LEFT JOIN V_Unit ON unit_ID = tbi_unit
+        -- 小样状态(有无状态/上下架状态)
+        LEFT JOIN V_MaterialSmallSample ON mss_MatID = m_ID AND mss_Status = 0
+        WHERE
+        a.m_jincheng = 0
+        AND a.m_SampleType = 1
+        AND a.m_updatestate =  1
+        AND (a.m_CostPrice + a.m_QuotesPrice) > 0
+        AND a.m_BrandName IS NOT NULL AND LEN(a.m_BrandName) != 0 AND a.m_BrandType IS NOT NULL AND LEN(a.m_BrandType) != 0
+        AND brandLOGOPhoto.brandLOGOPhotoURL IS NOT NULL AND LEN(brandLOGOPhoto.brandLOGOPhotoURL) != 0
+        AND brandMainPhoto.brandMainPhotoURL IS NOT NULL AND LEN(brandMainPhoto.brandMainPhotoURL) != 0
+        AND brandTypePhoto.brandTypePhotoURL IS NOT NULL AND LEN(brandTypePhoto.brandTypePhotoURL) != 0
+        AND a.m_CityID = #{cityID}
+        AND a.m_TreeFour = #{treeFourID}
+        -- 排序:档次/材料名称/品牌名称/更新时间/创建时间 新创建的排前
+        ORDER BY  matLevel,matName,matBrandName,matUpdateTime,matCreateTime
+    </select>
+
+    <!-- 材料回路数据,通过城市ID与四级科目ID检索(注:调用存储过程  PRO_MAT_GET_MMSLoop_FindOne)
+    MMSLoopVO matGetMMSLoopFindOne(@Param("cityID")Integer cityID,@Param("treeFourID") String treeFourID);-->
+    <select id="matGetMMSLoopFindOne" resultType="MMSLoopVO">
+         EXEC PRO_MAT_GET_MMSLoop_FindOne #{cityID},#{treeFourID}
+    </select>
+
+    <!-- 查找子库列表:'检索'材料回路列表
+    List<MatLoopList> findMatLoopListsByMatLoopQuery(MatLoopQuery matLoopQuery); -->
+    <select id="findMatLoopListsByMatLoopQuery"  resultType="MatLoopList">
+        -- 品牌详情相关
+        ;WITH brandDetail AS (
+            -- A档回路相关
+            SELECT
+            treeFourID AS treeFourID
+            ,matCityID AS matCityID
+            ,matLevel
+            ,COUNT(*) matCount
+            ,COUNT(
+                CASE WHEN
+                ISNULL(matBrandName, '') = '' OR
+                ISNULL(matBrandTypeName, '') = '' OR
+                ISNULL(brandLOGOPhotoURL, '') = '' OR
+                ISNULL(brandMainPhotoURL, '') = '' OR
+                ISNULL(brandTypePhotoURL, '') = ''
+                THEN 1 END
+            ) AS brandNotCount
+            FROM  MMS_View_ALevelMatDtail
+            GROUP BY treeFourID,matCityID,matLevel
+
+            UNION ALL
+            -- B档回路相关
+            SELECT
+            treeFourID AS treeFourID
+            ,matCityID AS matCityID
+            ,matLevel
+            ,COUNT(*) matCount
+            ,COUNT(
+                CASE WHEN
+                ISNULL(matBrandName, '') = '' OR
+                ISNULL(matBrandTypeName, '') = '' OR
+                ISNULL(brandLOGOPhotoURL, '') = '' OR
+                ISNULL(brandMainPhotoURL, '') = '' OR
+                ISNULL(brandTypePhotoURL, '') = ''
+                THEN 1 END
+            ) AS brandNotCount
+            FROM  MMS_View_BLevelMatDtail
+            GROUP BY treeFourID,matCityID,matLevel
+
+            UNION ALL
+            -- C档回路相关
+
+            SELECT
+            treeFourID AS treeFourID
+            ,matCityID AS matCityID
+            ,matLevel
+            ,COUNT(*) matCount
+            ,COUNT(
+                CASE WHEN
+                ISNULL(matBrandName, '') = '' OR
+                ISNULL(matBrandTypeName, '') = '' OR
+                ISNULL(brandLOGOPhotoURL, '') = '' OR
+                ISNULL(brandMainPhotoURL, '') = '' OR
+                ISNULL(brandTypePhotoURL, '') = ''
+                THEN 1 END
+            ) AS brandNotCount
+            FROM  MMS_View_CLevelMatDtail
+            GROUP BY treeFourID,matCityID,matLevel
+        )
+        -- 品牌回路相关
+        , brandLoop AS (
+            SELECT treeFourID
+            , ISNULL(MAX(CASE WHEN MatLevel=1 THEN  brandNotCount END), 0) AS abrandNotCount
+            , ISNULL(MAX(CASE WHEN MatLevel=2 THEN  brandNotCount END), 0) AS bbrandNotCount
+            , ISNULL(MAX(CASE WHEN MatLevel=4 THEN  brandNotCount END), 0) AS cbrandNotCount
+            , CASE WHEN SUM(DISTINCT matLevel) = tps_BaseState THEN 1 ELSE 0 END AS levelSUMFlag
+            , CASE WHEN ISNULL(MIN(matCount), 0) = 0 THEN 0 ELSE 1 END AS matCountFlag
+            FROM brandDetail
+            LEFT JOIN V_TreePerfectState ON tps_TreeFour = treeFourID AND tps_jincheng = 0
+            WHERE matCityID =#{cityID}
+            GROUP BY TreeFourID,tps_BaseState
+        )
+        -- 处理回路相关
+        ,VMH AS (
+            SELECT
+                -- 内排序:四级ID,用户卡号分组,处理时间降序排序
+                ROW_NUMBER() OVER(PARTITION BY vmh_MainObject,vmh_CityID ORDER BY vmh_CreateTime DESC) TopNum
+                ,vmh_Type,vmh_CreateTime,vmh_MainObject,vmh_CityID,vmh_Content
+            FROM V_MaterialHandle
+            WHERE vmh_Status = 0
+        )
+        -- 圈中相关
+        , circleCenter AS (
+            SELECT tci_TreeID,tci_PageIndex AS tciFlag
+            FROM V_TreeCityInfo
+            WHERE tci_Status=0 AND tci_PageIndex>=1 AND tci_CityID=#{cityID}
+        )
+        , matLoopList AS (
+        SELECT
+            ROW_NUMBER() OVER(ORDER BY vmh_CreateTime,mps_updateTime,T4.tree_Order,T1.tree_createTime,T2.tree_createTime,T3.tree_createTime,T4.tree_createTime) showNum
+            -- 基础信息相关
+            ,mps_CityID AS  mpsCityID
+            ,mps_TreeFour AS treeFourID
+            ,T4.tree_Order AS rowNum
+            ,T1.tree_Name treeOneName
+            ,T2.tree_Name treeTwoName
+            ,T3.tree_Name matName
+            ,T4.tree_Name matSpec
+            -- 材料处理相关
+            ,vmh_Type visitMark
+            ,vmh_CreateTime visitTime
+            ,vmh_Content visitContent
+            -- 回路相关
+            ,CASE WHEN ISNULL(matCountFlag, 0) = 0 OR ISNULL(platformLoopStatus, 0) = 0 OR ISNULL(abrandNotCount, 0) > 0 OR ISNULL(bbrandNotCount , 0) > 0 OR ISNULL(cbrandNotCount , 0) > 0  OR ISNULL(levelSUMFlag, 0) = 0 OR ISNULL(levelStaNotCount, 0) > 0 OR ISNULL(levelContrastCount, 0) = 0 OR ISNULL(levelContrastNotCount, 0) > 0  THEN 0 ELSE 1 END AS loopStatus
+            -- 平台回路相关
+            ,CASE WHEN ISNULL(tpf.platformLoopStatus, 0) = 0 OR ISNULL(levelContrastCount, 0) = 0 THEN 0 ELSE 1 END AS platformLoopStatus
+            -- A档回路相关
+            ,abrandNotCount
+            -- B档回路相关
+            ,bbrandNotCount
+            -- C档回路相关
+            ,cbrandNotCount
+            -- 圈中
+            ,ISNULL(tciFlag, 0) AS tciFlag
+        FROM V_MaterialPerfectState
+        -- 规格名称
+        LEFT JOIN V_Tree T4 ON mps_TreeFour=T4.tree_ID
+        -- 材料名称
+        LEFT JOIN V_Tree T3 ON T4.tree_ParentID=T3.tree_ID
+        -- 二级类
+        LEFT JOIN V_Tree T2 ON T3.tree_ParentID=T2.tree_ID
+        -- 一级类
+        LEFT JOIN V_Tree T1 ON T2.tree_ParentID=T1.tree_ID
+        -- 处理(处理状态/处理时间)
+        LEFT JOIN VMH ON vmh_MainObject = mps_TreeFour AND vmh_CityID = mps_CityID AND VMH.TopNum=1
+        -- 平台回路相关
+        LEFT JOIN Loop_View_PlatformLoopStatus AS tpf ON mps_TreeFour = tpf.plsl_treeFourID AND mps_CityID = plsl_mpsCityID
+        -- 档次(A档/B档/C档/质量标准/对比项)回路相关
+        LEFT JOIN brandLoop AS tabcl ON mps_TreeFour = tabcl.treeFourID
+        LEFT JOIN Loop_View_LevelSta AS lsl ON mps_TreeFour = lsl.lsl_treeFourID
+        LEFT JOIN Loop_View_LevelContrast AS lcl ON mps_TreeFour= lcl.lcl_treeFourID AND lcl.lcl_cityID = mps_CityID
+        -- 圈中相关
+        LEFT JOIN circleCenter ON mps_TreeFour = tci_TreeID
+        WHERE  mps_jincheng = 0
+        )
+        SELECT * FROM matLoopList
+        WHERE mpsCityID = #{cityID}
+        -- 圈中
+        <if test="null != circleFlag">
+            AND tciFlag > 0
+        </if>
+        -- 总回路状态(1完/2未)
+        <if test="totalFlag == 1">
+            AND loopStatus = 1
+        </if>
+        <if test="totalFlag == 2">
+            AND loopStatus = 0
+        </if>
+        -- 平台回路(1完/2未)
+        <if test="platformFlag == 1">
+            AND platformLoopStatus = 1
+        </if>
+        <if test="platformFlag == 2">
+            AND platformLoopStatus = 0
+        </if>
+        -- A档回路(1完/2未)
+        <if test="aLevelFlag == 1">
+            AND aBrandLoopStatus = 1
+        </if>
+        <if test="aLevelFlag == 2">
+            AND aBrandLoopStatus = 0
+        </if>
+        -- B档回路(1完/2未)
+        <if test="bLevelFlag == 1">
+            AND bBrandLoopStatus = 1
+        </if>
+        <if test="bLevelFlag == 2">
+            AND bBrandLoopStatus = 0
+        </if>
+        -- C档回路(1完/2未)
+        <if test="cLevelFlag == 1">
+            AND cBrandLoopStatus = 1
+        </if>
+        <if test="cLevelFlag == 2">
+            AND cBrandLoopStatus = 0
+        </if>
+        -- 处理类型(1正/2异/3问)
+        <if test="null != handleTypeFlag">
+            AND visitMark = #{handleTypeFlag}
+        </if>
+        -- 处理日期(1当天/2本周/3本季/4本年)
+        <if test="null != handleTimeFlag">
+            AND visitTime > #{startTime} AND visitTime &lt; #{endTime}
+        </if>
+        ORDER BY visitTime DESC
+    </select>
+
+    <!-- 子库列表:获取全国材料回路列表
+    List<QGMatLoopList> getQGLoopMatList();-->
+    <select id="getQGLoopMatList"  resultType="QGMatLoopList">
+        EXEC PRO_MAT_GET_MMS_QG_Loop__List
+    </select>
+
+</mapper>

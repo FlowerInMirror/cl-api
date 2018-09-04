@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.rsgl.dao.RsglDiQuDao">
+    
+	<sql id="rsglDiQuColumns">
+		a.dq_id AS "dqId",
+		a.dq_name AS "dqName",
+		a.dq_code AS "dqCode",
+		a.dq_lishu AS "dqLishu",
+		a.dq_time AS "dqTime",
+		a.dq_jingcheng AS "dqJingcheng",
+		a.dq_quhao AS "dqQuhao",
+		a.dq_oldid AS "dqOldid",
+		a.lasteditdate AS "lasteditdate",
+		a.creationdate AS "creationdate",
+		a.tb_diqu AS "tbDiqu",
+		a.wps_usestate AS "wpsUsestate"
+	</sql>
+	
+	<sql id="rsglDiQuJoins">
+	</sql>
+    
+	<select id="get" resultType="RsglDiQu">
+		SELECT 
+			<include refid="rsglDiQuColumns"/>
+		FROM rsgl_diqu a
+		<include refid="rsglDiQuJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="RsglDiQu">
+		SELECT 
+			<include refid="rsglDiQuColumns"/>
+		FROM rsgl_diqu a
+		<include refid="rsglDiQuJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="RsglDiQu">
+		SELECT 
+			<include refid="rsglDiQuColumns"/>
+		FROM rsgl_diqu a
+		<include refid="rsglDiQuJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO rsgl_diqu(
+			dq_id,
+			dq_name,
+			dq_code,
+			dq_lishu,
+			dq_time,
+			dq_jingcheng,
+			dq_quhao,
+			dq_oldid,
+			lasteditdate,
+			creationdate,
+			tb_diqu,
+			wps_usestate
+		) VALUES (
+			#{dqId},
+			#{dqName},
+			#{dqCode},
+			#{dqLishu},
+			#{dqTime},
+			#{dqJingcheng},
+			#{dqQuhao},
+			#{dqOldid},
+			#{lasteditdate},
+			#{creationdate},
+			#{tbDiqu},
+			#{wpsUsestate}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE rsgl_diqu SET 	
+			dq_id = #{dqId},
+			dq_name = #{dqName},
+			dq_code = #{dqCode},
+			dq_lishu = #{dqLishu},
+			dq_time = #{dqTime},
+			dq_jingcheng = #{dqJingcheng},
+			dq_quhao = #{dqQuhao},
+			dq_oldid = #{dqOldid},
+			lasteditdate = #{lasteditdate},
+			creationdate = #{creationdate},
+			tb_diqu = #{tbDiqu},
+			wps_usestate = #{wpsUsestate}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM rsgl_diqu
+		WHERE id = #{id}
+	</update>
+	
+	<!--获取全部地区(人事管理)数据 
+	public List<RsglDiQu> getAllRsglDiQu(); -->
+	<select id="getAllRsglDiQu" resultType="RsglDiQu">
+        SELECT <include refid="rsglDiQuColumns"/>
+        FROM rsgl_diqu a
+        WHERE a.wps_UseState=0
+    </select>
+	
+</mapper>

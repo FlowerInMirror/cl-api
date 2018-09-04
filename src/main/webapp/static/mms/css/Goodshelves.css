@@ -1,0 +1,84 @@
+.QRcodes{position: absolute;right:10px;top: 50%;margin-top: -42px;}
+
+.percentwidthBlock{border: 1px solid #ccc;height:40px;line-height: 38px;white-space: nowrap;text-overflow: ellipsis;color: #aaa;cursor: pointer;font-size: 14px;}
+.positionAlert{height: 100%;}
+.addRowBtn{position: absolute;right:0;top:10px;}
+.bgf7f7f7 div{background: #3c6;font-size: 16px;font-weight: bold;border-color:#3c6;color: #fff;}
+/*.bgf7f7f7 .percentwidthBlock{border-color: transparent;}*/
+.divfloor{width:80px;float: left;text-align: center;}
+.SolidBorder{border: 1px solid #ddd;height:30px;line-height: 30px;font-size:14px;cursor: pointer;white-space: nowrap;text-overflow: ellipsis; overflow: hidden; color: #ddd;}
+.divrowParent{margin-left:45px;overflow: hidden;}
+.percentwidth{width: 1%;float: left;text-align: center;}
+.rowItem .SolidBorder{height:30px;line-height: 30px;}
+.out {
+    border-top: 29px #029032 solid;
+    width: 0px;
+    height: 0px;
+    border-left: 68px #33cc66 solid;
+    position: relative;
+    color: #fff;
+    font-size: 16px;
+}
+.out b {
+    font-style: normal;
+    display: block;
+    position: absolute;
+    top: -32px;
+    left: -26px;
+    width: 30px;
+}
+.out em {
+    font-style: normal;
+    display: block;
+    position: absolute;
+    top: -25px;
+    left: -65px;
+    width: 25px;
+}
+
+.deleteImg{position: absolute;right:5px;top:50%;margin-top:-10px;}
+
+.ul_tab2divbox {
+    height: 80px;
+    background: #fff;
+}
+.ul_tab2div {
+    display: inline-block;
+    
+}
+body .ul_tab2 li {
+    width:auto;
+    float: left;
+    background: none;
+
+}
+body .ul_tab2 li .tab2_li_span{
+    width: 40px;
+    height: 30px;
+    line-height: 30px;
+    /* margin-right: 23px; */
+    text-align: center;
+    color: #aaa;
+    cursor: pointer;
+    background: #e4e4e4;
+}
+body .ul_tab2 li:last-child .tab2_li_line{
+    display: none;}
+body .bg_blue{background: none!important}
+body .bg_blue .tab2_li_span,.canClick.active{
+    background-color: #0e92ff!important;
+    color: #fff!important;
+}
+body .ul_tab2 li .tab2_li_line{
+    color:#ccc;}
+body .ul_tab2 .bg_blue .tab2_li_line{
+    color: #0e92ff;}
+body .ul_tab2 span {
+    height: 24px;
+    line-height: 24px;
+    color: #ccc;
+}
+.canClick.hover{
+    border-color: #0e92ff;
+    color: #0e92ff;
+}

@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.api.jmat.dao.MatRegionalIncreaseDao">
+    
+	<sql id="matRegionalIncreaseColumns">
+		a.mri_id AS "mriId",
+		a.mri_ranking AS "mriRanking",
+		a.mri_cityid AS "mriCityid",
+		a.mri_totalprice AS "mriTotalprice",
+		a.mri_createtime AS "mriCreatetime"
+	</sql>
+	
+	<sql id="matRegionalIncreaseJoins">
+	</sql>
+    
+	<select id="get" resultType="MatRegionalIncrease">
+		SELECT 
+			<include refid="matRegionalIncreaseColumns"/>
+		FROM mat_regionalincrease a
+		<include refid="matRegionalIncreaseJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="MatRegionalIncrease">
+		SELECT 
+			<include refid="matRegionalIncreaseColumns"/>
+		FROM mat_regionalincrease a
+		<include refid="matRegionalIncreaseJoins"/>
+		<where>
+			
+			<if test="mriId != null and mriId != ''">
+				AND a.mri_id = #{mriId}
+			</if>
+			<if test="mriRanking != null and mriRanking != ''">
+				AND a.mri_ranking = #{mriRanking}
+			</if>
+			<if test="mriCityid != null and mriCityid != ''">
+				AND a.mri_cityid = #{mriCityid}
+			</if>
+			<if test="mriTotalprice != null and mriTotalprice != ''">
+				AND a.mri_totalprice = #{mriTotalprice}
+			</if>
+			<if test="mriCreatetime != null and mriCreatetime != ''">
+				AND a.mri_createtime = #{mriCreatetime}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="MatRegionalIncrease">
+		SELECT 
+			<include refid="matRegionalIncreaseColumns"/>
+		FROM mat_regionalincrease a
+		<include refid="matRegionalIncreaseJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO mat_regionalincrease(
+			mri_id,
+			mri_ranking,
+			mri_cityid,
+			mri_totalprice,
+			mri_createtime
+		) VALUES (
+			#{mriId},
+			#{mriRanking},
+			#{mriCityid},
+			#{mriTotalprice},
+			#{mriCreatetime}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE mat_regionalincrease SET 	
+			mri_id = #{mriId},
+			mri_ranking = #{mriRanking},
+			mri_cityid = #{mriCityid},
+			mri_totalprice = #{mriTotalprice},
+			mri_createtime = #{mriCreatetime}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM mat_regionalincrease
+		WHERE id = #{id}
+	</update>
+	
+	<!-- 获取子库默认页成本三段(成本整体排名数据) 	
+	public List<CostOverallRanking> getCastThreeSection(); -->
+	<select id="getCastThreeSection" resultType="CostOverallRanking">
+		--查询上月整体排行数据
+		WITH lmt AS (
+			SELECT
+				ROW_NUMBER () OVER (
+					PARTITION BY a.mri_cityID
+					ORDER BY
+						a.mri_createtime DESC
+				) lmTopNum, -- 筛选条件
+				a.mri_Ranking AS lmRanking, -- 上月排名
+				a.mri_CityID AS lmCityID, -- 上月城市ID
+				a.mri_TotalPrice AS lmTotalPrice -- 上月材料总价
+			FROM
+				Mat_RegionalIncrease a
+		),
+		--查询整体排行数据
+		 cmt AS (
+			SELECT
+				Row_Number () OVER (ORDER BY k.totalPrice DESC) AS cmRanking, -- 本月整体排名
+				k.cityID AS cmCityID, -- 本月排名城市ID
+				k.totalPrice AS cmTotalPrice -- 本月材料总价
+			FROM
+				(
+					SELECT
+						a.m_CityID AS cityID,
+						SUM (
+							a.m_CostPrice + m_InstallPrice
+						) AS totalPrice
+					FROM
+						V_Material a
+					WHERE
+						a.m_UpdateState = 1
+					AND a.m_jincheng = 0
+					GROUP BY
+						a.m_CityID
+				) k
+		) 
+		SELECT
+		  cmt.cmRanking,
+			cmt.cmCityID,
+			cmt.cmTotalPrice,
+			lmt.lmRanking,
+			lmt.lmCityID,
+			lmt.lmTotalPrice
+		FROM
+		  cmt LEFT JOIN lmt ON cmt.cmCityID = lmt.lmCityID AND lmt.lmTopNum = 1
+	</select>
+	
+	
+	
+	
+	
+	
+</mapper>

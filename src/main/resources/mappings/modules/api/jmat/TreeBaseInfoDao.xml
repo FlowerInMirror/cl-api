@@ -1,0 +1,335 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.api.jmat.dao.TreeBaseInfoDao">
+    
+	<sql id="treeBaseInfoColumns">
+		a.tbi_id AS "tbiId",
+		a.tbi_treeid AS "tbiTreeid",
+		a.tbi_unit AS "tbiUnit",
+		a.tbi_matdescription AS "tbiMatdescription",
+		a.tbi_matfunction AS "tbiMatfunction",
+		a.tbi_exteriorname AS "tbiExteriorname",
+		a.tbi_exteriorsc AS "tbiExteriorsc",
+		a.tbi_exteriordm AS "tbiExteriordm",
+		a.tbi_mockupsamplingremark AS "tbiMockupsamplingremark",
+		a.tbi_pstype AS "tbiPstype",
+		a.tbi_psmaterialquality AS "tbiPsmaterialquality",
+		a.tbi_pspackageremark AS "tbiPspackageremark",
+		a.tbi_psmarkremark AS "tbiPsmarkremark",
+		a.tbi_status AS "tbiStatus",
+		a.tbi_createtime AS "tbiCreatetime",
+		a.tbi_updatetime AS "tbiUpdatetime"
+	</sql>
+	
+	<sql id="treeBaseInfoJoins">
+		LEFT JOIN V_Unit b ON a.tbi_unit = b.unit_ID AND b.unit_jincheng = 0
+	</sql>
+    
+	<select id="get" resultType="TreeBaseInfo">
+		SELECT 
+			<include refid="treeBaseInfoColumns"/>
+		FROM v_treebaseinfo a
+		<include refid="treeBaseInfoJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="TreeBaseInfo">
+		SELECT 
+			<include refid="treeBaseInfoColumns"/>
+		FROM v_treebaseinfo a
+		<include refid="treeBaseInfoJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="TreeBaseInfo">
+		SELECT 
+			<include refid="treeBaseInfoColumns"/>
+		FROM v_treebaseinfo a
+		<include refid="treeBaseInfoJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO v_treebaseinfo
+	    <trim prefix="(" suffix=")" suffixOverrides="," >
+	    	<if test="null != tbiId">
+				tbi_id,
+	    	</if>
+	    	<if test="null != tbiTreeid">
+				tbi_treeid,
+	    	</if>
+	    	<if test="null != tbiUnit">
+				tbi_unit,
+	    	</if>
+	    	<if test="null != tbiMatdescription">
+				tbi_matdescription,
+	    	</if>
+	    	<if test="null != tbiMatfunction">
+				tbi_matfunction,
+	    	</if>
+			<if test="null != tbiExteriorname">
+				tbi_exteriorname,
+			</if>			
+			<if test="null != tbiExteriorsc">
+				tbi_exteriorsc,
+			</if>
+			<if test="null != tbiExteriordm">
+				tbi_exteriordm,
+			</if>
+			<if test="null != tbiMockupsamplingremark">
+				tbi_mockupsamplingremark,
+			</if>
+			<if test="null != tbiPstype">
+				tbi_pstype,
+			</if>
+			<if test="null != tbiPsmaterialquality">
+				tbi_psmaterialquality,
+			</if>
+			<if test="null != tbiPspackageremark">
+				tbi_pspackageremark,
+			</if>
+			<if test="null != tbiPsmarkremark">
+				tbi_psmarkremark,
+			</if>
+			<if test="null != tbiStatus">
+				tbi_status,
+			</if>
+			<if test="null != tbiCreatetime">
+				tbi_createtime,
+			</if>
+			<if test="null != tbiUpdatetime">
+				tbi_updatetime
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides="," >
+			<if test="null != tbiId">
+				#{tbiId},
+			</if>
+			<if test="null != tbiTreeid">
+				#{tbiTreeid},
+			</if>
+			<if test="null != tbiUnit">
+				#{tbiUnit},
+			</if>
+			<if test="null != tbiMatdescription">
+				#{tbiMatdescription},
+			</if>
+			<if test="null != tbiMatfunction">
+				#{tbiMatfunction},
+			</if>
+			<if test="null != tbiExteriorname">
+				#{tbiExteriorname},
+			</if>
+			<if test="null != tbiExteriorsc">
+				#{tbiExteriorsc},
+			</if>
+			<if test="null != tbiExteriordm">
+				#{tbiExteriordm},
+			</if>
+			<if test="null != tbiMockupsamplingremark">
+				#{tbiMockupsamplingremark},
+			</if>
+			<if test="null != tbiPstype">
+				#{tbiPstype},
+			</if>
+			<if test="null != tbiPsmaterialquality">
+				#{tbiPsmaterialquality},
+			</if>
+			<if test="null != tbiPspackageremark">
+				#{tbiPspackageremark},
+			</if>
+			<if test="null != tbiPsmarkremark">
+				#{tbiPsmarkremark},
+			</if>
+			<if test="null != tbiStatus">
+				#{tbiStatus},
+			</if>
+			<if test="null != tbiCreatetime">
+				#{tbiCreatetime},
+			</if>
+			<if test="null != tbiUpdatetime">
+				#{tbiUpdatetime}
+			</if>
+		</trim>
+	</insert>
+	
+	<update id="update">
+		UPDATE v_treebaseinfo SET 	
+			tbi_id = #{tbiId},
+			tbi_treeid = #{tbiTreeid},
+			tbi_unit = #{tbiUnit},
+			tbi_matdescription = #{tbiMatdescription},
+			tbi_matfunction = #{tbiMatfunction},
+			tbi_exteriorname = #{tbiExteriorname},
+			tbi_exteriorsc = #{tbiExteriorsc},
+			tbi_exteriordm = #{tbiExteriordm},
+			tbi_mockupsamplingremark = #{tbiMockupsamplingremark},
+			tbi_pstype = #{tbiPstype},
+			tbi_psmaterialquality = #{tbiPsmaterialquality},
+			tbi_pspackageremark = #{tbiPspackageremark},
+			tbi_psmarkremark = #{tbiPsmarkremark},
+			tbi_status = #{tbiStatus},
+			tbi_createtime = #{tbiCreatetime},
+			tbi_updatetime = #{tbiUpdatetime}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM v_treebaseinfo
+		WHERE id = #{id}
+	</update>
+		
+	<!--通过四级科目ID,查找材料基础信息. 
+	public TreeBaseInfo findTreeBaseInfoByTreeID(@Param("treeFourID")String treeFourID); -->
+	<select id="findTreeBaseInfoByTreeID" parameterType="String" resultType="TreeBaseInfo">
+		SELECT 
+			<include refid="treeBaseInfoColumns"/>,b.unit_Name AS "unitName"
+		FROM v_treebaseinfo a
+		<include refid="treeBaseInfoJoins"/>
+		WHERE a.tbi_TreeID = #{treeFourID}
+		AND a.tbi_Status = 0
+	</select>
+		
+	<!--更新材料基础信息 	
+	public int updateByPlatformBasicInformation(PlatformBasicInformation pbi); -->
+	<update id="updateByPlatformBasicInformation"  parameterType="PlatformBasicInformation">
+		UPDATE v_treebaseinfo SET 	
+			tbi_unit = #{unit},
+			tbi_matdescription = #{matDescription},
+			tbi_matfunction = #{matFunction},
+			tbi_updatetime = GETDATE()
+		WHERE tbi_treeid = #{treeID}
+	</update>
+		
+	<!--新增或更新材料基础信息 	
+	public int treeBaseInfoSaveOrUpdate(TreeBaseInfo treeBaseInfo);		 -->
+	<update id="treeBaseInfoSaveOrUpdate"  parameterType="TreeBaseInfo">
+		exec sp_executesql N'
+		    DECLARE @zxCount INT
+		    --第一步：更新材料树（规格级）基础信息
+		    IF(EXISTS (SELECT 1 FROM V_TreeBaseInfo WHERE tbi_TreeID=@tbi_TreeID AND tbi_Status=0 ))
+		    BEGIN
+		    UPDATE V_TreeBaseInfo
+		    SET 
+				 tbi_unit=@tbi_unit
+				,tbi_MatDescription=@tbi_MatDescription
+				,tbi_MatFunction=@tbi_MatFunction
+				,tbi_ExteriorName=@tbi_ExteriorName
+				,tbi_ExteriorSC=@tbi_ExteriorSC
+				,tbi_ExteriorDM=@tbi_ExteriorDM
+				,tbi_MockUpSamplingRemark=@tbi_MockUpSamplingRemark
+				,tbi_PSType=@tbi_PSType
+				,tbi_PSMaterialQuality=@tbi_PSMaterialQuality
+				,tbi_PSPackageRemark=@tbi_PSPackageRemark
+				,tbi_PSMarkRemark=@tbi_PSMarkRemark
+				,tbi_updatetime = GETDATE()
+		    WHERE tbi_TreeID=@tbi_TreeID AND tbi_Status=0
+		    SET @zxCount=@@ROWCOUNT
+		    END
+		    ELSE
+		    BEGIN
+		    INSERT INTO V_TreeBaseInfo
+		    (tbi_ID
+				,tbi_TreeID
+				,tbi_unit
+				,tbi_MatDescription
+				,tbi_MatFunction
+				,tbi_ExteriorName
+				,tbi_ExteriorSC
+				,tbi_ExteriorDM
+				,tbi_MockUpSamplingRemark
+				,tbi_PSType
+				,tbi_PSMaterialQuality
+				,tbi_PSPackageRemark
+				,tbi_PSMarkRemark)
+		    VALUES
+		    (    @tbi_ID
+				,@tbi_TreeID
+				,@tbi_unit
+				,@tbi_MatDescription
+				,@tbi_MatFunction
+				,@tbi_ExteriorName
+				,@tbi_ExteriorSC
+				,@tbi_ExteriorDM
+				,@tbi_MockUpSamplingRemark
+				,@tbi_PSType
+				,@tbi_PSMaterialQuality
+				,@tbi_PSPackageRemark
+		        ,@tbi_PSMarkRemark)
+		    SET @zxCount=@@ROWCOUNT
+		    END
+		
+		    SELECT @zxCount
+		  ',N'
+			@tbi_ExteriorDM nvarchar(4000)
+			,@tbi_ExteriorName nvarchar(4000)
+			,@tbi_ExteriorSC nvarchar(4000)
+			,@tbi_ID uniqueidentifier
+			,@tbi_MatDescription nvarchar(4000)
+			,@tbi_MatFunction nvarchar(4000)
+			,@tbi_MockUpSamplingRemark nvarchar(4000)
+			,@tbi_PSMarkRemark nvarchar(4000)
+			,@tbi_PSMaterialQuality nvarchar(4000)
+			,@tbi_PSPackageRemark nvarchar(4000)
+			,@tbi_PSType int
+			,@tbi_TreeID uniqueidentifier
+			,@tbi_unit int'
+			,@tbi_ExteriorDM=#{tbiExteriordm}
+			,@tbi_ExteriorName=#{tbiExteriorname}
+			,@tbi_ExteriorSC=#{tbiExteriorsc}
+			,@tbi_ID=#{tbiId}
+			,@tbi_MatDescription=#{tbiMatdescription}
+			,@tbi_MatFunction=#{tbiMatfunction}
+			,@tbi_MockUpSamplingRemark=#{tbiMockupsamplingremark}
+			,@tbi_PSMarkRemark=#{tbiPsmarkremark}
+			,@tbi_PSMaterialQuality=#{tbiPsmaterialquality}
+			,@tbi_PSPackageRemark=#{tbiPspackageremark}
+			,@tbi_PSType=#{tbiPstype}
+		    ,@tbi_TreeID=#{tbiTreeid}
+			,@tbi_unit=#{tbiUnit}
+	</update>
+		
+	<!--通过四级科目ID,更新包装照片 	
+	public int updatePhotoUrlByTreeFourID(@Param("treeFourID")String treeFourID,@Param("photoUrl") String photoUrl); -->
+	<update id="updatePhotoUrlByTreeFourID"  parameterType="PlatformBasicInformation">
+		UPDATE v_treebaseinfo SET 	
+			tbi_pspackageremark = #{photoUrl},
+			tbi_updatetime = GETDATE()
+		WHERE tbi_treeid = #{treeFourID} 
+		AND tbi_Status=0
+	</update>
+	
+	<!--保存 新增标准- 材料基础信息
+		插入字段:ID,四级ID,单位ID 	
+	public void saveCityNewlyIncreased(@Param("baseInfoID")String baseInfoID, @Param("treeFourID")String treeFourID,@Param("unitID") Integer unitID); -->
+	<insert id="saveCityNewlyIncreased">
+		INSERT INTO v_treebaseinfo(
+			tbi_id,
+			tbi_treeid,
+			tbi_unit
+		) VALUES (
+			#{baseInfoID},
+			#{treeFourID},
+			#{unitID}
+		)
+	</insert>
+	
+</mapper>

@@ -1,0 +1,711 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.jmat.dao.MaterialDao">
+    
+	<sql id="materialColumns">
+		a.m_id AS "mId",
+		a.m_treeone AS "mTreeone",
+		a.m_treetwo AS "mTreetwo",
+		a.m_treethree AS "mTreethree",
+		a.m_treefour AS "mTreefour",
+		a.m_tsid AS "mTsid",
+		a.m_level AS "mLevel",
+		a.m_cityid AS "mCityid",
+		a.m_code AS "mCode",
+		a.m_brandid AS "mBrandid",
+		a.m_brandname AS "mBrandname",
+		a.m_brandtype AS "mBrandtype",
+		a.m_costprice AS "mCostprice",
+		a.m_quotesprice AS "mQuotesprice",
+		a.m_installprice AS "mInstallprice",
+		a.m_hoststate AS "mHoststate",
+		a.m_homehoststate AS "mHomehoststate",
+		a.m_mattype AS "mMattype",
+		a.m_matdescription AS "mMatdescription",
+		a.m_updatestate AS "mUpdatestate",
+		a.m_shoppingstate AS "mShoppingstate",
+		a.m_jincheng AS "mJincheng",
+		a.m_createtime AS "mCreatetime",
+		a.m_updatetime AS "mUpdatetime",
+		a.m_toptime AS "mToptime",
+		a.m_remark AS "mRemark",
+		a.m_remark2 AS "mRemark2"
+	</sql>
+	
+	<sql id="materialJoins">
+	</sql>
+    
+	<select id="get" resultType="Material">
+		SELECT 
+			<include refid="materialColumns"/>
+		FROM v_material a
+		<include refid="materialJoins"/>
+		WHERE a.m_ID = #{id}
+	</select>
+	
+	<select id="findList" resultType="Material">
+		SELECT 
+			<include refid="materialColumns"/>
+		FROM v_material a
+		<include refid="materialJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="Material">
+		SELECT 
+			<include refid="materialColumns"/>
+		FROM v_material a
+		<include refid="materialJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO v_material(
+			m_id,
+			m_treeone,
+			m_treetwo,
+			m_treethree,
+			m_treefour,
+			m_tsid,
+			m_level,
+			m_cityid,
+			m_code,
+			m_brandid,
+			m_brandname,
+			m_brandtype,
+			m_costprice,
+			m_quotesprice,
+			m_installprice,
+			m_hoststate,
+			m_homehoststate,
+			m_mattype,
+			m_matdescription,
+			m_updatestate,
+			m_shoppingstate,
+			m_jincheng,
+			m_createtime,
+			m_updatetime,
+			m_toptime,
+			m_remark,
+			m_remark2
+		) VALUES (
+			#{mId},
+			#{mTreeone},
+			#{mTreetwo},
+			#{mTreethree},
+			#{mTreefour},
+			#{mTsid},
+			#{mLevel},
+			#{mCityid},
+			#{mCode},
+			#{mBrandid},
+			#{mBrandname},
+			#{mBrandtype},
+			#{mCostprice},
+			#{mQuotesprice},
+			#{mInstallprice},
+			#{mHoststate},
+			#{mHomehoststate},
+			#{mMattype},
+			#{mMatdescription},
+			#{mUpdatestate},
+			#{mShoppingstate},
+			#{mJincheng},
+			#{mCreatetime},
+			#{mUpdatetime},
+			#{mToptime},
+			#{mRemark},
+			#{mRemark2}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE v_material SET 	
+			m_id = #{mId},
+			m_treeone = #{mTreeone},
+			m_treetwo = #{mTreetwo},
+			m_treethree = #{mTreethree},
+			m_treefour = #{mTreefour},
+			m_tsid = #{mTsid},
+			m_level = #{mLevel},
+			m_cityid = #{mCityid},
+			m_code = #{mCode},
+			m_brandid = #{mBrandid},
+			m_brandname = #{mBrandname},
+			m_brandtype = #{mBrandtype},
+			m_costprice = #{mCostprice},
+			m_quotesprice = #{mQuotesprice},
+			m_installprice = #{mInstallprice},
+			m_hoststate = #{mHoststate},
+			m_homehoststate = #{mHomehoststate},
+			m_mattype = #{mMattype},
+			m_matdescription = #{mMatdescription},
+			m_updatestate = #{mUpdatestate},
+			m_shoppingstate = #{mShoppingstate},
+			m_jincheng = #{mJincheng},
+			m_createtime = #{mCreatetime},
+			m_updatetime = #{mUpdatetime},
+			m_toptime = #{mToptime},
+			m_remark = #{mRemark},
+			m_remark2 = #{mRemark2}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM v_material
+		WHERE id = #{id}
+	</update>
+		
+	<!-- 查找所有材料档次总计数据,通过城市ID与四级科目树ID,.
+	public List<Map<String, Object>> findAllLevelDataByCityAndTreeID(@Param("city")Integer city,@Param("treeFourID") String treeFourID); -->
+	<select id="findAllLevelDataByCityAndTreeID" resultType="java.util.Map" >
+        -- 获取材料档次总计数据
+        -- 获取材料档次总计数据
+        WITH K AS (
+        SELECT
+        1 MLevel
+        UNION ALL
+        SELECT
+        2
+        UNION ALL
+        SELECT
+        4
+        ),
+        LevelContrastLoop AS (
+        -- PS:关联条件城市ID,四级科目ID
+        --通过四级科目ID,查找材料对比属性结果集(囊括对比图片)
+        SELECT
+        -- 笛卡尔积表:档次/城市
+        k.MLevel AS levelFlag,
+        mva.cityID AS mvaCityID,
+        -- 对比 a
+        a.mca_ID AS mcaID,
+        -- 对比ID
+        a.mca_Name AS mcaName,
+        -- 对比名称
+        a.mca_Key AS mcaKey,
+        -- KEY（用于审核存储）
+        a.mca_TreeID AS treeFourID,
+        -- 四级科目ID
+        -- 图 p
+        p.tsp_ID AS tspID,
+        -- 材料照片ID
+        p.tsp_CityID AS cityID,
+        -- 城市ID
+        p.tsp_PhotoURL AS mcaPhotoURL,
+        -- 对比照片url
+        p.tsp_Title AS mcaPara,
+        -- 对比参数
+        p.tsp_Content1 AS mcaDescribe,
+        --对比描述
+        p.tsp_TSID AS matID -- 材料ID
+        FROM
+        V_MaterialComparedAttributes a
+        LEFT JOIN K k ON 1 = 1
+        LEFT JOIN MMS_View_Area AS mva ON 1 = 1 -- 关联辅显表材料照片;关联条件外键四级科目ID城市ID进程类型档次
+        LEFT JOIN V_TreeStandardPhoto p ON p.tsp_ParaID = a.mca_ID
+        AND p.tsp_CityID = mva.cityID
+        AND p.tsp_MatLevel = k.MLevel
+        AND p.tsp_TreeFour = a.mca_TreeID
+        AND p.tsp_jincheng = 0
+        AND p.tsp_Type = 3
+        WHERE
+        a.mca_Status = 0
+        AND a.mca_Type = 1
+        ),
+        LevelLoop AS (
+        SELECT
+        treeFourID AS lcl_treeFourID,
+        mvaCityID AS cityID,
+        levelFlag,
+        COUNT (*) AS levelContrastCount,
+        COUNT (
+        CASE
+        WHEN ISNULL(mcaPhotoURL, '') = '' THEN
+        1
+        END
+        ) levelContrastNotCount
+        FROM
+        LevelContrastLoop
+        WHERE
+        treeFourID = #{treeFourID}
+        AND mvaCityID = #{city}
+        GROUP BY
+        treeFourID,
+        mvaCityID,
+        levelFlag
+        ),
+        Businessman AS (
+        -- 获取材料商的供货个数
+        SELECT
+        ms_MatID,
+        COUNT (1) UserCount
+        FROM
+        V_MaterialToSuppliers -- 材料关联表
+        WHERE
+        ms_jincheng = 0
+        AND ms_Price >= 0.01
+        GROUP BY
+        ms_MatID
+        ),
+        A AS (
+        -- 获取不同档次(完善)材料的平均价 (算法:档次下所有材料 成本的平均价)
+        SELECT
+        m_Level MatLevel,
+        AVG (m_CostPrice + m_InstallPrice) AVGPrice
+        FROM
+        V_Material
+        WHERE
+        m_TreeFour = #{treeFourID}
+        AND m_UpdateState = 1
+        AND (m_CostPrice + m_InstallPrice) > 0
+        AND m_jincheng = 0
+        GROUP BY
+        m_Level
+        ),
+        LevelData AS (
+        SELECT
+        m_Level AS mLevel,
+        COUNT (1) matCount,
+        COUNT (
+        CASE
+        WHEN m_UpdateState = 1 THEN
+        1
+        END
+        ) perfectNumber,
+        COUNT (
+        CASE
+        WHEN m_UpdateState = 1
+        AND m_CostPrice + m_InstallPrice > AVGPrice THEN
+        1
+        END
+        ) highPrice,
+        COUNT (
+        CASE
+        WHEN m_UpdateState = 1
+        AND m_CostPrice + m_InstallPrice &lt; AVGPrice THEN
+        1
+        END
+        ) lowPrice,
+        COUNT (
+        CASE
+        WHEN m_UpdateState = 1
+        AND UserCount >= 1 THEN
+        1
+        END
+        ) lackSupply -- 完善且有供应商的材料数量
+        FROM
+        V_material
+        LEFT JOIN Businessman ON m_ID = ms_MatID
+        LEFT JOIN A ON m_Level = MatLevel
+        WHERE
+        m_TreeFour = #{treeFourID}
+        AND m_CityID = #{city}
+        AND (m_CostPrice + m_InstallPrice) > 0
+        AND m_jincheng = 0
+        GROUP BY
+        m_Level
+        ),
+        LevelFlag AS (
+        SELECT
+        1 MLevel
+        UNION ALL
+        SELECT
+        2
+        UNION ALL
+        SELECT
+        4
+        ),
+        LevelStaLoop AS (
+        -- 子库地区'档次' - 获取针对'档次'相关质量标准
+        SELECT
+        MLevel AS lsl_levelFlag,
+        T2.tsi_ID AS tsiId --ID
+        ,
+        T2.tsi_Value AS tsiValue --属性值
+        ,
+        T2.tsi_StandardMin AS tsiStandardmin --范围：最小
+        ,
+        T2.tsi_StandardMax AS tsiStandardmax --范围：最大
+        ,
+        T2.tsi_AppPush AS tsiApppush --是否推送：1推送   （默认0）
+        ,
+        T1.tsi_TreeFour AS tsiTreefour --四级ID（规格）
+        ,
+        ISNULL(T2.tsi_MatLevel, MLevel) AS tsi2Matlevel --档次（1:A档，2:B档，4:C档）
+        ,
+        T1.tsi_Name AS tsiName --属性名称
+        ,
+        T1.tsi_Unit AS tsiUnit --属性单位ID
+        ,
+        T1.tsi_UnitName AS tsiUnitname --属性单位名称
+        ,
+        T1.tsi_SpecialClaim AS tsiSpecialclaim --特殊要求
+        ,
+        T1.tsi_DetectMethod AS tsiDetectmethod --检测方法
+        ,
+        T1.tsi_ID tsiParentid --继承ID（质量继承）
+        ,
+        T1.tsi_createTime AS tsiCreatetime --创建时间    （默认getdate()）
+        --属性一，属性二
+        ,
+        T1.tsi_ExteriorName AS tsiExteriorname --外观
+        ,
+        T1.tsi_ExteriorSC AS tsiExteriorsc --外观-特殊要求
+        FROM
+        V_TreeStandardItme T1
+        LEFT JOIN LevelFlag ON 1 = 1
+        LEFT JOIN V_TreeStandardItme T2 ON T2.tsi_ParentID = T1.tsi_ID
+        AND T2.tsi_jincheng = 0
+        AND T2.tsi_MatLevel = MLevel
+        WHERE
+        T1.tsi_jincheng = 0
+        AND T1.tsi_Type = 1
+        AND T1.tsi_MatLevel = 0
+        AND ISNULL(
+        T1.tsi_ParentID,
+        '00000000-0000-0000-0000-000000000000'
+        ) = '00000000-0000-0000-0000-000000000000'
+        UNION ALL
+        --档次 标准
+        SELECT
+        '',
+        T1.tsi_ID,
+        T1.tsi_Value,
+        T1.tsi_StandardMin,
+        T1.tsi_StandardMax,
+        T1.tsi_AppPush,
+        T1.tsi_TreeFour,
+        T1.tsi_MatLevel,
+        T1.tsi_Name,
+        T1.tsi_Unit,
+        T1.tsi_UnitName,
+        T1.tsi_SpecialClaim,
+        T1.tsi_DetectMethod,
+        T1.tsi_ParentID,
+        T1.tsi_createTime --属性一，属性二
+        ,
+        T1.tsi_ExteriorName,
+        T1.tsi_ExteriorSC
+        FROM
+        V_TreeStandardItme T1
+        WHERE
+        T1.tsi_jincheng = 0
+        AND T1.tsi_Type = 1
+        AND T1.tsi_MatLevel >= 1
+        AND ISNULL(
+        T1.tsi_ParentID,
+        '00000000-0000-0000-0000-000000000000'
+        ) = '00000000-0000-0000-0000-000000000000'
+        ),
+        levelSta AS (
+        SELECT
+        tsi2Matlevel,
+        tsiTreefour AS lsl_treeFourID,
+        COUNT (*) AS levelStaCount,
+        COUNT (
+        CASE
+        WHEN ISNULL(tsiValue, '') = '' THEN
+        1
+        END
+        ) levelStaNotCount
+        FROM
+        LevelStaLoop
+        GROUP BY
+        tsiTreefour,
+        tsi2Matlevel
+        ) SELECT
+        ld.*, ISNULL(ll.levelContrastCount, - 1) AS levelContrastCount,
+        ISNULL(
+        ll.levelContrastNotCount,
+        - 1
+        ) AS levelContrastNotCount,
+        ISNULL(ls.levelStaNotCount, - 1) AS levelStaNotCount,
+        ISNULL(ls.levelStaCount, - 1) AS levelStaCount
+        FROM
+        LevelData AS ld
+        LEFT JOIN LevelLoop AS ll ON ld.mLevel = ll.levelFlag
+        LEFT JOIN levelSta AS ls ON ld.mLevel = ls.tsi2Matlevel
+        AND ls.lsl_treeFourID = #{treeFourID}
+	</select>
+	
+	<!--品牌统计(子库起始页状态,材料统计),通过城市ID获得. 	
+	public Map<String, Object> findBrandStatisticsByCityID(@Param("cityID")Integer cityID); -->
+	<select id="findBrandStatisticsByCityID" resultType="java.util.Map" >
+		SELECT
+			b.brandTotal AS brand,
+			a.perfectTotal AS perfect,
+			(
+				b.brandTotal - a.perfectTotal
+			) AS Imperfect
+		FROM
+			(
+				--品牌完善数量
+				SELECT
+					COUNT (1) AS perfectTotal
+				FROM
+					V_Material a
+				WHERE
+					a.m_UpdateState = 1
+				AND a.m_jincheng = 0
+				AND (
+					a.m_CostPrice + a.m_InstallPrice
+				) > 0
+				AND a.m_CityID = #{cityID}
+			) a,
+			(
+				--品牌总计数量
+				SELECT
+					COUNT (1) AS brandTotal
+				FROM
+					V_Material a
+				WHERE
+					a.m_jincheng = 0
+				AND a.m_CityID = #{cityID}
+			) b
+	</select>
+	
+	<!--获取城市排名,条件城市ID. 	
+	public Integer findCityRankingByCityID(@Param("cityID")Integer cityID); -->
+	<select id="findCityRankingByCityID" parameterType="Integer" resultType="Integer">
+		WITH A AS (
+			SELECT
+				Row_Number () OVER (ORDER BY k.totalPrice DESC) AS ranking,
+				k.cityID,
+				k.totalPrice
+			FROM
+				(
+					SELECT
+						a.m_CityID AS cityID,
+						CAST (SUM (a.m_CostPrice + a.m_InstallPrice) AS DECIMAL (18, 2)) AS totalPrice
+					FROM
+						V_Material a
+					WHERE
+						a.m_UpdateState = 1
+					AND a.m_jincheng = 0
+					GROUP BY
+						a.m_CityID
+				) k
+		) SELECT
+			a.ranking AS ranking
+		FROM
+			A a
+		WHERE
+			a.cityID = #{cityID}
+	</select>
+	
+	<!--获取成本价高基地,通过城市ID 	
+	public Map<String, Object> findCostHighPriceAndLowPriceByCityID(Integer cityID); -->
+	<select id="findCostHighPriceAndLowPriceByCityID" parameterType="Integer" resultType="java.util.Map" >
+		WITH X AS (
+			SELECT
+				--价高
+				COUNT (1) AS highPrice
+			FROM
+				V_Material a
+			LEFT JOIN (
+				SELECT
+					a.m_TreeFour AS treeFourID,
+					a.m_Level AS mlevel,
+					AVG (
+						a.m_CostPrice + a.m_InstallPrice
+					) AS middleRate
+				FROM
+					V_Material a
+				WHERE
+					a.m_jincheng = 0
+				AND (
+					a.m_CostPrice + a.m_InstallPrice
+				) > 0
+				AND a.m_UpdateState = 1
+				GROUP BY
+					a.m_TreeFour,
+					a.m_Level
+			) t ON a.m_TreeFour = t.treeFourID
+			AND a.m_Level = t.mlevel
+			WHERE
+				a.m_jincheng = 0
+			AND a.m_UpdateState = 1
+			AND (
+				a.m_CostPrice + a.m_InstallPrice
+			) > 0
+			AND a.m_CityID = #{cityID}
+			AND (
+				a.m_CostPrice + a.m_InstallPrice
+			) > t.middleRate
+		),
+		 T AS (
+			SELECT
+		   	    --总计
+				COUNT (1) AS total
+			FROM
+				V_Material a
+			LEFT JOIN (
+				SELECT
+					a.m_TreeFour AS treeFourID,
+					a.m_Level AS mlevel,
+					AVG (
+						a.m_CostPrice + a.m_InstallPrice
+					) AS middleRate
+				FROM
+					V_Material a
+				WHERE
+					a.m_jincheng = 0
+				AND (
+					a.m_CostPrice + a.m_InstallPrice
+				) > 0
+				AND a.m_UpdateState = 1
+				GROUP BY
+					a.m_TreeFour,
+					a.m_Level
+			) t ON a.m_TreeFour = t.treeFourID
+			AND a.m_Level = t.mlevel
+			WHERE
+				a.m_jincheng = 0
+			AND a.m_UpdateState = 1
+			AND (
+				a.m_CostPrice + a.m_InstallPrice
+			) > 0
+			AND a.m_CityID = #{cityID}
+		) SELECT
+			t.total,
+			x.highPrice,
+			(t.total - x.highPrice) AS lowPrice
+		FROM
+			X AS x,
+			T AS t
+	</select>
+
+    <!--查找商城中首推材料类,通过城市ID与四级科目(材料规格)ID.
+    public Material findMallMatByCityIDAndTreeFourID(Integer cityID ,String treeFourID);-->
+    <select id="findMallMatByCityIDAndTreeFourID" resultType="Material">
+        -- 查找商城中首推材料类,通过城市ID与四级科目(材料规格)ID.
+        SELECT
+          <include refid="materialColumns"/>
+        FROM
+            V_Material a
+        WHERE
+            a.m_TreeFour = #{treeFourID}
+        AND a.m_HostState = 1
+        AND a.m_CityID = #{cityID}
+    </select>
+
+    <!-- 查找完善材料数量,通过 城市ID 或 四级科目ID 或 档次类别标识
+    public Material findPerfectMatByCityIDOrTreeFourIDOrLevel(@Param("cityID")Integer cityID, @Param("treeFourID")String treeFourID, @Param("level")Integer level);-->
+	<select id="findPerfectMatByCityIDOrTreeFourIDOrLevel" resultType="Material">
+        -- 查找完善材料数量,通过 城市ID 或 四级科目ID 或 档次类别标识
+        SELECT
+          <include refid="materialColumns"/>
+        FROM V_Material a
+        WHERE a.m_jincheng = 0
+        AND a.m_UpdateState = 1
+        AND (a.m_CostPrice + a.m_InstallPrice) > 0
+        <if test="null != cityID">
+            AND a.m_CityID = #{cityID}
+        </if>
+        <if test="null != treeFourID">
+            AND a.m_TreeFour = #{treeFourID}
+        </if>
+        <if test="null != level">
+            AND a.m_Level = #{level}
+        </if>
+    </select>
+
+    <!-- 查找 档次价格统计(=>品牌),通过城市ID与四级科目ID.
+    public List<Map<String,Object>> findLevelPricesByCityIDAndTreeFourID(Integer cityID, String treeFourID);-->
+    <select id="findLevelPricesByCityIDAndTreeFourID" resultType="java.util.Map">
+        -- 查找 档次价格统计(=>品牌),通过城市ID与四级科目ID.
+        SELECT
+            a.m_Level AS matLevel,
+            COUNT (a.m_Level) AS levelCount,
+            ISNULL(
+                MIN (
+                    CASE
+                    WHEN a.m_UpdateState = 1 THEN
+                        a.m_CostPrice + a.m_InstallPrice
+                    END
+                ),
+                0
+            ) costMin,
+            ISNULL(
+                MAX (
+                    CASE
+                    WHEN a.m_UpdateState = 1 THEN
+                        a.m_CostPrice + a.m_InstallPrice
+                    END
+                ),
+                0
+            ) costMax,
+            ISNULL(MIN(ms_Price), 0) dealMin,
+            ISNULL(MAX(ms_Price), 0) dealMax
+        FROM
+        V_Material a
+        LEFT JOIN V_MaterialToSuppliers b ON a.m_ID = b.ms_MatID AND ms_jincheng=0 AND ms_Price>=0.01
+        WHERE
+        a.m_jincheng = 0
+        AND a.m_CityID = #{cityID}
+        AND a.m_TreeFour = #{treeFourID}
+        GROUP BY a.m_Level;
+    </select>
+
+    <!-- 地区/规格|档次下的所有材料,By 城市ID/四级科目ID|档次flag
+    List<Material> findAllMaterialsByCityIDAndTreeFourIDOrLevel(@Param("cityID")Integer cityID,@Param("treeFourID") String treeFourID,@Param("levelFalg") Integer levelFalg);-->
+    <select id="findAllMaterialsByCityIDAndTreeFourIDOrLevel" resultType="Material">
+        -- 地区/规格|档次下的所有材料
+        SELECT
+          a.m_CostPrice + a.m_InstallPrice AS matCost,
+          <include refid="materialColumns"/>
+        FROM
+            V_Material a
+        WHERE a.m_jincheng = 0
+        <if test="null != treeFourID">
+            AND a.m_TreeFour = #{treeFourID}
+        </if>
+        <if test="null != cityID">
+            AND a.m_CityID = #{cityID}
+        </if>
+        <if test="null != levelFalg" >
+            AND a.m_Level = #{levelFalg}
+        </if>
+        ORDER BY a.m_createTime
+    </select>
+
+    <!-- 查找 '应用'品牌数量和入驻数量,通过城市ID和四级科目ID.
+    List<Map<String,Object>> findAppBrandCountWithEnterByCityIDAndTreeFourID(@Param("cityID")Integer cityID,@Param("treeFourID") String treeFourID);-->
+    <select id="findAppBrandCountWithEnterByCityIDAndTreeFourID" resultType="java.util.Map">
+        SELECT
+            a.m_ID AS matID,
+            a.m_Level AS matLevel,
+            COUNT(DISTINCT a.m_ID) AS matCount,
+          COUNT(b.ms_MatID) AS busCount
+        FROM V_Material a
+        LEFT JOIN V_MaterialToSuppliers b ON a.m_ID = b.ms_MatID AND b.ms_jincheng = 0
+        WHERE a.m_jincheng = 0
+        AND a.m_UpdateState = 1
+        AND (a.m_CostPrice + a.m_InstallPrice) > 0
+        AND a.m_CityID = #{cityID}
+        AND a.m_TreeFour = #{treeFourID}
+        GROUP BY a.m_ID,a.m_Level
+        ORDER BY a.m_level
+    </select>
+
+	
+</mapper>

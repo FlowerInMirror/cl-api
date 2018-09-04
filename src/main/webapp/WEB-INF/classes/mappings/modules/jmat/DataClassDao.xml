@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.jmat.dao.DataClassDao">
+    
+	<sql id="dataClassColumns">
+		a.dc_id AS "dcId",
+		a.dc_classcode AS "dcClasscode",
+		a.dc_classname AS "dcClassname",
+		a.dc_parentid AS "dcParentid",
+		a.dc_jincheng AS "dcJincheng",
+		a.dc_createtime AS "dcCreatetime",
+		a.dc_updatetime AS "dcUpdatetime"
+	</sql>
+	
+	<sql id="dataClassJoins">
+	</sql>
+    
+	<select id="get" resultType="DataClass">
+		SELECT 
+			<include refid="dataClassColumns"/>
+		FROM data_class a
+		<include refid="dataClassJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="DataClass">
+		SELECT 
+			<include refid="dataClassColumns"/>
+		FROM data_class a
+		<include refid="dataClassJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="DataClass">
+		SELECT 
+			<include refid="dataClassColumns"/>
+		FROM data_class a
+		<include refid="dataClassJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO data_class(
+			dc_id,
+			dc_classcode,
+			dc_classname,
+			dc_parentid,
+			dc_jincheng,
+			dc_createtime,
+			dc_updatetime
+		) VALUES (
+			#{dcId},
+			#{dcClasscode},
+			#{dcClassname},
+			#{dcParentid},
+			#{dcJincheng},
+			#{dcCreatetime},
+			#{dcUpdatetime}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE data_class SET 	
+			dc_id = #{dcId},
+			dc_classcode = #{dcClasscode},
+			dc_classname = #{dcClassname},
+			dc_parentid = #{dcParentid},
+			dc_jincheng = #{dcJincheng},
+			dc_createtime = #{dcCreatetime},
+			dc_updatetime = #{dcUpdatetime}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM data_class
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

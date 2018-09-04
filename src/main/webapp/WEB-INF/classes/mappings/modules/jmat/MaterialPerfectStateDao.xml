@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.jmat.dao.MaterialPerfectStateDao">
+    
+	<sql id="materialPerfectStateColumns">
+		a.mps_id AS "mpsId",
+		a.mps_treefour AS "mpsTreefour",
+		a.mps_cityid AS "mpsCityid",
+		a.mps_basestate AS "mpsBasestate",
+		a.mps_photostate AS "mpsPhotostate",
+		a.mps_pricestate AS "mpsPricestate",
+		a.mps_shopingstate AS "mpsShopingstate",
+		a.mps_jincheng AS "mpsJincheng",
+		a.mps_createtime AS "mpsCreatetime",
+		a.mps_updatetime AS "mpsUpdatetime"
+	</sql>
+	
+	<sql id="materialPerfectStateJoins">
+	</sql>
+    
+	<select id="get" resultType="MaterialPerfectState">
+		SELECT 
+			<include refid="materialPerfectStateColumns"/>
+		FROM v_materialperfectstate a
+		<include refid="materialPerfectStateJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="MaterialPerfectState">
+		SELECT 
+			<include refid="materialPerfectStateColumns"/>
+		FROM v_materialperfectstate a
+		<include refid="materialPerfectStateJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="MaterialPerfectState">
+		SELECT 
+			<include refid="materialPerfectStateColumns"/>
+		FROM v_materialperfectstate a
+		<include refid="materialPerfectStateJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO v_materialperfectstate(
+			mps_id,
+			mps_treefour,
+			mps_cityid,
+			mps_basestate,
+			mps_photostate,
+			mps_pricestate,
+			mps_shopingstate,
+			mps_jincheng,
+			mps_createtime,
+			mps_updatetime
+		) VALUES (
+			#{mpsId},
+			#{mpsTreefour},
+			#{mpsCityid},
+			#{mpsBasestate},
+			#{mpsPhotostate},
+			#{mpsPricestate},
+			#{mpsShopingstate},
+			#{mpsJincheng},
+			#{mpsCreatetime},
+			#{mpsUpdatetime}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE v_materialperfectstate SET 	
+			mps_id = #{mpsId},
+			mps_treefour = #{mpsTreefour},
+			mps_cityid = #{mpsCityid},
+			mps_basestate = #{mpsBasestate},
+			mps_photostate = #{mpsPhotostate},
+			mps_pricestate = #{mpsPricestate},
+			mps_shopingstate = #{mpsShopingstate},
+			mps_jincheng = #{mpsJincheng},
+			mps_createtime = #{mpsCreatetime},
+			mps_updatetime = #{mpsUpdatetime}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM v_materialperfectstate
+		WHERE id = #{id}
+	</update>
+		
+	<!--保存 地区新增标准 - 材料子库完善状态(用于保存地区信息) 	
+		插入字段:ID,四级规格ID(一),地区 (多)
+	public void saveCityNewlyIncreased(@Param("treeFourID") String treeFourID,@Param("cityID") Integer cityID); -->
+	<insert id="saveCityNewlyIncreased"  >
+		INSERT INTO v_materialperfectstate(
+			mps_treefour,
+			mps_cityid,
+			mps_BaseState
+		) VALUES (
+			#{treeFourID},
+			#{cityID},
+			#{levelCount}
+		)
+	</insert>
+		
+	<!--种类统计(子库起始页状态,材料统计),通过城市ID获得. 	
+	public Map<String, Object> findClassStatisticsByCityID(Integer cityID); -->
+	<select id="findClassStatisticsByCityID" resultType="java.util.Map" >
+		SELECT
+			b.class AS class,
+			a.perfect AS perfect,
+			(b.class - a.perfect) AS Imperfect
+		FROM
+			(
+				--完善数量
+				SELECT
+					COUNT (*) AS perfect
+				FROM
+					V_MaterialPerfectState a
+				LEFT JOIN (
+					SELECT
+						a.m_TreeFour AS treeFourID,
+						a.m_CityID AS cityID,
+						SUM (DISTINCT a.m_Level) AS levelCount
+					FROM
+						V_Material a
+					WHERE
+						a.m_UpdateState = 1
+					AND a.m_jincheng = 0
+					AND (
+						a.m_CostPrice + a.m_InstallPrice
+					) > 0
+					GROUP BY
+						a.m_TreeFour,
+						a.m_CityID
+					HAVING
+						a.m_CityID = #{cityID}
+				) b 
+				ON        a.mps_TreeFour = b.TreeFourID
+				LEFT JOIN V_TreePerfectState c 
+				ON        c.tps_TreeFour = a.mps_TreeFour
+				AND       c.tps_TreeFour = b.treeFourID
+				WHERE     a.mps_CityID = #{cityID}
+				AND       a.mps_jincheng = 0
+				AND       c.tps_BaseState = b.levelCount
+			) a,
+			(
+				--种类总数
+				SELECT
+					COUNT (*) AS class
+				FROM
+					V_MaterialPerfectState a
+				WHERE
+					a.mps_CityID = #{cityID}
+				AND a.mps_jincheng = 0
+			) b
+	</select>
+
+    <!--获取子库起始页一段
+    public List<Map<String,Object>> getIndexOneSection()-->
+    <select id="getIndexOneSection" resultType="java.util.Map">
+        --获取子库总览列表（地区统计）
+        WITH TT AS(
+        --主页置顶
+        SELECT tci_TreeID,tci_CityID,tci_PageIndex
+        FROM V_TreeCityInfo
+        WHERE tci_Status=0 AND tci_PageIndex>=1
+        /*  先去除(其他分类置顶)
+        UNION  ALL
+        --分页置顶
+        SELECT tca_t_TreeID,tca_t_CityID,tca_t_PageIndex
+        FROM V_TreeCityAttached_Top
+        WHERE tca_t_Status=0 AND tca_t_PageIndex>=1
+        */
+        )
+        ,TTop AS (
+        --置顶
+        SELECT tci_TreeID,tci_CityID,COUNT(1) topCount
+        FROM TT
+        GROUP BY tci_TreeID,tci_CityID
+        )
+        ,C1 AS (
+        --审核（集团主案）
+        SELECT TopNum = ROW_NUMBER() OVER (PARTITION BY ica_TreeID,ica_CityID ORDER BY ica_Time DESC )
+        ,ica_TreeID,ica_CityID,ica_Type,ica_State
+        FROM V_InfoCheckAndAccept
+        WHERE ica_Object=1
+        )
+        ,C2 AS (
+        --审核（集团材料）
+        SELECT TopNum = ROW_NUMBER() OVER (PARTITION BY ica_TreeID,ica_CityID ORDER BY ica_Time DESC )
+        ,*
+        FROM V_InfoCheckAndAccept
+        WHERE ica_Object=2
+        )
+        ,R AS (
+        --价格审核（待审核）
+        SELECT pch_MatID
+        FROM V_PriceChangeHistory
+        WHERE pch_Status=1
+        UNION ALL
+        --材料完善审核（待审核）
+        SELECT mch_MID
+        FROM V_MaterialChangeHistory
+        WHERE mch_jincheng=0 AND mch_CheckState IN (0,1)
+        UNION ALL
+        --任务（待办）
+        SELECT bt_MainID
+        FROM dbo.V_BusinessTask
+        WHERE bt_Type=1001 AND bt_state=1
+        )
+        ,LLL AS(
+        --材料个数
+        SELECT mps_CityID AS CityID
+        ,COUNT(1) MatCount
+        ,0 TopCount,0 ICAType1,0 ICAType2
+        ,0 WaitCount
+        FROM V_MaterialPerfectState
+        WHERE mps_jincheng=0
+        GROUP BY mps_CityID
+        UNION ALL
+        --审核项
+        SELECT tci_CityID
+        ,0 MatCount
+        , COUNT(1) TopCount
+        , COUNT(CASE WHEN C1.ica_Type=100 AND C1.ica_State=100 THEN 1 END) ICAType1
+        , COUNT(CASE WHEN C2.ica_Type=100 AND C2.ica_State=100 THEN 1 END) ICAType2
+        ,0 WaitCount
+        FROM TTop
+        LEFT JOIN C1 ON C1.ica_TreeID = tci_TreeID AND C1.ica_CityID = tci_CityID AND C1.TopNum=1
+        LEFT JOIN C2 ON C2.ica_TreeID = tci_TreeID AND C2.ica_CityID = tci_CityID AND C2.TopNum=1
+        GROUP BY tci_CityID
+        UNION ALL
+        SELECT m_CityID
+        ,0 MatCount
+        ,0 TopCount,0 ICAType1,0 ICAType2
+        ,COUNT(1) WaitCount
+        FROM V_Material
+        INNER JOIN R ON m_id=pch_MatID
+        WHERE m_jincheng=0
+        GROUP BY m_CityID
+        )
+        SELECT
+            cityID,MAX(MatCount) classs,MAX(TopCount) topCount,MAX(ICAType1)oneTry ,MAX(ICAType2)twoTry,MAX(WaitCount) waitCount
+        FROM LLL
+        GROUP BY CityID
+    </select>
+</mapper>

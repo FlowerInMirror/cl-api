@@ -1,0 +1,276 @@
+﻿.tc-righttop-tab a i{background: url(../images/pic/gobck.png) no-repeat;
+    width: 18px;
+    height: 18px;
+    background-size: 18px 18px;}
+.alertMask {
+    width: 100%;
+    height: 100%;
+    background: #000;
+    opacity: .5;
+    filter: alpha(opacity=50);
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: none;
+    z-index: 1031;
+}
+.ml8 {
+    margin-left:8px;
+}
+
+.alertBox {
+    z-index: 1032;
+    display: none;
+    background: #fff;
+    position: fixed;
+    left: 50%;
+    top: 50%;
+}
+    /*2017.1.2修改了一下高度*/
+    .alertBox .alertCon {
+        max-height: 510px;
+        overflow: auto;
+        overflow-x: hidden;
+    }
+
+    .alertBox .alertTitle {
+        width: 100%;
+        height: 40px;
+        line-height: 40px;
+        background: #eeeeee;
+    }
+
+        .alertBox .alertTitle p {
+            color: #fff;
+            line-height: 40px;
+            padding-left: 20px;
+            color: #333;
+        }
+
+    .alertBox .close {
+        background: url(../images/alert_close.png) no-repeat;
+        width: 12px;
+        height: 12px;
+        position: absolute;
+        top: 14px;
+        right: 20px;
+        cursor: pointer;
+    }
+
+        .alertBox .close:hover {
+            background-position: 0 -12px;
+        }
+
+.alertFoot {
+    text-align: center;
+}
+
+.hide {
+    display: none;
+}
+.alertBox .alertCon {
+    max-height: 450px;
+    overflow: auto;
+    overflow-x: hidden;
+}
+.alertFoot {
+    text-align: center;
+}
+.returndiv-textarea, .frozenAlert-textarea {
+    width: 400px;
+    height: 120px;
+}
+.pa20 {
+    padding: 20px;
+}
+.hand {
+ cursor:pointer;
+}
+/*待评价弹出框*/
+.project {
+    cursor: pointer;
+}
+
+.tractive {
+    background-color: rgba(0, 153, 255, 1);
+}
+
+.alertProject, .alerteval, .alertorderflow {
+    position: absolute;
+    left: 102%;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: #fff;
+    border: 1px solid #ededed;
+    box-shadow: 3px 3px 4px #ccc;
+    overflow: hidden;
+}
+.visiterecord-rgt {
+    margin-left: 80px;
+    overflow: hidden;
+    padding-right: 10px;
+}
+.visiterecord-rgt-scroll {
+    overflow: hidden;
+    overflow-y: auto;
+}
+    .visiterecord-rgt-scroll::-webkit-scrollbar {
+        width: 2px;
+        height: 10px;
+    }
+    .visiterecord-rgt-scroll::-webkit-scrollbar-track {
+        -webkit-box-shadow: none;
+        border-radius: 0px;
+        background: transparent;
+    }
+    .visiterecord-rgt-scroll::-webkit-scrollbar-thumb {
+        border-radius: 0px;
+        -webkit-box-shadow: none;
+        background: rgba(193,193,193,0.3);
+    }
+.visiterecord-rgt-scroll::-webkit-scrollbar-thumb:hover{
+    border-radius: 0px;
+    -webkit-box-shadow: none;
+    background: rgba(193,193,193,0.3);
+}
+.relative {
+    position: relative;
+}
+
+.memberAlert-tit .close, .evalAlert-tit .close {
+    background: url(../images/pic/close_xm.png) no-repeat;
+    width: 13px;
+    height: 13px;
+}
+
+.bractive {
+    border-right: 1px solid rgba(0, 153, 255, 1);
+}
+
+.uiTitle2 .uiTitle-icon {
+    margin-top: 3px;
+}
+.memberAlert-tit i {
+    background: url(../images/pic/littlepoint.jpg) no-repeat;
+    width: 4px;
+    height: 4px;
+    margin: 8px 5px 0 0px;
+}
+.evalAlert-tit i {
+    background: url(../images/pic/littlepoint.jpg) no-repeat;
+    width: 4px;
+    height: 4px;
+    margin: 8px 5px 0 0px;
+}
+.mt1f {
+    margin-top: -1px;
+}
+/*待评价*/
+.nav li {
+    cursor: pointer;
+}
+.nav li {
+    width: 74px;
+    height: 30px;
+    line-height: 30px;
+    border: 1px solid #ccc;
+    margin-left: 5px;
+    float: left;
+    border-radius: 2px;
+    margin-top: 10px;
+    text-align: center;
+}
+.mt20 {
+    margin-top:20px;
+}
+.returndiv-textarea1, .frozenAlert-textarea1 {
+    width: 416px;
+    height: 120px;
+}
+.ml20 {
+    margin-left:20px;
+}
+
+
+.width60 {width: 60px;}
+.ml60 {margin-left: 60px;overflow: hidden;}
+.feedbackScroll, .dealtScroll, eventedScroll {}
+.feedbackbtn,.dealtbtn,.eventedbtn{width:30px;height:30px;background-size:30px 30px;background-repeat:no-repeat;}
+.feedbackPrev,.dealtPrev,.eventedPrev{background-image:url(../images/pic/u186.png);}
+.feedbackPrev,.dealtPrev{margin-right:10px;}
+.feedbackScrollCon,.dealtScrollCon,.eventedScrollCon{width:240px;height:75px;overflow:hidden;}
+.eventedScrollCon{width:360px;}
+.feedbackScrollCon li,.dealtScrollCon li,.eventedScrollCon li{float:left;width:100px;height:75px;overflow:hidden;position:relative;margin:0 10px;display:inline-block;}
+.feedbackScrollCon li img,.dealtScrollCon li img,.eventedScrollCon li img{display:block;width:100%;height:100%;}
+.feedbackNext, .dealtNext,.eventedNext {background-image: url(../images/pic/u188.png);}
+.feedbackNext, .dealtNext{margin-left: 10px;}
+.feedbackScroll .uiImgUpload-mark-link, .dealtScroll .uiImgUpload-mark-link, .eventedScroll .uiImgUpload-mark-link {height: 20px;margin-top: -10px;}
+.feedbackScroll .enlarge_link, .dealtScroll .enlarge_link, .eventedScroll .enlarge_link {background: url(../images/pic/forlargeico.png) no-repeat;width: 20px;height: 20px;background-size: 20px 20px;}
+.evalue_circle {
+    position: relative;
+    display: inline-block;
+    width: 35px;
+    height: 9px;
+}
+/*材料-订单-处理版块三段（展示项目经理评价，材料商评价。对材料商评价）*/
+.choice-span, .choice-span2 {
+    display: inline-block;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    padding: 0 10px;
+    line-height: 24px;
+    margin-bottom: 5px;
+    margin-right: 5px;
+    cursor: pointer;
+}
+.execute-ul li {
+    float: left;
+    padding: 0 8px;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    cursor: pointer;
+    margin-right: 10px;
+    line-height: 24px;
+}
+/*底部按钮点击事件右1*/
+.execute-ul li.current {
+    background: #0099ff;
+    border-color: #0099ff;
+    color: #fff;
+}
+/*底部左一*/
+.choice-span.current {
+    background: #0099ff;
+    color: #fff;
+}
+.layerRtb-bottom {
+    border-top: 5px solid #f1f1f1;
+}
+.operate-bottomR {
+    border-left: 5px solid #f1f1f1;
+}
+.borT-scroll {
+    border-top: 5px solid #f1f1f1;
+}
+.height70{
+    height: 70px;
+}
+.width90 {
+    width: 90px;
+}
+.execute-title {
+    display: inline-block;
+    border: 1px solid #f33;
+    border-radius: 3px;
+    padding: 0 10px;
+    line-height: 24px;
+    margin-bottom: 5px;
+    margin-right: 5px;
+    cursor: pointer;
+    background: #f33;
+    color: #fff;
+}
+
+
+

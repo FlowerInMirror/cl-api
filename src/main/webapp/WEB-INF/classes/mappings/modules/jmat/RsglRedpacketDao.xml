@@ -1,0 +1,297 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.jmat.dao.RsglRedpacketDao">
+
+	<resultMap id="BaseResultMap" type="RsglRedpacket" >
+		<id column="rpId" property="rpId"  />
+		<result column="userNo" property="userNo"  />
+		<result column="rpType" property="rpType"  />
+		<result column="taskTarget" property="taskTarget"  />
+		<result column="taskEndTime" property="taskEndTime"  />
+		<result column="reward" property="reward"  />
+		<result column="taskNote" property="taskNote"  />
+		<result column="createTime" property="createTime"  />
+		<result column="createdBy" property="createdBy"  />
+		<result column="modifyTime" property="modifyTime" />
+		<result column="modifyBy" property="modifyBy"  />
+		<result column="rpStatus" property="rpStatus"  />
+		<result column="uid" property="uid"  />
+		<result column="affairType" property="affairType"  />
+	</resultMap>
+
+	<sql id="rsglRedpacketColumns">
+		a.rpid AS "rpId",
+		a.userno AS "userNo",
+		a.rptype AS "rpType",
+		a.tasktarget AS "taskTarget",
+		a.taskendtime AS "taskendTime",
+		a.reward AS "reward",
+		a.tasknote AS "taskNote",
+		a.createtime AS "createTime",
+		a.createdby AS "createdBy",
+		a.modifytime AS "modifyTime",
+		a.modifyby AS "modifyBy",
+		a.rpstatus AS "rpStatus",
+		a.uid AS "uid",
+		a.affairtype AS "affairType"
+	</sql>
+	
+	<sql id="rsglRedpacketJoins">
+	</sql>
+    
+	<select id="get" resultType="RsglRedpacket">
+		SELECT 
+			<include refid="rsglRedpacketColumns"/>
+		FROM rsgl_redpacket a
+		<include refid="rsglRedpacketJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="RsglRedpacket">
+		SELECT 
+			<include refid="rsglRedpacketColumns"/>
+		FROM rsgl_redpacket a
+		<include refid="rsglRedpacketJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="RsglRedpacket">
+		SELECT 
+			<include refid="rsglRedpacketColumns"/>
+		FROM rsgl_redpacket a
+		<include refid="rsglRedpacketJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO rsgl_redpacket(
+			rpid,
+			userno,
+			rptype,
+			tasktarget,
+			taskendtime,
+			reward,
+			tasknote,
+			createtime,
+			createdby,
+			modifytime,
+			modifyby,
+			rpstatus,
+			uid,
+			affairtype
+		) VALUES (
+			#{rpId},
+			#{userNo},
+			#{rpType},
+			#{taskTarget},
+			#{taskendTime},
+			#{reward},
+			#{taskNote},
+			#{createTime},
+			#{createdBy},
+			#{modifyTime},
+			#{modifyBy},
+			#{rpStatus},
+			#{uid},
+			#{affairType}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE rsgl_redpacket SET 	
+			rpid = #{rpId},
+			userno = #{userNo},
+			rptype = #{rpType},
+			tasktarget = #{taskTarget},
+			taskendtime = #{taskendTime},
+			reward = #{reward},
+			tasknote = #{taskNote},
+			createtime = #{createTime},
+			createdby = #{createdBy},
+			modifytime = #{modifyTime},
+			modifyby = #{modifyBy},
+			rpstatus = #{rpStatus},
+			uid = #{uid},
+			affairtype = #{affairType}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM rsgl_redpacket
+		WHERE id = #{id}
+	</update>
+
+<!-- 插入-->
+	<insert id="insertRsglRedpacket" parameterType="RsglRedpacket" >
+		insert into rsgl_redpacket
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="rpId != null" >
+				rpId,
+			</if>
+			<if test="userNo != null" >
+				userNo,
+			</if>
+			<if test="rpType != null" >
+				rpType,
+			</if>
+			<if test="taskTarget != null" >
+				taskTarget,
+			</if>
+			<if test="taskEndTime != null" >
+				taskEndTime,
+			</if>
+			<if test="reward != null" >
+				reward,
+			</if>
+			<if test="taskNote != null" >
+				taskNote,
+			</if>
+			<if test="createTime != null" >
+				createTime,
+			</if>
+			<if test="createdBy != null" >
+				createdBy,
+			</if>
+			<if test="modifyTime != null" >
+				modifyTime,
+			</if>
+			<if test="modifyBy != null" >
+				modifyBy,
+			</if>
+			<if test="rpStatus != null" >
+				rpStatus,
+			</if>
+			<if test="uid != null" >
+				uid,
+			</if>
+			<if test="affairType != null" >
+				affairType,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides="," >
+			<if test="rpId != null" >
+				#{rpId,jdbcType=INTEGER},
+			</if>
+			<if test="userNo != null" >
+				#{userNo,jdbcType=VARCHAR},
+			</if>
+			<if test="rpType != null" >
+				#{rpType,jdbcType=INTEGER},
+			</if>
+			<if test="taskTarget != null" >
+				#{taskTarget,jdbcType=INTEGER},
+			</if>
+			<if test="taskEndTime != null" >
+				#{taskEndTime,jdbcType=DATE},
+			</if>
+			<if test="reward != null" >
+				#{reward},
+			</if>
+			<if test="taskNote != null" >
+				#{taskNote},
+			</if>
+			<if test="createTime != null" >
+				#{createTime,jdbcType=DATE},
+			</if>
+			<if test="createdBy != null" >
+				#{createdBy,jdbcType=VARCHAR},
+			</if>
+			<if test="modifyTime != null" >
+				#{modifyTime,jdbcType=DATE},
+			</if>
+			<if test="modifyBy != null" >
+				#{modifyBy,jdbcType=VARCHAR},
+			</if>
+			<if test="rpStatus != null" >
+				#{rpStatus,jdbcType=INTEGER},
+			</if>
+			<if test="uid != null" >
+				#{uid,jdbcType=INTEGER},
+			</if>
+			<if test="affairType != null" >
+				#{affairType,jdbcType=INTEGER},
+			</if>
+		</trim>
+	</insert>
+
+<!-- 更新-->
+	<update id="updateRsglRedpacket" parameterType="RsglRedpacket" >
+		update rsgl_redpacket
+		<set >
+			<if test="userNo != null" >
+				userNo = #{userNo,jdbcType=VARCHAR},
+			</if>
+			<if test="rpType != null" >
+				rpType = #{rpType,jdbcType=INTEGER},
+			</if>
+			<if test="taskTarget != null" >
+				taskTarget = #{taskTarget,jdbcType=INTEGER},
+			</if>
+			<if test="taskEndTime != null" >
+				taskEndTime = #{taskEndTime,jdbcType=DATE},
+			</if>
+			<if test="reward != null" >
+				reward = #{reward},
+			</if>
+			<if test="taskNote != null" >
+				taskNote = #{taskNote},
+			</if>
+			<if test="createTime != null" >
+				createTime = #{createTime,jdbcType=DATE},
+			</if>
+			<if test="createdBy != null" >
+				createdBy = #{createdBy,jdbcType=VARCHAR},
+			</if>
+			<if test="modifyTime != null" >
+				modifyTime = #{modifyTime,jdbcType=DATE},
+			</if>
+			<if test="modifyBy != null" >
+				modifyBy = #{modifyBy,jdbcType=VARCHAR},
+			</if>
+			<if test="rpStatus != null" >
+				rpStatus = #{rpStatus,jdbcType=INTEGER},
+			</if>
+			<if test="uid != null" >
+				uid = #{uid,jdbcType=INTEGER},
+			</if>
+			<if test="affairType != null" >
+				affairType = #{affairType,jdbcType=INTEGER},
+			</if>
+		</set>
+		where rpId = #{rpId,jdbcType=INTEGER}
+	</update>
+
+
+	<!--根据用户卡号获取用户红包个数AND datediff(MONTH,createTime,GETDATE()) = 0-->
+	<select id="getRedPacketCountByUserNo" resultType="java.lang.Integer">
+		SELECT count(1) FROM rsgl_redPacket WHERE rpStatus=2 and affairType=#{affairType}
+		<if test="uid != null">
+			and uid=#{uid}
+		</if>
+		<if test="rpTypes != null">
+			and rpType IN
+			<foreach collection="rpTypes" item="rpType" open="(" separator="," close=")">
+				#{rpType}
+			</foreach>
+		</if>
+	</select>
+	
+</mapper>

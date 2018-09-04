@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.gcgl.dao.PmUserinfoDao">
+    
+	<sql id="pmUserinfoColumns">
+	    a.uid AS "uid ",
+		a.id AS "id",
+		a.user_type AS "userType",
+		a.user_name AS "userName",
+		a.mobile AS "mobile",
+		a.induction_area AS "inductionArea"
+	</sql>
+	
+	<sql id="pmUserinfoJoins">
+	</sql>
+	
+	<select id="getpmUserinfoTypeReturned" resultType="PmUserinfo">  
+	  select 
+	       a.user_name AS "userName",
+		   a.mobile AS "mobile",
+		   a.induction_area AS "inductionArea"
+		 from  pm_userinfo a
+		       
+		 where a.uid=#{uid}
+	
+	
+	
+	 </select>
+	
+	
+    
+	<select id="get" resultType="PmUserinfo">
+		SELECT 
+			<include refid="pmUserinfoColumns"/>
+		FROM pm_userinfo a
+		<include refid="pmUserinfoJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="PmUserinfo">
+		SELECT 
+			<include refid="pmUserinfoColumns"/>
+		FROM pm_userinfo a
+		<include refid="pmUserinfoJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="PmUserinfo">
+		SELECT 
+			<include refid="pmUserinfoColumns"/>
+		FROM pm_userinfo a
+		<include refid="pmUserinfoJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO pm_userinfo(
+			id,
+			user_type,
+			user_name,
+			mobile,
+			induction_area
+		) VALUES (
+			#{id},
+			#{userType},
+			#{userName},
+			#{mobile},
+			#{inductionArea}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE pm_userinfo SET 	
+			user_type = #{userType},
+			user_name = #{userName},
+			mobile = #{mobile},
+			induction_area = #{inductionArea}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM pm_userinfo
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

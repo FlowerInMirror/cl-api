@@ -1,0 +1,124 @@
+html{overflow:hidden}
+.firstFloor {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: #fff;
+}
+.secondFloor, .threeFloor, .fourFloor ,.fiveFloor {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    right: -100%;
+    background: #fff;
+}
+.threeFloor{
+        z-index:1
+    }
+    .swiper1 {
+        width: 100%;
+    }
+.swiper1 .swiper-slide {
+        text-align: center;
+        font-size: 16px;
+        height: 50px;
+        /* Center slide text vertically */
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display:flex;
+        display: flex;
+        -webkit-box-pack: center;
+        -ms-flex-pack: center;
+        justify-content: center;
+        justify-content: center;
+        -webkit-box-align: center;
+        -ms-flex-align: center;
+        align-items: center;
+        align-items: center;
+        cursor: pointer;
+    }
+.container {
+    border-bottom: 2px solid #FF9800
+}
+.u1042_img {
+    border-width: 0px;
+    position: absolute;
+    left: 0px;
+    top: 43px;
+    width: 13px;
+    height: 7px;
+    left:60px;
+}
+.maList_list {
+    width:100% !important;
+}
+.maList {
+    margin-top: 20px;
+    width: 100%;
+    height: 160px;
+    background-color: rgba(242, 242, 242, 1);
+}
+.list1, .list2, .list3 {
+    width: 100%;
+    overflow: hidden;
+    padding-top: 20px;
+   
+}
+ .list1 li, .list2 li, .list3 li {
+        float: left;
+        width: 124px;
+        height: 40px;
+        line-height: 40px;
+        text-align: center;
+        background: #fff;
+        border-radius: 11px;
+        margin-left: 37px;
+        cursor: pointer;
+    }
+.u1083_img {
+    width: 119px;
+    height: 117px;
+    float:left;
+}
+.footer1{
+    margin-top:5px;
+}
+.footer1 span {
+        display: inline-block;
+        margin-left: 28px;
+        margin-bottom: 10px;
+    }
+.u1129_img, .u1126_img{
+    vertical-align:middle;
+}
+.u1128_input{text-align:center;}
+.paice {
+    display: inline-block;
+    width: 100px;
+    height: 30px;
+    border-radius: 11px;
+    line-height: 30px;
+    text-align: center;
+    cursor:pointer;
+    background: rgba(0, 153, 255, 0.129411764705882);
+}
+.activeColor {
+    color: rgb(255, 102, 0);
+}
+.Mactive {
+    background-color: rgba(255, 153, 0, 1) !important;
+}
+.maList_list {
+    position: absolute;
+}
+.imgM1, .imgM2{
+    width:40px;
+}
+.cont {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+   -webkit-box-pack: justify;
+   -ms-flex-pack: justify;
+    justify-content: space-around
+}

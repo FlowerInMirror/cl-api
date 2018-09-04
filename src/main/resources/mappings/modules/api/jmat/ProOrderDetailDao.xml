@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.api.jmat.dao.ProOrderDetailDao">
+    
+	<sql id="proOrderDetailColumns">
+		a.pod_id AS "podId",
+		a.pod_poid AS "podPoid",
+		a.pod_pmiid AS "podPmiid",
+		a.pod_type AS "podType",
+		a.pod_matid AS "podMatid",
+		a.pod_matprice AS "podMatprice",
+		a.pod_originalcount AS "podOriginalcount",
+		a.pod_alreadycount AS "podAlreadycount",
+		a.pod_jincheng AS "podJincheng",
+		a.pod_createtime AS "podCreatetime",
+		a.pod_updatetime AS "podUpdatetime"
+	</sql>
+	
+	<sql id="proOrderDetailJoins">
+	</sql>
+    
+	<select id="get" resultType="ProOrderDetail">
+		SELECT 
+			<include refid="proOrderDetailColumns"/>
+		FROM mat_proorderdetail a
+		<include refid="proOrderDetailJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="ProOrderDetail">
+		SELECT 
+			<include refid="proOrderDetailColumns"/>
+		FROM mat_proorderdetail a
+		<include refid="proOrderDetailJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="ProOrderDetail">
+		SELECT 
+			<include refid="proOrderDetailColumns"/>
+		FROM mat_proorderdetail a
+		<include refid="proOrderDetailJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO mat_proorderdetail(
+			pod_id,
+			pod_poid,
+			pod_pmiid,
+			pod_type,
+			pod_matid,
+			pod_matprice,
+			pod_originalcount,
+			pod_alreadycount,
+			pod_jincheng,
+			pod_createtime,
+			pod_updatetime
+		) VALUES (
+			#{podId},
+			#{podPoid},
+			#{podPmiid},
+			#{podType},
+			#{podMatid},
+			#{podMatprice},
+			#{podOriginalcount},
+			#{podAlreadycount},
+			#{podJincheng},
+			#{podCreatetime},
+			#{podUpdatetime}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE mat_proorderdetail SET 	
+			pod_id = #{podId},
+			pod_poid = #{podPoid},
+			pod_pmiid = #{podPmiid},
+			pod_type = #{podType},
+			pod_matid = #{podMatid},
+			pod_matprice = #{podMatprice},
+			pod_originalcount = #{podOriginalcount},
+			pod_alreadycount = #{podAlreadycount},
+			pod_jincheng = #{podJincheng},
+			pod_createtime = #{podCreatetime},
+			pod_updatetime = #{podUpdatetime}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM mat_proorderdetail
+		WHERE id = #{id}
+	</update>
+	
+	<!--查找材料使用量集合,通过城市ID与数据量. 	
+	public List<CostMaterialApplicationAmount> findMatApplicationAmountsByCityIDAndTopNum(@Param("cityID")Integer cityID,@Param("topNum") Integer topNum); -->
+	<select id="findMatApplicationAmountsByCityIDAndTopNum" resultType="CostMaterialApplicationAmount" >
+		WITH K AS (
+			  -- 获取 排名(针对城市)/城市ID/材料ID/总数量/平均价价
+				SELECT
+			    --根据城市内分组,然后根据实际下单量总数排序(降序)
+					ROW_NUMBER () OVER (PARTITION BY m_cityID ORDER BY SUM (pod_AlreadyCount) DESC ) TopNum,
+					m_cityID , 
+					pod_MatID,
+					SUM (pod_AlreadyCount) pod_AlreadyCount, -- 材料实际下单量总数
+					CAST (AVG (pod_MatPrice) AS DECIMAL (18, 2)) pod_MatPrice -- 材料单价平均价
+				FROM      V_ProInfoOrderDetail
+				LEFT JOIN V_ProInfoOrder       ON   pod_POID  = po_ID
+				LEFT JOIN V_Material           ON   pod_MatID = m_ID
+				WHERE     pod_jincheng = 0
+				AND       po_jincheng = 0
+				AND       pod_Type = 1
+				GROUP BY 	m_cityID, pod_MatID -- 城市ID,订单材料ID分组.
+			) , A AS (
+			  -- 获得 材料ID/单量总数/分组行号/材料单价 = 条件topNum 使用量靠前的数据 小於等於 100 等效于 前 100 名
+				SELECT
+					pod_MatID,
+					pod_AlreadyCount,
+					TopNum,
+					pod_MatPrice
+				FROM
+					K
+				WHERE TopNum &lt;= #{topNum}
+			    AND  m_cityID = #{cityID}
+			), AV AS (
+				--获取 规格ID/材料档次/档次下材料的平均价
+				SELECT
+					m_TreeFour TreeID,
+					m_Level MatLevel,
+					CAST (AVG (m_CostPrice + m_InstallPrice) AS DECIMAL (18, 2)) CostPrice
+				FROM
+					V_Material
+				WHERE
+					m_jincheng = 0
+				AND m_updateState = 1
+			  AND (m_CostPrice + m_InstallPrice) > 0
+				GROUP BY
+					m_TreeFour,
+					m_Level
+			) 
+			SELECT
+				T1.tree_Name AS treeOneName,
+				T2.tree_name AS treeTwoName,
+				T3.tree_name AS treeThreeName,
+				T4.tree_name AS treeFourName,
+				unit_name AS unitName,
+				m_Code AS matCode,
+				m_brandName AS brandName,
+				m_brandType AS brandType,
+				m_CostPRice AS costPrice,
+				m_QuotesPrice AS quotesPrice,
+				m_InstallPrice AS installPrice,
+				pod_MatPrice  AS matAvgPrice, -- '此材料交易平均价'
+				CostPrice  AS nationwideMatAvgPrice, -- '全国平均成本价'
+				CASE m_level WHEN 1 THEN 'A' WHEN 2 THEN 'B' WHEN 4 THEN 'C' END AS matLevel,
+			  TopNum , 
+			  pod_AlreadyCount AS totalSingleQuantity, -- 总单"量" 
+			  m_ID AS matID
+			FROM V_Material
+			LEFT JOIN V_Tree T4 ON T4.tree_ID = m_treeFour
+			LEFT JOIN V_Tree T3 ON T3.tree_ID = m_treeThree
+			LEFT JOIN V_Tree T2 ON T2.tree_ID = m_treeTwo
+			LEFT JOIN V_Tree T1 ON T1.tree_ID = m_treeOne
+			LEFT JOIN dbo.V_TreeBaseInfo ON tbi_TreeID = m_treeFour
+			LEFT JOIN dbo.V_Unit ON unit_id = tbi_unit
+			INNER JOIN A ON pod_MatID = m_ID
+			LEFT JOIN AV ON TreeID = m_treeFour
+			AND      m_Level = MatLevel
+			WHERE    m_jincheng = 0
+			ORDER BY m_cityID,TopNum
+	</select>
+	
+</mapper>

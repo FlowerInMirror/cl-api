@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.api.jmat.dao.UnitDao">
+    
+	<sql id="unitColumns">
+		a.unit_id AS "unitId",
+		a.unit_name AS "unitName",
+		a.unit_code AS "unitCode",
+		a.unit_jincheng AS "unitJincheng",
+		a.unit_createtime AS "unitCreatetime",
+		a.unit_updatetime AS "unitUpdatetime"
+	</sql>
+	
+	<sql id="unitJoins">
+	</sql>
+    
+	<select id="get" resultType="Unit">
+		SELECT 
+			<include refid="unitColumns"/>
+		FROM v_unit a
+		<include refid="unitJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="Unit">
+		SELECT 
+			<include refid="unitColumns"/>
+		FROM v_unit a
+		<include refid="unitJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="Unit">
+		SELECT 
+			<include refid="unitColumns"/>
+		FROM v_unit a
+		<include refid="unitJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO v_unit(
+			unit_id,
+			unit_name,
+			unit_code,
+			unit_jincheng,
+			unit_createtime,
+			unit_updatetime
+		) VALUES (
+			#{unitId},
+			#{unitName},
+			#{unitCode},
+			#{unitJincheng},
+			#{unitCreatetime},
+			#{unitUpdatetime}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE v_unit SET 	
+			unit_id = #{unitId},
+			unit_name = #{unitName},
+			unit_code = #{unitCode},
+			unit_jincheng = #{unitJincheng},
+			unit_createtime = #{unitCreatetime},
+			unit_updatetime = #{unitUpdatetime}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM v_unit
+		WHERE id = #{id}
+	</update>
+		
+	<!--获取全部材料单位 	
+	public List<Unit>  getAllUnit(); -->
+	<select id="getAllUnit" resultType="Unit" >
+		SELECT <include refid="unitColumns"/>
+		FROM V_Unit a
+		WHERE a.unit_jincheng = 0
+		ORDER BY a.unit_createTime
+	</select>
+	
+	
+</mapper>

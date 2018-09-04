@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xmlns:context="http://www.springframework.org/schema/context" xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+	   xmlns:jee="http://www.springframework.org/schema/jee" xmlns:tx="http://www.springframework.org/schema/tx"
+	   xmlns:util="http://www.springframework.org/schema/util" xmlns:task="http://www.springframework.org/schema/task" xsi:schemaLocation="
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
+		http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc-4.0.xsd
+		http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-4.0.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.0.xsd
+		http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-4.0.xsd"
+	   default-lazy-init="true">
+
+	<description>Spring Configuration</description>
+
+    <!-- 定时器任务:每天0点0时0分更新全国子库回路列表到Redis缓存 -->
+    <!--<task:scheduled-tasks>-->
+        <!--&lt;!&ndash;<task:scheduled ref="mmsTaskJob" method="testJob" cron="* * * * * ?"/>&ndash;&gt;-->
+        <!--<task:scheduled ref="mmsTaskJob" method="setQGLoopMatListCache" cron="0 0 0 * * ?"/>-->
+    <!--</task:scheduled-tasks>-->
+
+	<!-- 加载配置属性文件 -->
+	<context:property-placeholder ignore-unresolvable="true" location="classpath:jeesite.properties" />
+
+	<!-- 加载应用属性实例，可通过  @Value("#{APP_PROP['jdbc.driver']}") String jdbcDriver 方式引用 -->
+	<util:properties id="APP_PROP" location="classpath:jeesite.properties" local-override="true"/>
+
+	<!-- 使用Annotation自动注册Bean，解决事物失效问题：在主容器中不扫描@Controller注解，在SpringMvc中只扫描@Controller注解。  -->
+	<context:component-scan base-package="com.thinkgem.jeesite"><!-- base-package 如果多个，用“,”分隔 -->
+		<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+	</context:component-scan>
+
+    <!-- 上传图片的实现类 -->
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+    </bean>
+
+	<!-- MyBatis begin -->
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dynamicDataSource"/>
+		<property name="typeAliasesPackage" value="com.thinkgem.jeesite"/>
+		<property name="typeAliasesSuperType" value="com.thinkgem.jeesite.common.persistence.BaseEntity"/>
+		<property name="mapperLocations" value="classpath:/mappings/**/*.xml"/>
+		<property name="configLocation" value="classpath:/mybatis-config.xml"></property>
+	</bean>
+
+	<!-- 扫描basePackage下所有以@MyBatisDao注解的接口 -->
+	<bean id="mapperScannerConfigurer" class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory" />
+		<property name="basePackage" value="com.thinkgem.jeesite"/>
+		<property name="annotationClass" value="com.thinkgem.jeesite.common.persistence.annotation.MyBatisDao"/>
+	</bean>
+
+	<!-- 定义事务 -->
+	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dynamicDataSource" />
+	</bean>
+
+	<!-- 配置 Annotation 驱动，扫描@Transactional注解的类定义事务  -->
+	<tx:annotation-driven transaction-manager="transactionManager" proxy-target-class="true"/>
+	<!-- MyBatis end -->
+
+	<!-- 配置 JSR303 Bean Validator 定义 -->
+	<bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean" />
+
+	<!-- 缓存配置 -->
+	<bean id="cacheManager" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
+		<property name="configLocation" value="classpath:${ehcache.configFile}" />
+	</bean>
+
+	<!-- 计划任务配置 法一，用 @Service @Lazy(false)标注类，用@Scheduled(cron = "0 0 2 * * ?")标注方法 -->
+	<task:executor id="executor" pool-size="10"/>
+	<task:scheduler id="scheduler" pool-size="10"/>
+	<task:annotation-driven scheduler="scheduler" executor="executor" proxy-target-class="true"/>
+
+	<!-- 计划任务配置 法二，xml      class="com.thinkgem.jeesite.test.TaskXMLTest"
+    <bean id="anaDataTask" class="com.thinkgem.jeesite.modules.adm.service.AnaBusDataweekTask"></bean> -->
+	<!-- 定时任务之任务平台数据-->
+	<!--<bean id="eduSysTask" class="com.thinkgem.jeesite.modules.edu.service.EduSysMaterialTask"></bean>
+ 	<task:scheduled-tasks>
+        <task:scheduled ref="eduSysTask" method="run" cron="0/30 * * * * ?"/>
+    </task:scheduled-tasks>-->
+
+	<!-- 瑞祥材料-数据源配置, 使用 BoneCP 数据库连接池 -->
+	<bean id="dataSourceCL" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
+		<!-- 数据源驱动类可不写，Druid默认会自动根据URL识别DriverClass -->
+		<property name="driverClassName" value="${jdbc.driver}" />
+
+		<!-- 基本属性 url、user、password -->
+		<property name="url" value="${jdbc.url}" />
+		<property name="username" value="${jdbc.username}" />
+		<property name="password" value="${jdbc.password}" />
+
+		<!-- 配置初始化大小、最小、最大 -->
+		<property name="initialSize" value="${jdbc.pool.init}" />
+		<property name="minIdle" value="${jdbc.pool.minIdle}" />
+		<property name="maxActive" value="${jdbc.pool.maxActive}" />
+
+		<!-- 配置获取连接等待超时的时间 -->
+		<property name="maxWait" value="60000" />
+
+		<!-- 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒 -->
+		<property name="timeBetweenEvictionRunsMillis" value="60000" />
+
+		<!-- 配置一个连接在池中最小生存的时间，单位是毫秒 -->
+		<property name="minEvictableIdleTimeMillis" value="300000" />
+
+		<!-- 用来检测连接是否有效的sql，要求是一个查询语句 -->
+		<property name="validationQuery" value="${jdbc.testSql}" />
+
+		<!-- 可以保证连接池内部定时检测连接的可用性，不可用的连接会被抛弃或者重建，最大情况的保证从连接池中得到的Connection对象是可用的 -->
+		<property name="testWhileIdle" value="true" />
+
+		<!-- 使用testOnBorrow为true（即在获取Connection对象时检测其可用性），不过这样会影响性能 -->
+		<property name="testOnBorrow" value="false" />
+		<property name="testOnReturn" value="false" />
+
+		<!-- 打开PSCache，并且指定每个连接上PSCache的大小（Oracle使用）,mysql5.5及以上可以打开-->
+		<property name="poolPreparedStatements" value="true" />
+		<property name="maxPoolPreparedStatementPerConnectionSize" value="100" />
+
+		<!-- 配置监控统计拦截的filters -->
+		<property name="filters" value="stat" />
+	</bean>
+
+	<!-- 瑞祥工程-数据源配置, 使用 BoneCP 数据库连接池 -->
+	<bean id="dataSourceGC" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
+		<!-- 数据源驱动类可不写，Druid默认会自动根据URL识别DriverClass -->
+		<property name="driverClassName" value="${jdbc2.driver}" />
+
+		<!-- 基本属性 url、user、password -->
+		<property name="url" value="${jdbc2.url}" />
+		<property name="username" value="${jdbc2.username}" />
+		<property name="password" value="${jdbc2.password}" />
+
+		<!-- 配置初始化大小、最小、最大 -->
+		<property name="initialSize" value="${jdbc2.pool.init}" />
+		<property name="minIdle" value="${jdbc2.pool.minIdle}" />
+		<property name="maxActive" value="${jdbc2.pool.maxActive}" />
+
+		<!-- 配置获取连接等待超时的时间 -->
+		<property name="maxWait" value="60000" />
+
+		<!-- 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒 -->
+		<property name="timeBetweenEvictionRunsMillis" value="60000" />
+
+		<!-- 配置一个连接在池中最小生存的时间，单位是毫秒 -->
+		<property name="minEvictableIdleTimeMillis" value="300000" />
+
+		<property name="validationQuery" value="${jdbc2.testSql}" />
+		<property name="testWhileIdle" value="true" />
+		<property name="testOnBorrow" value="false" />
+		<property name="testOnReturn" value="false" />
+
+		<!-- 配置监控统计拦截的filters -->
+		<property name="filters" value="stat" />
+	</bean>
+	
+	<!-- 瑞祥人事-数据源配置, 使用 BoneCP 数据库连接池 -->
+	<bean id="dataSourceRS" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
+		<!-- 数据源驱动类可不写，Druid默认会自动根据URL识别DriverClass -->
+		<property name="driverClassName" value="${jdbc3.driver}" />
+
+		<!-- 基本属性 url、user、password -->
+		<property name="url" value="${jdbc3.url}" />
+		<property name="username" value="${jdbc3.username}" />
+		<property name="password" value="${jdbc3.password}" />
+
+		<!-- 配置初始化大小、最小、最大 -->
+		<property name="initialSize" value="${jdbc3.pool.init}" />
+		<property name="minIdle" value="${jdbc3.pool.minIdle}" />
+		<property name="maxActive" value="${jdbc3.pool.maxActive}" />
+
+		<!-- 配置获取连接等待超时的时间 -->
+		<property name="maxWait" value="60000" />
+
+		<!-- 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒 -->
+		<property name="timeBetweenEvictionRunsMillis" value="60000" />
+
+		<!-- 配置一个连接在池中最小生存的时间，单位是毫秒 -->
+		<property name="minEvictableIdleTimeMillis" value="300000" />
+
+		<property name="validationQuery" value="${jdbc3.testSql}" />
+		<property name="testWhileIdle" value="true" />
+		<property name="testOnBorrow" value="false" />
+		<property name="testOnReturn" value="false" />
+
+		<!-- 配置监控统计拦截的filters -->
+		<property name="filters" value="stat" />
+	</bean>
+
+	<!-- 瑞祥财务-数据源配置, 使用 BoneCP 数据库连接池 -->
+	<bean id="dataSourceCW" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
+		<!-- 数据源驱动类可不写，Druid默认会自动根据URL识别DriverClass -->
+		<property name="driverClassName" value="${jdbc4.driver}" />
+
+		<!-- 基本属性 url、user、password -->
+		<property name="url" value="${jdbc4.url}" />
+		<property name="username" value="${jdbc4.username}" />
+		<property name="password" value="${jdbc4.password}" />
+
+		<!-- 配置初始化大小、最小、最大 -->
+		<property name="initialSize" value="${jdbc4.pool.init}" />
+		<property name="minIdle" value="${jdbc4.pool.minIdle}" />
+		<property name="maxActive" value="${jdbc4.pool.maxActive}" />
+
+		<!-- 配置获取连接等待超时的时间 -->
+		<property name="maxWait" value="60000" />
+
+		<!-- 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒 -->
+		<property name="timeBetweenEvictionRunsMillis" value="60000" />
+
+		<!-- 配置一个连接在池中最小生存的时间，单位是毫秒 -->
+		<property name="minEvictableIdleTimeMillis" value="300000" />
+
+		<property name="validationQuery" value="${jdbc4.testSql}" />
+		<property name="testWhileIdle" value="true" />
+		<property name="testOnBorrow" value="false" />
+		<property name="testOnReturn" value="false" />
+
+		<!-- 配置监控统计拦截的filters -->
+		<property name="filters" value="stat" />
+	</bean>
+
+	<!-- 瑞祥工程-数据源配置, 使用 BoneCP 数据库连接池 -->
+	<bean id="dataSourceDA" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
+		<!-- 数据源驱动类可不写，Druid默认会自动根据URL识别DriverClass -->
+		<property name="driverClassName" value="${jdbc5.driver}" />
+
+		<!-- 基本属性 url、user、password -->
+		<property name="url" value="${jdbc5.url}" />
+		<property name="username" value="${jdbc5.username}" />
+		<property name="password" value="${jdbc5.password}" />
+
+		<!-- 配置初始化大小、最小、最大 -->
+		<property name="initialSize" value="${jdbc5.pool.init}" />
+		<property name="minIdle" value="${jdbc5.pool.minIdle}" />
+		<property name="maxActive" value="${jdbc5.pool.maxActive}" />
+
+		<!-- 配置获取连接等待超时的时间 -->
+		<property name="maxWait" value="60000" />
+
+		<!-- 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒 -->
+		<property name="timeBetweenEvictionRunsMillis" value="60000" />
+
+		<!-- 配置一个连接在池中最小生存的时间，单位是毫秒 -->
+		<property name="minEvictableIdleTimeMillis" value="300000" />
+
+		<property name="validationQuery" value="${jdbc5.testSql}" />
+		<property name="testWhileIdle" value="true" />
+		<property name="testOnBorrow" value="false" />
+		<property name="testOnReturn" value="false" />
+
+		<!-- 配置监控统计拦截的filters -->
+		<property name="filters" value="stat" />
+	</bean>
+
+
+	<!-- 动态数据源 
+			dataSourceCL 瑞祥材料 数据源
+			dataSourceGC 瑞祥工程 数据源
+			dataSourceRS 瑞祥人事 数据源
+			dataSourceCW 瑞祥财务 数据源
+			dataSourceDA 瑞祥财务 数据源
+	-->
+	<bean id="dynamicDataSource" class="com.thinkgem.jeesite.common.db.DynamicDataSource">
+		<property name="defaultTargetDataSource" ref="dataSourceCL"/>
+		<property name="targetDataSources">
+			<map>
+				<entry key="dataSourceCL" value-ref="dataSourceCL"/>
+				<entry key="dataSourceGC" value-ref="dataSourceGC"/>
+				<entry key="dataSourceRS" value-ref="dataSourceRS"/>
+				<entry key="dataSourceCW" value-ref="dataSourceCW"/>
+				<entry key="dataSourceDA" value-ref="dataSourceDA"/>
+			</map>
+		</property>
+	</bean>
+
+</beans>

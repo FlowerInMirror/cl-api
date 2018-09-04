@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.api.major.dao.MajorDao">
+
+    <!--// "============================== 一段 =============================="-->
+
+    <!-- 主营管理:一段列表
+    List<AList> getMajorAList();-->
+    <select id="getMajorAList" resultType="AList">
+        SELECT
+            t1.tree_ID AS treeOneID,
+            t2.tree_ID AS treeTwoID,
+            t1.tree_Code AS treeOneCode,
+            t2.tree_Code AS treeTwoCode,
+            t1.tree_Name AS treeOneName,
+            t2.tree_Name AS treeTwoName,
+            CASE WHEN mctTreeTwoID IS NULL OR mctLoopStatus = 0 THEN 0 ELSE 1 END AS majorLoopStatus
+        FROM
+            V_Tree t2
+        LEFT JOIN V_Tree t1 ON t2.tree_ParentID = t1.tree_ID AND t1.tree_jincheng = 0 AND t1.tree_Level = 1
+        LEFT JOIN Major_Loop_View_Category ON mctTreeTwoID = t2.tree_ID
+        WHERE t2.tree_jincheng = 0
+        AND t2.tree_Level = 2
+        ORDER BY t1.tree_createTime,t2.tree_createTime,t1.tree_updateTime,t2.tree_updateTime
+    </select>
+
+    <!--// "============================== 二段 ==============================" -->
+
+    <!--// "============================== 三段 =============================="-->
+
+
+</mapper>

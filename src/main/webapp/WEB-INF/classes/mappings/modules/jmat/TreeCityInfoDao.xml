@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.jmat.dao.TreeCityInfoDao">
+    
+	<sql id="treeCityInfoColumns">
+		a.tci_id AS "tciId",
+		a.tci_treeid AS "tciTreeid",
+		a.tci_cityid AS "tciCityid",
+		a.tci_pageindex AS "tciPageindex",
+		a.tci_pagenum AS "tciPagenum",
+		a.tci_toptime AS "tciToptime",
+		a.tci_homehoststate AS "tciHomehoststate",
+		a.tci_status AS "tciStatus",
+		a.tci_createtime AS "tciCreatetime",
+		a.tci_updatetime AS "tciUpdatetime"
+	</sql>
+	
+	<sql id="treeCityInfoJoins">
+	</sql>
+    
+	<select id="get" resultType="TreeCityInfo">
+		SELECT 
+			<include refid="treeCityInfoColumns"/>
+		FROM v_treecityinfo a
+		<include refid="treeCityInfoJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="TreeCityInfo">
+		SELECT 
+			<include refid="treeCityInfoColumns"/>
+		FROM v_treecityinfo a
+		<include refid="treeCityInfoJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="TreeCityInfo">
+		SELECT 
+			<include refid="treeCityInfoColumns"/>
+		FROM v_treecityinfo a
+		<include refid="treeCityInfoJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO v_treecityinfo(
+			tci_id,
+			tci_treeid,
+			tci_cityid,
+			tci_pageindex,
+			tci_pagenum,
+			tci_toptime,
+			tci_homehoststate,
+			tci_status,
+			tci_createtime,
+			tci_updatetime
+		) VALUES (
+			#{tciId},
+			#{tciTreeid},
+			#{tciCityid},
+			#{tciPageindex},
+			#{tciPagenum},
+			#{tciToptime},
+			#{tciHomehoststate},
+			#{tciStatus},
+			#{tciCreatetime},
+			#{tciUpdatetime}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE v_treecityinfo SET 	
+			tci_id = #{tciId},
+			tci_treeid = #{tciTreeid},
+			tci_cityid = #{tciCityid},
+			tci_pageindex = #{tciPageindex},
+			tci_pagenum = #{tciPagenum},
+			tci_toptime = #{tciToptime},
+			tci_homehoststate = #{tciHomehoststate},
+			tci_status = #{tciStatus},
+			tci_createtime = #{tciCreatetime},
+			tci_updatetime = #{tciUpdatetime}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM v_treecityinfo
+		WHERE id = #{id}
+	</update>
+		
+	<!--通过城市ID与四级科目树ID,查找材料地区信息. 	
+	public TreeCityInfo findTreeCityInfoByCityAndTreeID(@Param("city")Integer city,@Param("treeFourID") String treeFourID); -->
+	<select id="findTreeCityInfoByCityAndTreeID" resultType="TreeCityInfo">
+		SELECT 
+			<include refid="treeCityInfoColumns"/>
+		FROM v_treecityinfo a
+		WHERE a.tci_TreeID = #{treeFourID}
+		AND a.tci_CityID = #{city}
+		AND a.tci_Status = 0;
+	</select>
+	
+	<!--平台统计(子库起始页状态,材料统计),通过城市ID获得. 	
+	public Map<String, Object> findPlatformStatisticsByCityID(Integer cityID); -->
+	<select id="findPlatformStatisticsByCityID" resultType="java.util.Map" >
+		SELECT
+			a.total AS  platform,
+		  b.perfect AS perfect,
+		  (a.total - b.perfect) AS Imperfect
+		FROM
+			(
+				--全部平台数量统计
+				SELECT
+					COUNT (1) AS total
+				FROM
+					V_TreeCityInfo a
+				INNER JOIN V_Material b ON a.tci_TreeID = b.m_TreeFour
+				AND a.tci_CityID = b.m_CityID
+				AND b.m_jincheng = 0
+				WHERE
+					a.tci_CityID = 12
+				AND a.tci_PageIndex > 0
+				AND a.tci_Status = 0
+			) a ,(
+				--平台完善数量统计
+				SELECT
+					COUNT (1) AS perfect
+				FROM
+					V_TreeCityInfo a
+				LEFT JOIN (
+					SELECT
+						*
+					FROM
+						V_Material a
+					WHERE
+						a.m_UpdateState = 1
+					AND a.m_jincheng = 0
+					AND (
+						a.m_CostPrice + a.m_InstallPrice
+					) > 0
+				) b ON a.tci_TreeID = b.m_TreeFour
+				AND a.tci_CityID = b.m_CityID
+				AND b.m_jincheng = 0
+				WHERE
+					a.tci_CityID = 12
+				AND a.tci_PageIndex > 0
+				AND a.tci_Status = 0
+			) b
+	</select>
+	
+	<!--查找置顶总计,通过城市ID. 	
+	public Integer findTopCountByCityID(Integer cityID); -->
+	<select id="findTopCountByCityID"  parameterType="Integer" resultType="Integer" >
+		--得到指定地区下的所有置顶规格
+		SELECT
+			count(1)
+		FROM
+			V_TreeCityInfo a
+		WHERE
+			a.tci_Status = 0
+		AND a.tci_PageIndex >= 1
+		AND a.tci_CityID = #{cityID}
+	</select>	
+	
+</mapper>

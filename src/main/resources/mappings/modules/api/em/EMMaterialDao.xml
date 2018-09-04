@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.api.em.material.dao.EMMaterialDao">
+    <!--// "======================= 列表 ========================"-->
+
+    <!--// 材料列表 @depict 通过城市检索 @author ljc @createTime 2018-8-30 10:20:47-->
+    <!--List<EMMaterialListVo> findEMMaterialListVoByCityID(Integer cityID);-->
+    <select id="findEMMaterialListVoByCityID" resultType="EMMaterialListVo">
+       EM_MaterialList #{cityID}
+    </select>
+</mapper>

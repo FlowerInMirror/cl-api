@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.gcgl.dao.BehaviorDao">
+    
+	<sql id="behaviorColumns">
+		a.db_id AS "dbId",
+		a.db_class AS "dbClass",
+		a.db_operattype AS "dbOperattype",
+		a.db_operatuser AS "dbOperatuser",
+		a.db_mainid AS "dbMainid",
+		a.db_eventid AS "dbEventid",
+		a.db_position AS "dbPosition",
+		a.db_content AS "dbContent",
+		a.db_data AS "dbData",
+		a.db_state AS "dbState",
+		a.db_ifread AS "dbIfread",
+		a.db_readtime AS "dbReadtime",
+		a.db_jincheng AS "dbJincheng",
+		a.db_createtime AS "dbCreatetime",
+		a.db_updatetime AS "dbUpdatetime",
+		a.db_operatecityid AS "dbOperatecityid",
+		a.db_cityid AS "dbCityid"
+	</sql>
+	
+	<sql id="behaviorJoins">
+	</sql>
+    <!-- 根据材料对象，查询材料四级名称，三级名称，二级级名称，一级名称-->	
+  <select id="getBehaviorAuditor" resultType="Behavior">
+	
+	   SELECT 
+       d.db_content AS "dbContent",
+       d.db_createtime AS "dbCreatetime",
+	   T4.tree_name AS "MatSpec",
+	   T3.tree_name AS "MatName", 
+	   T2.tree_name AS "treeTwoName",
+	   T1.tree_name AS "treeOneName"
+	   FROM 
+	          data_behavior d
+	   LEFT  JOIN 
+	      v_infocheckandaccept v  ON  d.db_mainid=v.ica_id  
+		  LEFT JOIN V_Tree T4 ON T4.tree_ID=v.[ica_TreeID]
+	      LEFT JOIN V_Tree T3  ON T4.tree_ParentID=T3.tree_ID
+	      LEFT JOIN V_Tree T2 ON T3.tree_ParentID=T2.tree_ID
+	      LEFT JOIN V_Tree T1  ON T2.tree_ParentID=T1.tree_ID
+	   WHERE 
+	      v.ica_object=#{icaObject}
+	     AND
+	         d.db_class=9   
+	     AND         
+	         d.db_content='一审:审核通过'
+	     AND  v.ica_type=100  
+	       <if test="dbOperatuser !=null and dbOperatuser != ''">
+			     AND  d.db_operatuser=#{dbOperatuser}
+			</if> 
+		    <if test="start != null ">
+			     AND d.db_createtime &gt;= #{start}
+			  </if>
+			 <if test="stop!=null">
+			     AND d.db_createtime &lt;= #{stop}
+			  </if> 
+	       
+	       ORDER BY d.db_createTime desc;   
+	     
+	
+	</select>
+	
+	
+    
+	<select id="get" resultType="Behavior">
+		SELECT 
+			<include refid="behaviorColumns"/>
+		FROM data_behavior a
+		<include refid="behaviorJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="Behavior">
+		SELECT 
+			<include refid="behaviorColumns"/>
+		FROM data_behavior a
+		<include refid="behaviorJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="Behavior">
+		SELECT 
+			<include refid="behaviorColumns"/>
+		FROM data_behavior a
+		<include refid="behaviorJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO data_behavior(
+			db_id,
+			db_class,
+			db_operattype,
+			db_operatuser,
+			db_mainid,
+			db_eventid,
+			db_position,
+			db_content,
+			db_data,
+			db_state,
+			db_ifread,
+			db_readtime,
+			db_jincheng,
+			db_createtime,
+			db_updatetime,
+			db_operatecityid,
+			db_cityid
+		) VALUES (
+			#{dbId},
+			#{dbClass},
+			#{dbOperattype},
+			#{dbOperatuser},
+			#{dbMainid},
+			#{dbEventid},
+			#{dbPosition},
+			#{dbContent},
+			#{dbData},
+			#{dbState},
+			#{dbIfread},
+			#{dbReadtime},
+			#{dbJincheng},
+			#{dbCreatetime},
+			#{dbUpdatetime},
+			#{dbOperatecityid},
+			#{dbCityid}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE data_behavior SET 	
+			db_id = #{dbId},
+			db_class = #{dbClass},
+			db_operattype = #{dbOperattype},
+			db_operatuser = #{dbOperatuser},
+			db_mainid = #{dbMainid},
+			db_eventid = #{dbEventid},
+			db_position = #{dbPosition},
+			db_content = #{dbContent},
+			db_data = #{dbData},
+			db_state = #{dbState},
+			db_ifread = #{dbIfread},
+			db_readtime = #{dbReadtime},
+			db_jincheng = #{dbJincheng},
+			db_createtime = #{dbCreatetime},
+			db_updatetime = #{dbUpdatetime},
+			db_operatecityid = #{dbOperatecityid},
+			db_cityid = #{dbCityid}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM data_behavior
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

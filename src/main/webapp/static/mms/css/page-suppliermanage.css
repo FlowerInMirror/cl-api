@@ -1,0 +1,41 @@
+/*材料商添加*/
+.clslft{width:330px ;}
+.photoupload{width: 110px;height: 146px; margin: 0 auto;}
+.photoupload-p{position: absolute;left: 0;bottom: 16px;width: 100%;}
+.clsrgt{margin-left: 330px;overflow: hidden;}
+.erweimainfo{width: 100px;margin: 0 auto;}
+.erweimainfo img{display: block;width: 100px;height: 100px;}
+/*上传资料*/
+.marginauto{margin: 0 auto;}
+/*定义滚动条高宽及背景 高宽分别对应横竖滚动条的尺寸*/  
+.thinScroll::-webkit-scrollbar{width: 10px; height:10px;}
+/*定义滚动条轨道 内阴影+圆角*/  
+.thinScroll::-webkit-scrollbar-track{-webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);border-radius: 5px;background: rgba(0,0,0,0.5);}  
+/*定义滑块 内阴影+圆角*/  
+.thinScroll::-webkit-scrollbar-thumb{border-radius: 5px;-webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);background: rgba(0,0,0,0.4);}  
+.thinScroll::-webkit-scrollbar-thumb:hover/*滑块效果*/{border-radius: 5px;-webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);background: rgba(0,0,0,0.5);}
+
+.cahandle_left{ width:200px;overflow-y:auto;}
+.cahandle_right{ margin-left:200px; border-left: 10px solid #e9f0f6;}
+.cahandle_left li{ cursor:pointer; width:100%; height:40px; line-height:40px; float:left; text-align:center; border-bottom:1px solid #ecf0f3; border-left:4px solid transparent}
+.cahandle_left .cahan_cur{ background:#f5f6f8; border-left-color: #46a1fe;}
+.cahandle_left li .txtname{width: 50%;}
+.cahandle_rightL{ width:245px; overflow-y:auto;}
+.cahandle_rightR{ margin-left:245px; border-left:1px dashed #ccc;}
+.cahandle_rightR .percent100{width: 100%;height: 100%;}
+.cahandle_rightR .paper-link .paper-link-img{overflow: hidden;display: block;width: 100%;height: 100%;}
+.doc-download{background: url(../images/pic/download_ic.png) no-repeat;width:16px;height:16px;display:inline-block;vertical-align: text-bottom;}
+
+/*身份证*/
+.twopic{width: 310px;}
+.twopic .paper-link{width: 310px;height: 180px;overflow: hidden;}
+.twopicparent{top: 50%;margin-top:-118px;}
+.cascrollBtn{width: 36px;height: 36px;position: absolute;top:50%;margin-top: -18px;}
+.cascroll-prev{background: url(../images/ico/uiLeft05_off.png) no-repeat;left: -46px;}
+.cascroll-prev:hover{background: url(../images/ico/uiLeft05_on.png) no-repeat;}
+.cascroll-next{background: url(../images/ico/uiRight05_off.png) no-repeat;right: -46px;}
+.cascroll-next:hover{background: url(../images/ico/uiRight05_on.png) no-repeat;}
+.cascrollcon{overflow: hidden;}
+.cascrollcon li{float: left;}
+
+.uiTab7 .uiTab7-active a{color: #fff;}

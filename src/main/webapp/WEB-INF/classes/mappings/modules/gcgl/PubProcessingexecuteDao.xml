@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.gcgl.dao.PubProcessingexecuteDao">
+    
+	<sql id="pubProcessingexecuteColumns">
+		a.pe_id AS "peId",
+		a.pe_pid AS "pePid",
+		a.pe_type AS "peType",
+		a.pe_firstscore AS "peFirstscore",
+		a.pe_lastscore AS "peLastscore",
+		a.pe_claimtime AS "peClaimtime",
+		a.pe_remark AS "peRemark",
+		a.pe_executestate AS "peExecutestate",
+		a.pe_defineremark AS "peDefineremark",
+		a.pe_definetime AS "peDefinetime",
+		a.pe_status AS "peStatus",
+		a.pe_createtime AS "peCreatetime",
+		a.pe_updatetime AS "peUpdatetime",
+		a.poe_usertype AS "poeUsertype",
+		a.poe_userno AS "poeUserno",
+		a.poe_username AS "poeUsername"
+	</sql>
+	
+	<sql id="pubProcessingexecuteJoins">
+	</sql>
+	
+	
+	<select id="getPubProcessingexecute" resultType="PubProcessingexecute">
+	  SELECT 
+	    a.pe_pid AS "pePid",
+	    a.pe_remark AS "peRemark",
+	    a.pe_type AS "peType",
+	    a.pe_firstscore AS "peFirstscore",
+	    a.pe_lastscore AS "peLastscore",
+	    a.pe_claimtime AS "peClaimtime",
+	    a.pe_definetime AS "peDefinetime",
+	    a.poe_username AS "poeUsername"
+	   FROM   pub_processingexecute a
+	   
+	  where  a.pe_pid =#{pePid}
+	
+	</select>
+
+    
+	<select id="get" resultType="PubProcessingexecute">
+		SELECT 
+			<include refid="pubProcessingexecuteColumns"/>
+		FROM pub_processingexecute a
+		<include refid="pubProcessingexecuteJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="PubProcessingexecute">
+		SELECT 
+			<include refid="pubProcessingexecuteColumns"/>
+		FROM pub_processingexecute a
+		<include refid="pubProcessingexecuteJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="PubProcessingexecute">
+		SELECT 
+			<include refid="pubProcessingexecuteColumns"/>
+		FROM pub_processingexecute a
+		<include refid="pubProcessingexecuteJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO pub_processingexecute(
+			pe_id,
+			pe_pid,
+			pe_type,
+			pe_firstscore,
+			pe_lastscore,
+			pe_claimtime,
+			pe_remark,
+			pe_executestate,
+			pe_defineremark,
+			pe_definetime,
+			pe_status,
+			pe_createtime,
+			pe_updatetime,
+			poe_usertype,
+			poe_userno,
+			poe_username
+		) VALUES (
+			#{peId},
+			#{pePid},
+			#{peType},
+			#{peFirstscore},
+			#{peLastscore},
+			#{peClaimtime},
+			#{peRemark},
+			#{peExecutestate},
+			#{peDefineremark},
+			#{peDefinetime},
+			#{peStatus},
+			#{peCreatetime},
+			#{peUpdatetime},
+			#{poeUsertype},
+			#{poeUserno},
+			#{poeUsername}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE pub_processingexecute SET 	
+			pe_id = #{peId},
+			pe_pid = #{pePid},
+			pe_type = #{peType},
+			pe_firstscore = #{peFirstscore},
+			pe_lastscore = #{peLastscore},
+			pe_claimtime = #{peClaimtime},
+			pe_remark = #{peRemark},
+			pe_executestate = #{peExecutestate},
+			pe_defineremark = #{peDefineremark},
+			pe_definetime = #{peDefinetime},
+			pe_status = #{peStatus},
+			pe_createtime = #{peCreatetime},
+			pe_updatetime = #{peUpdatetime},
+			poe_usertype = #{poeUsertype},
+			poe_userno = #{poeUserno},
+			poe_username = #{poeUsername}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM pub_processingexecute
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

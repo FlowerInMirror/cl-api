@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.api.jmat.dao.ProInfoMaterialDao">
+    
+	<sql id="proInfoMaterialColumns">
+		a.pm_id AS "pmId",
+		a.pm_piid AS "pmPiid",
+		a.pm_rwdid AS "pmRwdid",
+		a.pm_matid AS "pmMatid",
+		a.pm_mattype AS "pmMattype",
+		a.pm_matprice AS "pmMatprice",
+		a.pm_userid AS "pmUserid",
+		a.pm_totalcount AS "pmTotalcount",
+		a.pm_alreadycount AS "pmAlreadycount",
+		a.pm_floatingrate AS "pmFloatingrate",
+		a.pm_matname AS "pmMatname",
+		a.pm_unitname AS "pmUnitname",
+		a.pm_jincheng AS "pmJincheng",
+		a.pm_createtime AS "pmCreatetime",
+		a.pm_updatetime AS "pmUpdatetime",
+		a.pm_pushtoapp AS "pmPushtoapp",
+		a.pm_formtype AS "pmFormtype",
+		a.pm_oldcount AS "pmOldcount",
+		a.pm_splitcount AS "pmSplitcount",
+		a.pm_plusminuscount AS "pmPlusminuscount"
+	</sql>
+	
+	<sql id="proInfoMaterialJoins">
+	</sql>
+    
+	<select id="get" resultType="ProInfoMaterial">
+		SELECT 
+			<include refid="proInfoMaterialColumns"/>
+		FROM v_proinfomaterial a
+		<include refid="proInfoMaterialJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="ProInfoMaterial">
+		SELECT 
+			<include refid="proInfoMaterialColumns"/>
+		FROM v_proinfomaterial a
+		<include refid="proInfoMaterialJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="ProInfoMaterial">
+		SELECT 
+			<include refid="proInfoMaterialColumns"/>
+		FROM v_proinfomaterial a
+		<include refid="proInfoMaterialJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO v_proinfomaterial(
+			pm_id,
+			pm_piid,
+			pm_rwdid,
+			pm_matid,
+			pm_mattype,
+			pm_matprice,
+			pm_userid,
+			pm_totalcount,
+			pm_alreadycount,
+			pm_floatingrate,
+			pm_matname,
+			pm_unitname,
+			pm_jincheng,
+			pm_createtime,
+			pm_updatetime,
+			pm_pushtoapp,
+			pm_formtype,
+			pm_oldcount,
+			pm_splitcount,
+			pm_plusminuscount
+		) VALUES (
+			#{pmId},
+			#{pmPiid},
+			#{pmRwdid},
+			#{pmMatid},
+			#{pmMattype},
+			#{pmMatprice},
+			#{pmUserid},
+			#{pmTotalcount},
+			#{pmAlreadycount},
+			#{pmFloatingrate},
+			#{pmMatname},
+			#{pmUnitname},
+			#{pmJincheng},
+			#{pmCreatetime},
+			#{pmUpdatetime},
+			#{pmPushtoapp},
+			#{pmFormtype},
+			#{pmOldcount},
+			#{pmSplitcount},
+			#{pmPlusminuscount}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE v_proinfomaterial SET 	
+			pm_id = #{pmId},
+			pm_piid = #{pmPiid},
+			pm_rwdid = #{pmRwdid},
+			pm_matid = #{pmMatid},
+			pm_mattype = #{pmMattype},
+			pm_matprice = #{pmMatprice},
+			pm_userid = #{pmUserid},
+			pm_totalcount = #{pmTotalcount},
+			pm_alreadycount = #{pmAlreadycount},
+			pm_floatingrate = #{pmFloatingrate},
+			pm_matname = #{pmMatname},
+			pm_unitname = #{pmUnitname},
+			pm_jincheng = #{pmJincheng},
+			pm_createtime = #{pmCreatetime},
+			pm_updatetime = #{pmUpdatetime},
+			pm_pushtoapp = #{pmPushtoapp},
+			pm_formtype = #{pmFormtype},
+			pm_oldcount = #{pmOldcount},
+			pm_splitcount = #{pmSplitcount},
+			pm_plusminuscount = #{pmPlusminuscount}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM v_proinfomaterial
+		WHERE id = #{id}
+	</update>
+
+    <!-- 查找:项目四级科目材料使用量,通过四级科目ID
+    int findFourTreeMatCountByTreeFourIDAndCityID(@Param("treeFourID")String treeFourID,@Param("cityID")Integer cityID);-->
+    <select id="findFourTreeMatCountByTreeFourIDAndCityID" resultType="int">
+        SELECT COUNT(1)
+        FROM V_ProInfoMaterial
+        LEFT JOIN V_Material ON m_ID=pm_MatID AND m_jincheng = 0
+        WHERE pm_jincheng=0 AND m_TreeFour=#{treeFourID} AND m_CityID=#{cityID}
+    </select>
+
+
+</mapper>

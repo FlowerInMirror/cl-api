@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.api.jmat.dao.TreeStandardPhotoDao">
+    
+	<sql id="treeStandardPhotoColumns">
+		a.tsp_id AS "tspId",
+		a.tsp_treefour AS "tspTreefour",
+		a.tsp_tsid AS "tspTsid",
+		a.tsp_class AS "tspClass",
+		a.tsp_type AS "tspType",
+		a.tsp_photourl AS "tspPhotourl",
+		a.tsp_paraid AS "tspParaid",
+		a.tsp_brandid AS "tspBrandid",
+		a.tsp_mian AS "tspMian",
+		a.tsp_title AS "tspTitle",
+		a.tsp_content1 AS "tspContent1",
+		a.tsp_content2 AS "tspContent2",
+		a.tsp_jincheng AS "tspJincheng",
+		a.tsp_createtime AS "tspCreatetime",
+		a.tsp_updatetime AS "tspUpdatetime",
+		a.tsp_matlevel AS "tspMatlevel",
+		a.tsp_cityid AS "tspCityid"
+	</sql>
+	
+	<sql id="treeStandardPhotoJoins">
+	</sql>
+    
+	<select id="get" resultType="TreeStandardPhoto">
+		SELECT 
+			<include refid="treeStandardPhotoColumns"/>
+		FROM v_treestandardphoto a
+		<include refid="treeStandardPhotoJoins"/>
+		WHERE a.tsp_ID = #{id}
+	</select>
+	
+	<select id="findList" resultType="TreeStandardPhoto">
+		SELECT 
+			<include refid="treeStandardPhotoColumns"/>
+		FROM v_treestandardphoto a
+		<include refid="treeStandardPhotoJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="TreeStandardPhoto">
+		SELECT 
+			<include refid="treeStandardPhotoColumns"/>
+		FROM v_treestandardphoto a
+		<include refid="treeStandardPhotoJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO v_treestandardphoto(
+			tsp_id,
+			tsp_treefour,
+			tsp_tsid,
+			tsp_class,
+			tsp_type,
+			tsp_photourl,
+			tsp_paraid,
+			tsp_brandid,
+			tsp_mian,
+			tsp_title,
+			tsp_content1,
+			tsp_content2,
+			tsp_jincheng,
+			tsp_createtime,
+			tsp_updatetime,
+			tsp_matlevel,
+			tsp_cityid
+		) VALUES (
+			#{tspId},
+			#{tspTreefour},
+			#{tspTsid},
+			#{tspClass},
+			#{tspType},
+			#{tspPhotourl},
+			#{tspParaid},
+			#{tspBrandid},
+			#{tspMian},
+			#{tspTitle},
+			#{tspContent1},
+			#{tspContent2},
+			#{tspJincheng},
+			#{tspCreatetime},
+			#{tspUpdatetime},
+			#{tspMatlevel},
+			#{tspCityid}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE v_treestandardphoto SET 	
+			tsp_id = #{tspId},
+			tsp_treefour = #{tspTreefour},
+			tsp_tsid = #{tspTsid},
+			tsp_class = #{tspClass},
+			tsp_type = #{tspType},
+			tsp_photourl = #{tspPhotourl},
+			tsp_paraid = #{tspParaid},
+			tsp_brandid = #{tspBrandid},
+			tsp_mian = #{tspMian},
+			tsp_title = #{tspTitle},
+			tsp_content1 = #{tspContent1},
+			tsp_content2 = #{tspContent2},
+			tsp_jincheng = #{tspJincheng},
+			tsp_createtime = #{tspCreatetime},
+			tsp_updatetime = #{tspUpdatetime},
+			tsp_matlevel = #{tspMatlevel},
+			tsp_cityid = #{tspCityid}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM v_treestandardphoto
+		WHERE id = #{id}
+	</update>
+
+    <!--  查找 材料照片, 通过城市ID 与 科目树ID 或 照片类型
+    public List<TreeStandardPhoto> findMatPhotoByCityIDAndTreeFourOrPhotoType(@Param("cityID") Integer cityID,@Param("treeFourID") String treeFourID,@Param("photoType") Integer photoType);-->
+    <select id="findMatPhotoByCityIDAndTreeFourOrPhotoType" resultType="TreeStandardPhoto">
+        --  查找 材料照片, 通过城市ID 与 科目树ID 或 照片类型
+        --材料相关照片(类型 1~8)
+        ;WITH LLL AS (
+        --规格级（效果图，细节图，自定义）
+        SELECT tsp_ID,tsp_TreeFour,tsp_TSID,tsp_Class,tsp_Type
+        ,tsp_PhotoURL,tsp_BrandID,tsp_ParaID,tsp_Mian,tsp_Title,tsp_Content1,tsp_Content2
+        ,tsp_createTime,tsp_MatLevel,tsp_CityID
+        FROM V_TreeStandardPhoto
+        WHERE tsp_TreeFour= #{treeFourID}
+        AND tsp_MatLevel=0 AND tsp_CityID=0
+        AND tsp_jincheng=0 AND tsp_Class=1
+        UNION ALL
+        --规格级地区级（对比图）
+        SELECT tsp_ID,tsp_TreeFour,tsp_TSID,tsp_Class,tsp_Type
+        ,tsp_PhotoURL,tsp_BrandID,tsp_ParaID,tsp_Mian,tsp_Title,tsp_Content1,tsp_Content2
+        ,tsp_createTime,tsp_MatLevel,tsp_CityID
+        FROM V_TreeStandardPhoto
+        WHERE tsp_TreeFour= #{treeFourID}
+        AND tsp_CityID= #{cityID}
+        AND tsp_jincheng=0 AND tsp_Class=1 AND tsp_Type=3
+        UNION ALL
+        --档次级（主图）
+        SELECT tsp_ID,tsp_TreeFour,tsp_TSID,tsp_Class,tsp_Type
+        ,tsp_PhotoURL,tsp_BrandID,tsp_ParaID,tsp_Mian,tsp_Title,tsp_Content1,tsp_Content2
+        ,tsp_createTime,tsp_MatLevel,tsp_CityID
+        FROM V_TreeStandardPhoto
+        WHERE tsp_TreeFour= #{treeFourID}
+        AND tsp_CityID=0
+        AND tsp_MatLevel>=1
+        AND tsp_jincheng=0 AND tsp_Class=1 AND tsp_Type BETWEEN 1 AND 8
+        UNION ALL
+        --子库照片（品牌LOGO，型号图）
+        SELECT tsp_ID,tsp_TreeFour,tsp_TSID,tsp_Class,tsp_Type
+        ,tsp_PhotoURL,tsp_BrandID,tsp_ParaID,tsp_Mian,tsp_Title,tsp_Content1,tsp_Content2
+        ,tsp_createTime,tsp_MatLevel,tsp_CityID
+        FROM V_TreeStandardPhoto
+        INNER JOIN V_Material ON m_ID=tsp_TSID
+        WHERE tsp_TreeFour=#{treeFourID} AND m_CityID= #{cityID}
+        AND tsp_jincheng=0 AND tsp_Class=2
+        AND tsp_MatLevel>=1)
+        SELECT LLL.* FROM LLL
+        <where>
+            <if test="null != photoType">
+                LLL.tsp_Type = #{photoType}
+            </if>
+        </where>
+    </select>
+
+    <!-- 查找材料所有相关照片,根据材料ID.
+    List<TreeStandardPhoto> findMatPhotoByMatIDOrPhotoType(@Param("mId")String mId,@Param("tspClass")Integer tspClass);-->
+    <select id="findMatPhotoByMatIDOrPhotoType" resultType="TreeStandardPhoto">
+        -- 获取材料所有相关照片,根据材料ID
+        SELECT
+            <include refid="treeStandardPhotoColumns"/>
+        FROM
+            V_TreeStandardPhoto a
+        WHERE
+            a.tsp_jincheng = 0
+        AND a.tsp_TSID = #{mId}
+        <if test="null != tspClass">
+            AND a.tsp_Class = #{tspClass}
+        </if>
+        ORDER BY a.tsp_Class,a.tsp_createTime
+    </select>
+
+    <!--添加材料照片
+    void addMaterialPhotoByPhotoUpload(PhotoUpload photoUpload);-->
+    <insert id="addMaterialPhotoByPhotoUpload"  useGeneratedKeys="true" keyProperty="tspID" parameterType="PhotoUpload" >
+        INSERT INTO v_treestandardphoto(
+        tsp_id,
+        tsp_treefour,
+        tsp_tsid,
+        tsp_class,
+        tsp_type,
+        tsp_photourl,
+        tsp_paraid,
+        tsp_brandid,
+        tsp_mian,
+        tsp_title,
+        tsp_content1,
+        tsp_content2,
+        tsp_matlevel,
+        tsp_cityid
+        ) VALUES (
+        #{tspID},
+        #{tspTreeFour},
+        #{tspTSID},
+        #{tspClass},
+        #{tspType},
+        #{tspPhotoURL},
+        #{tspParaID},
+        #{tspBrandID},
+        #{tspMian},
+        #{tspTitle},
+        #{tspContent1},
+        #{tspContent2},
+        #{tspMatLevel},
+        #{tspCityID}
+        )
+    </insert>
+
+    <!-- 更新母库照片库(更新照片路径) 更新材料照片
+    int updateTreeStandardPhotoURLByPhotoUpload(PhotoUpload photoUpload);-->
+    <update id="updateTreeStandardPhotoURLByPhotoUpload" parameterType="PhotoUpload">
+        UPDATE V_TreeStandardPhoto
+        SET    tsp_PhotoURL=#{tspPhotoURL},tsp_updateTime=GETDATE()
+        WHERE  tsp_ID=#{tspID}
+    </update>
+
+    <!-- 更新材料照片参数/描述 保存照片附加信息
+    int updateMaterialPhotoOterTextByPhotoUpload(PhotoUpload photoUpload);-->
+    <update id="updateMaterialPhotoOterTextByPhotoUpload" parameterType="PhotoUpload">
+        UPDATE V_TreeStandardPhoto
+        SET    tsp_Title=#{tspTitle},tsp_Content1=#{tspContent1},tsp_Content2=#{tspContent2} ,tsp_updateTime=GETDATE()
+        WHERE  tsp_ID=#{tspID}
+    </update>
+
+    <!-- 删除材料照片  母库：删除母库照片
+    int deleteTreeStandardPhotoURLByPhotoUpload(PhotoUpload photoUpload);-->
+    <update id="deleteTreeStandardPhotoURLByPhotoUpload" parameterType="PhotoUpload">
+        UPDATE V_TreeStandardPhoto
+        SET    tsp_jincheng=1,tsp_updateTime=GETDATE()
+        WHERE  tsp_ID=#{tspID}
+        AND    tsp_jincheng=0
+    </update>
+
+    <!-- 材料母库照片表(规格下的所有材料的所有照片): 根据四级ID/城市ID,检索满足条件的记录 下架
+    int deleteMatPhotosByTreeFourIDAndCityID(@Param("treeFourID")String treeFourID,@Param("cityID") Integer cityID);-->
+    <update id="deleteMatPhotosByTreeFourIDAndCityID">
+        UPDATE  V_TreeStandardPhoto
+        SET    tsp_jincheng = 1,tsp_updateTime = GETDATE()
+        FROM   V_Material a
+        WHERE  a.m_TreeFour = #{treeFourID} AND a.m_CityID = #{cityID} AND a.m_ID = tsp_TSID
+    </update>
+
+
+
+</mapper>

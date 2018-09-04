@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.api.jmat.dao.TreePerfectStateDao">
+    
+	<sql id="treePerfectStateColumns">
+		a.id AS "id",
+		a.tps_treefour AS "tpsTreefour",
+		a.tps_basestate AS "tpsBasestate",
+		a.tps_standardstate AS "tpsStandardstate",
+		a.tps_linkstate AS "tpsLinkstate",
+		a.tps_craftstate AS "tpsCraftstate",
+		a.tps_photostate AS "tpsPhotostate",
+		a.tps_exteriorname AS "tpsExteriorname",
+		a.tps_exteriorsc AS "tpsExteriorsc",
+		a.tps_exteriordm AS "tpsExteriordm",
+		a.tps_jincheng AS "tpsJincheng",
+		a.tps_createtime AS "tpsCreatetime",
+		a.tps_updatetime AS "tpsUpdatetime"
+	</sql>
+	
+	<sql id="treePerfectStateJoins">
+	</sql>
+    
+	<select id="get" resultType="TreePerfectState">
+		SELECT 
+			<include refid="treePerfectStateColumns"/>
+		FROM v_treeperfectstate a
+		<include refid="treePerfectStateJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="TreePerfectState">
+		SELECT 
+			<include refid="treePerfectStateColumns"/>
+		FROM v_treeperfectstate a
+		<include refid="treePerfectStateJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="TreePerfectState">
+		SELECT 
+			<include refid="treePerfectStateColumns"/>
+		FROM v_treeperfectstate a
+		<include refid="treePerfectStateJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO v_treeperfectstate(
+			id,
+			tps_treefour,
+			tps_basestate,
+			tps_standardstate,
+			tps_linkstate,
+			tps_craftstate,
+			tps_photostate,
+			tps_exteriorname,
+			tps_exteriorsc,
+			tps_exteriordm,
+			tps_jincheng,
+			tps_createtime,
+			tps_updatetime
+		) VALUES (
+			#{id},
+			#{tpsTreefour},
+			#{tpsBasestate},
+			#{tpsStandardstate},
+			#{tpsLinkstate},
+			#{tpsCraftstate},
+			#{tpsPhotostate},
+			#{tpsExteriorname},
+			#{tpsExteriorsc},
+			#{tpsExteriordm},
+			#{tpsJincheng},
+			#{tpsCreatetime},
+			#{tpsUpdatetime}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE v_treeperfectstate SET 	
+			tps_treefour = #{tpsTreefour},
+			tps_basestate = #{tpsBasestate},
+			tps_standardstate = #{tpsStandardstate},
+			tps_linkstate = #{tpsLinkstate},
+			tps_craftstate = #{tpsCraftstate},
+			tps_photostate = #{tpsPhotostate},
+			tps_exteriorname = #{tpsExteriorname},
+			tps_exteriorsc = #{tpsExteriorsc},
+			tps_exteriordm = #{tpsExteriordm},
+			tps_jincheng = #{tpsJincheng},
+			tps_createtime = #{tpsCreatetime},
+			tps_updatetime = #{tpsUpdatetime}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM v_treeperfectstate
+		WHERE id = #{id}
+	</update>
+	
+	<!--保存 地区新增标准 - 材料母库完善状态表(保存规格档次总计)
+		插入字段:四级ID,基本信息(档次总计) 	
+	public void saveCityNewlyIncreased(@@Param("treeFourID") String treeFourID,@Param("levelCount") Integer levelCount); -->
+	<insert id="saveCityNewlyIncreased">
+		INSERT INTO v_treeperfectstate(
+			tps_treefour,
+			tps_basestate
+		) VALUES (
+			#{treeFourID},
+			#{levelCount}
+		)
+	</insert>
+
+    <!-- 查找 材料母库完善状态 实体,通过四级科目ID.
+    TreePerfectState findTreePerfectStateByTreeFourID(String treeFourID);-->
+    <select id="findTreePerfectStateByTreeFourID" resultType="TreePerfectState">
+        SELECT
+        <include refid="treePerfectStateColumns"/>
+        FROM v_treeperfectstate a
+        WHERE a.tps_TreeFour = #{treeFourID}
+    </select>
+	
+</mapper>

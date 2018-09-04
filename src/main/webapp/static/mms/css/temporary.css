@@ -1,0 +1,64 @@
+.MouseRightTop{display: none;position: absolute;left: -100%;top: 0;width: 100%;padding: 10px;background: #fff;box-shadow: 1px 1px 4px 1px #ddd;opacity: 0;filter: alpha(opacity=0);}
+.anItemBor{cursor: pointer;border-right: 2px solid #b1e3ff;}
+.anItemBor-active{border-right-color: #0099FF;}
+/*ä¸´æ—¶ä»»åŠ¡*/
+.taskDivBottom{height: 120px;border-top: 1px dotted #e4e4e4;}
+.TaskRecord{position: absolute;right: 0;top: 0;color: #0099ff;cursor: pointer;}
+.Task-listtxt{padding-bottom: 5px;margin: 0  0 0 27px;height:90px;}
+.c333{color: #333;}
+.TaskText{height: 60px;width: 100%;margin: 5px 0;}
+.TaskRecordBox{position: absolute;width: 100%;right: -100%;top: 0;opacity: 0;padding: 10px;background: #fff;}
+.TaskRecordTit{height: 30px;}
+.uiTitle2,.uiTitle3{font-size: 12px;}
+.pr30{padding-right: 30px;}
+.tc-right{overflow: hidden;}
+/*æ–°å¢žå¾…åŠž*/
+.NewAddBox{width: 100%;position: absolute;top: 0;right: -100%;background: #fff;border: 1px solid #e4e4e4;z-index: 1031;}
+.NewAddBoxTit{height: 30px;}
+.NewAddBox .taskName{width: 100%;border: none;}
+.NewAddBox textarea{width: 100%;}
+.AddIcon,.AddIcon1{width: 14px;height: 14px;display: inline-block;background: url(../images/pic/addicos.png) no-repeat;background-size: 100%;margin-bottom: -2px;cursor: pointer;}
+.DelIcon{width: 14px;height: 14px;display: inline-block;background: url(../images/pic/u1926.png) no-repeat;background-size: 100%;margin-bottom: -2px;cursor: pointer;}
+.closeNewAddBox{cursor: pointer;}
+.upPic { background: url(../images/pic/u2218.png) left center no-repeat; padding-left: 25px;display: inline-block;height: 20px;line-height: 20px;cursor: pointer;}
+.cl9c{color: #9c0;}
+/*è®°å½•æ»‘å‡º*/
+.MouseRight{width: 100%;position: absolute;top: 0;right: -100%;background: #fff;border: 1px solid #e4e4e4;z-index: 1031;}
+.MouseRight .ZTInp{border: none;}
+.ResultsPicBox{width: 455px;margin: 0 auto;}
+.RenWenText{width: 90%;height: 80px;}
+.submitBtn { padding: 0 16px;width: 120px;height: 28px;line-height: 26px;vertical-align: middle;}
+.w60{width: 50px;text-align: right;}
+.ml60{margin-left: 50px;}
+.MouseRBottom{height: 80px;border-top: 1px dotted #e4e4e4;text-align: center;line-height: 80px;}
+.CloseMouseRight{float: right;color: #0099ff;cursor: pointer;}
+/**è½®æ’­å›¾**/
+#slide3{width: 435px;margin: 10px 10px;}
+#slide4{width: 435px;margin: 10px 10px;}
+.scrollBtn{top:60px;}
+.Prev{left:-30px;}
+.Next{right:-30px;}
+.scroll-text{width: 100%;height: 150px;overflow: hidden;}
+.scrollUl li{position:relative;width: 135px;height: 150px;float: left;margin: 0 5px;display: inline;border: 1px solid #ddd;border-radius: 2px;cursor: pointer;}
+.scrollUl li img{display: block;width: 100%;height: 100%;}
+.upload_finish_div,#slide3 .upload_finish_div{display: block;}
+/*å›¾ç‰‡å·¦å³æ»šåŠ¨*/
+.scrollBtn{position: absolute;width:30px;height: 30px;overflow: hidden;background: url(../images/ico/upload_ico.png) no-repeat;}
+.uploadPrev,.uploadNext{top:96px;}
+.uploadPrev,.Prev{background-position: 0 0;}
+.uploadPrev:hover,.Prev:hover{background-position: 0 -60px;}
+.uploadNext,.Next{background-position: 0 -30px;}
+.uploadNext:hover,.Next:hover{background-position: 0 -90px;}
+/*å›¾ç‰‡ä¸Šä¼ */
+.upload_item .upload_div{width: 262px; }
+.upload_interview{position:relative;width: 260px;height: 200px;margin:0 auto 20px;overflow: hidden;border: 1px solid #dddddd;-webkit-border-radius: 3px;-moz-border-radius: 3px;border-radius: 3px;}
+.upload_interview a,.require-upload .item-img a{display: block;height:100%;width:100%;background:url(../images/upload-bg.png) no-repeat center center;position: relative;text-align: center;color: #333333;}
+.upload_interview a .file,.require-upload .item-img .file{position: absolute;font-size: 100px;right: 0;top: 0;width: 100%;height: 100%;opacity: 0;filter: alpha(opacity=0); cursor: pointer;}
+.upload_finish_div,.upload_layout_div{display:none;position: absolute;left: 0;top: 0;width: 100%;height: 100%;overflow: hidden;}
+.upload_finish_bg,.upload_layout_bg{position: absolute;left: 0;top: 0;width: 100%;height: 100%;z-index: 4;background: #000;opacity: 0.3;filter: alpha(opacity=30);}
+.upload_finish_img{display: block;width: 100%;height: 100%;overflow: hidden;}
+.upload_finish_link,.upload_layout_link{position: absolute;left: 0;top:50%;margin:-25px 0 0;width: 100%;height: 50px;overflow: hidden;z-index: 5;text-align: center;}
+.upload_finish_bg,.upload_finish_link{display:none;}
+.upload_finish_link a,.upload_layout_link a{background: url(../images/ico/icon_a.png) no-repeat;width: 50px;height: 50px; overflow: hidden;float: left;margin:0 5px;display: inline;}
+.upload_finish_link .enlarge_link,.upload_layout_link .enlarge_link{background-position: 0 0;}
+.upload_finish_link .delect_link,.upload_layout_link .delect_link{background-position: 0 -50px;}

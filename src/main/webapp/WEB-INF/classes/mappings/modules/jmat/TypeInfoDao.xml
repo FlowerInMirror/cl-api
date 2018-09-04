@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.jmat.dao.TypeInfoDao">
+    
+	<sql id="typeInfoColumns">
+		a.ti_id AS "tiId",
+		a.ti_type AS "tiType",
+		a.ti_title AS "tiTitle",
+		a.ti_titleen AS "tiTitleen",
+		a.ti_description AS "tiDescription",
+		a.ti_phototype AS "tiPhototype",
+		a.ti_uploaddescription AS "tiUploaddescription",
+		a.ti_status AS "tiStatus",
+		a.ti_time AS "tiTime"
+	</sql>
+	
+	<sql id="typeInfoJoins">
+	</sql>
+    
+	<select id="get" resultType="TypeInfo">
+		SELECT 
+			<include refid="typeInfoColumns"/>
+		FROM v_typeinfo a
+		<include refid="typeInfoJoins"/>
+		WHERE a.ti_id = #{id}
+	</select>
+	
+	<select id="findList" resultType="TypeInfo">
+		SELECT 
+			<include refid="typeInfoColumns"/>
+		FROM v_typeinfo a
+		<include refid="typeInfoJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="TypeInfo">
+		SELECT 
+			<include refid="typeInfoColumns"/>
+		FROM v_typeinfo a
+		<include refid="typeInfoJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO v_typeinfo(
+			ti_id,
+			ti_type,
+			ti_title,
+			ti_titleen,
+			ti_description,
+			ti_phototype,
+			ti_uploaddescription,
+			ti_status,
+			ti_time
+		) VALUES (
+			#{tiId},
+			#{tiType},
+			#{tiTitle},
+			#{tiTitleen},
+			#{tiDescription},
+			#{tiPhototype},
+			#{tiUploaddescription},
+			#{tiStatus},
+			#{tiTime}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE v_typeinfo SET 	
+			ti_id = #{tiId},
+			ti_type = #{tiType},
+			ti_title = #{tiTitle},
+			ti_titleen = #{tiTitleen},
+			ti_description = #{tiDescription},
+			ti_phototype = #{tiPhototype},
+			ti_uploaddescription = #{tiUploaddescription},
+			ti_status = #{tiStatus},
+			ti_time = #{tiTime}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM v_typeinfo
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

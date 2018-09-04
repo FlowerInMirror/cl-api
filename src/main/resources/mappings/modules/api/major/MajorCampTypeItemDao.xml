@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.api.major.dao.MajorCampTypeItemDao">
+    
+	<sql id="majorCampTypeItemColumns">
+        a.mcti_id AS "mctiId",
+        a.mcti_mctid AS "mctiMctid",
+        a.mcti_DealerID AS "mctiDealerID",
+        a.mcti_name AS "mctiName",
+        a.mcti_order AS "mctiOrder",
+        a.mcti_Type AS "mctiType",
+        a.mcti_status AS "mctiStatus",
+        a.mcti_createtime AS "mctiCreatetime",
+        a.mcti_updatetime AS "mctiUpdatetime"
+	</sql>
+	
+	<sql id="majorCampTypeItemJoins">
+	</sql>
+    
+	<select id="get" resultType="MajorCampTypeItem">
+		SELECT 
+			<include refid="majorCampTypeItemColumns"/>
+		FROM m_majorcamptypeitem a
+		<include refid="majorCampTypeItemJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="MajorCampTypeItem">
+		SELECT 
+			<include refid="majorCampTypeItemColumns"/>
+		FROM m_majorcamptypeitem a
+		<include refid="majorCampTypeItemJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="MajorCampTypeItem">
+		SELECT 
+			<include refid="majorCampTypeItemColumns"/>
+		FROM m_majorcamptypeitem a
+		<include refid="majorCampTypeItemJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO m_majorcamptypeitem(
+			mcti_id,
+			mcti_mctid,
+			mcti_name,
+			mcti_order,
+			mcti_status,
+			mcti_createtime,
+			mcti_updatetime
+		) VALUES (
+			#{mctiId},
+			#{mctiMctid},
+			#{mctiName},
+			#{mctiOrder},
+			#{mctiStatus},
+			#{mctiCreatetime},
+			#{mctiUpdatetime}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE m_majorcamptypeitem SET 	
+			mcti_id = #{mctiId},
+			mcti_mctid = #{mctiMctid},
+			mcti_name = #{mctiName},
+			mcti_order = #{mctiOrder},
+			mcti_status = #{mctiStatus},
+			mcti_createtime = #{mctiCreatetime},
+			mcti_updatetime = #{mctiUpdatetime}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM m_majorcamptypeitem
+		WHERE id = #{id}
+	</update>
+
+    <!--// "============================== CUD =============================="-->
+
+    <!--// 主营管理:添加主营属性(类别项),通过实体包装类 @auhtor ljc @createTime 2018-8-18 14:15:26-->
+    <!--int addCategoryItemByEntityVo(MajorCampTypeItemVo majorCampTypeItemVo);-->
+    <insert id="addCategoryItemByEntityVo" parameterType="MajorCampTypeItemVo" useGeneratedKeys="true" keyProperty="mctiId">
+        INSERT INTO m_majorcamptypeitem(
+            mcti_mctid,
+            mcti_name
+            <if test="mctiDealerID != null">
+                ,mcti_DealerID
+            </if>
+            <if test="mctiOrder != null">
+                ,mcti_order
+            </if>
+            <if test="mctiType != null">
+                ,mcti_Type
+            </if>
+        ) VALUES (
+            #{mctiMctid},
+            #{mctiName}
+            <if test="mctiDealerID != null">
+                ,#{mctiDealerID}
+            </if>
+            <if test="mctiOrder != null">
+                ,#{mctiOrder}
+            </if>
+            <if test="mctiType != null">
+               ,#{mctiType}
+            </if>
+        )
+    </insert>
+
+
+    <!--// 主营管理:更新主营属性(类别项),通过实体包装类 @auhtor ljc @createTime 2018-8-18 14:15:30-->
+    <!--int updateCategoryItemByEntityVo(MajorCampTypeItemVo majorCampTypeItemVo);-->
+    <update id="updateCategoryItemByEntityVo" parameterType="MajorCampTypeItemVo">
+        UPDATE m_majorcamptypeitem
+        <set>
+            mcti_updatetime = GETDATE(),
+            <if test="mctiMctid != null">
+                mcti_mctid = #{mctiMctid},
+            </if>
+            <if test="mctiName != null">
+                mcti_name = #{mctiName},
+            </if>
+            <if test="mctiOrder != null">
+                mcti_order = #{mctiOrder},
+            </if>
+        </set>
+        WHERE mcti_id = #{mctiId}
+    </update>
+
+    <!--// 主营管理:删除主营属性(类别项),通过实体包装类 @auhtor ljc @createTime 2018-8-18 14:15:33-->
+    <!--int deleteCategoryItemByEntityVo(MajorCampTypeItemVo majorCampTypeItemVo);-->
+    <update id="deleteCategoryItemByEntityVo" parameterType="MajorCampTypeItemVo">
+		UPDATE m_majorcamptypeitem
+		SET    mcti_status = 1,mcti_updatetime = GETDATE()
+		WHERE  mcti_id = #{mctiId}
+    </update>
+
+
+    <!--// "============================ FIND/GET ==========================="-->
+
+    <!-- 主营三段:类型项 @author ljc @createTime 2018-8-17 17:36:06
+    List<MajorCampTypeItem> findMajorCampTypeItemListByEntity(MajorCampTypeItem majorCampTypeItem);-->
+    <select id="findMajorCampTypeItemListByEntity" resultType="MajorCampTypeItem">
+        SELECT
+          <include refid="majorCampTypeItemColumns"/>
+        FROM m_majorcamptypeitem a
+        WHERE a.mcti_status = 0
+        AND a.mcti_Type = 0
+        <if test="mctiMctid != null">
+            AND mcti_mctid = #{mctiMctid}
+        </if>
+        ORDER BY a.mcti_order,a.mcti_updatetime,a.mcti_createtime
+    </select>
+	
+</mapper>

@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.api.special.dao.MajorCampGroupDao">
+    
+	<sql id="majorCampGroupColumns">
+		a.mcg_id AS "mcgId",
+		a.mcg_spid AS "mcgSpid",
+		a.mcg_code AS "mcgCode",
+		a.mcg_price AS "mcgPrice",
+		a.mcg_order AS "mcgOrder",
+		a.mcg_pushtype AS "mcgPushtype",
+		a.mcg_status AS "mcgStatus",
+		a.mcg_createtime AS "mcgCreatetime",
+		a.mcg_updatetime AS "mcgUpdatetime"
+	</sql>
+
+	<sql id="majorCampGroupJoins">
+	</sql>
+    
+	<select id="get" resultType="MajorCampGroup">
+		SELECT 
+			<include refid="majorCampGroupColumns"/>
+		FROM m_majorcampgroup a
+		<include refid="majorCampGroupJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="MajorCampGroup">
+		SELECT 
+			<include refid="majorCampGroupColumns"/>
+		FROM m_majorcampgroup a
+		<include refid="majorCampGroupJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="MajorCampGroup">
+		SELECT 
+			<include refid="majorCampGroupColumns"/>
+		FROM m_majorcampgroup a
+		<include refid="majorCampGroupJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO m_majorcampgroup(
+			mcg_id,
+			mcg_spid,
+			mcg_code,
+			mcg_price,
+			mcg_order,
+			mcg_pushtype,
+			mcg_status,
+			mcg_createtime,
+			mcg_updatetime
+		) VALUES (
+			#{mcgId},
+			#{mcgSpid},
+			#{mcgCode},
+			#{mcgPrice},
+			#{mcgOrder},
+			#{mcgPushtype},
+			#{mcgStatus},
+			#{mcgCreatetime},
+			#{mcgUpdatetime}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE m_majorcampgroup SET 	
+			mcg_id = #{mcgId},
+			mcg_spid = #{mcgSpid},
+			mcg_code = #{mcgCode},
+			mcg_price = #{mcgPrice},
+			mcg_order = #{mcgOrder},
+			mcg_pushtype = #{mcgPushtype},
+			mcg_status = #{mcgStatus},
+			mcg_createtime = #{mcgCreatetime},
+			mcg_updatetime = #{mcgUpdatetime}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM m_majorcampgroup
+		WHERE id = #{id}
+	</update>
+
+    <!--// "============================== CUD =============================="-->
+
+    <!--// 添加:组合套餐集(产品ID/编码/价格/是否主推) @auhtor ljc @createTime 2018-8-26 17:52:48-->
+    <!--int addMajorCampGroupsByEntitys(List<MajorCampGroup> majorCampGroups);-->
+    <insert id="addMajorCampGroupsByEntitys">
+        INSERT INTO m_majorcampgroup
+           (mcg_spid,mcg_code,mcg_price,mcg_pushtype)
+        VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+           (#{item.mcgSpid},#{item.mcgCode},#{item.mcgPrice},#{item.mcgPushtype})
+        </foreach>
+    </insert>
+
+    <!--// "============================ FIND ==============================="-->
+
+    <!--// 浏览:检索不可被选中项组 @author ljc @cerateTime 2018-8-27 13:18:01-->
+    <!--List<Integer> findDisabledItemIDsByProIDAndSearchCodeAndSearchCodeLen(String proID, String searchCode, int searchCodeLength);-->
+    <select id="findDisabledItemIDsByProIDAndSearchCodeAndSearchCodeLen" resultType="java.lang.Integer">
+        EXEC PRO_ZX_FIND_PRO_ZX_FIND_DisabledItemIDs #{proID},#{searchCode},#{searchCodeLength}
+    </select>
+
+    <!--// 浏览:检索组合套餐价格 @author ljc @createTime 2018-8-27 14:04:30-->
+    <!--Integer findGroupSetMealPriceByProIDAndSearchCode(String proID, String searchCode);-->
+    <select id="findGroupSetMealPriceByProIDAndSearchCode" resultType="java.lang.Double">
+        SELECT mcg_Price
+        FROM   M_MajorCampGroup
+        WHERE  mcg_Status = 0
+        AND    mcg_SPID = #{proID}
+        AND    mcg_Code = #{searchCode}
+    </select>
+
+    <!--// 编辑:检索主营组合套餐集 @author ljc @cerateTime 2018-8-27 20:06:06-->
+    <!--List<MajorCampGroup> findMajorCampGroupsByProID(String proID);-->
+    <select id="findMajorCampGroupsByProID" resultType="MajorCampGroup">
+        SELECT <include refid="majorCampGroupColumns"/>
+        FROM   M_MajorCampGroup a
+        WHERE  a.mcg_Status = 0
+        AND    a.mcg_SPID = #{proID}
+    </select>
+
+</mapper>

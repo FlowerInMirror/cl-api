@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.api.major.dao.MajorCampTypeDao">
+    
+	<sql id="majorCampTypeColumns">
+		a.mct_id AS "mctId",
+		a.mct_treetwoid AS "mctTreetwoid",
+		a.mct_name AS "mctName",
+		a.mct_order AS "mctOrder",
+		a.mct_status AS "mctStatus",
+		a.mct_createtime AS "mctCreatetime",
+		a.mct_updatetime AS "mctUpdatetime"
+	</sql>
+	
+	<sql id="majorCampTypeJoins">
+	</sql>
+    
+	<select id="get" resultType="MajorCampType">
+		SELECT 
+			<include refid="majorCampTypeColumns"/>
+		FROM m_majorcamptype a
+		<include refid="majorCampTypeJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="MajorCampType">
+		SELECT 
+			<include refid="majorCampTypeColumns"/>
+		FROM m_majorcamptype a
+		<include refid="majorCampTypeJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="MajorCampType">
+		SELECT 
+			<include refid="majorCampTypeColumns"/>
+		FROM m_majorcamptype a
+		<include refid="majorCampTypeJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO m_majorcamptype(
+			mct_id,
+			mct_treetwoid,
+			mct_name,
+			mct_order,
+			mct_status,
+			mct_createtime,
+			mct_updatetime
+		) VALUES (
+			#{mctId},
+			#{mctTreetwoid},
+			#{mctName},
+			#{mctOrder},
+			#{mctStatus},
+			#{mctCreatetime},
+			#{mctUpdatetime}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE m_majorcamptype SET 	
+			mct_id = #{mctId},
+			mct_treetwoid = #{mctTreetwoid},
+			mct_name = #{mctName},
+			mct_order = #{mctOrder},
+			mct_status = #{mctStatus},
+			mct_createtime = #{mctCreatetime},
+			mct_updatetime = #{mctUpdatetime}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM m_majorcamptype
+		WHERE id = #{id}
+	</update>
+
+
+    <!--// "============================== CUD =============================="-->
+    <!-- 主营管理:添加主营属性类别,通过实体包装类 @auhtor ljc @createTime 2018-8-18 11:25:49
+    int addCategoryByEntityVo(MajorCampTypeVo majorCampTypeVo);-->
+    <insert id="addCategoryByEntityVo" parameterType="MajorCampTypeVo" useGeneratedKeys="true" keyProperty="mctId" >
+        INSERT INTO m_majorcamptype(
+            mct_treetwoid,
+            mct_name,
+            mct_order
+        ) VALUES (
+            #{mctTreetwoid},
+            #{mctName},
+            #{mctOrder}
+        )
+    </insert>
+
+    <!-- // 主营管理:更新(主营属性类别),通过实体包装类 @auhtor ljc @createTime 2018-8-18 13:14:10
+   int updateCategoryByEntityVo(MajorCampTypeVo majorCampTypeVo);-->
+    <update id="updateCategoryByEntityVo" parameterType="MajorCampTypeVo">
+        UPDATE m_majorcamptype
+        <set>
+            mct_updatetime = GETDATE(),
+            <if test="mctTreetwoid != null">
+                mct_treetwoid = #{mctTreetwoid},
+            </if>
+            <if test="mctName != null">
+                mct_name = #{mctName},
+            </if>
+            <if test="mctOrder != null">
+                mct_order = #{mctOrder},
+            </if>
+        </set>
+        WHERE mct_id = #{mctId}
+    </update>
+
+    <!--主营管理:删除(主营属性类别),通过实体包装类 @auhtor ljc @createTime 2018-8-18 13:16:38
+    int deleteCategoryByEntityVo(MajorCampTypeVo majorCampTypeVo);-->
+    <update id="deleteCategoryByEntityVo" parameterType="MajorCampTypeVo">
+        UPDATE m_majorcamptype
+        SET    mct_updatetime = GETDATE(),mct_status = 1
+        WHERE  mct_id = #{mctId}
+    </update>
+
+
+
+
+    <!--// "============================== FIND/GET =============================="-->
+    <!-- 主营类别集,通过实体检索
+    List<MajorCampType> findMajorCampTypeListByEntity(MajorCampType majorCampType);-->
+    <select id="findMajorCampTypeListByEntity" resultType="MajorCampType">
+        SELECT
+          <include refid="majorCampTypeColumns"/>
+        FROM m_majorcamptype a
+        WHERE a.mct_Status = 0
+        <if test="mctTreetwoid != null">
+            AND  mct_treetwoid = #{mctTreetwoid}
+        </if>
+        ORDER BY a.mct_Order,a.mct_updatetime,a.mct_CreateTime
+    </select>
+
+</mapper>

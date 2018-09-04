@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.jmat.dao.BusinessTaskDao">
+    
+	<sql id="businessTaskColumns">
+		a.bt_id AS "btId",
+		a.bt_type AS "btType",
+		a.bt_mainid AS "btMainid",
+		a.bt_userid AS "btUserid",
+		a.bt_cityid AS "btCityid",
+		a.bt_title AS "btTitle",
+		a.bt_content AS "btContent",
+		a.bt_createtime AS "btCreatetime",
+		a.bt_starttime AS "btStarttime",
+		a.bt_endtime AS "btEndtime",
+		a.bt_state AS "btState",
+		a.bt_finishreason AS "btFinishreason",
+		a.bt_finishtime AS "btFinishtime",
+		a.bt_createuser AS "btCreateuser",
+		a.bt_createusername AS "btCreateusername",
+		a.bt_finishuser AS "btFinishuser",
+		a.bt_finishusername AS "btFinishusername"
+	</sql>
+	
+	<sql id="businessTaskJoins">
+	</sql>
+    
+	<select id="get" resultType="BusinessTask">
+		SELECT 
+			<include refid="businessTaskColumns"/>
+		FROM v_businesstask a
+		<include refid="businessTaskJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="BusinessTask">
+		SELECT 
+			<include refid="businessTaskColumns"/>
+		FROM v_businesstask a
+		<include refid="businessTaskJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="BusinessTask">
+		SELECT 
+			<include refid="businessTaskColumns"/>
+		FROM v_businesstask a
+		<include refid="businessTaskJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO v_businesstask(
+			bt_id,
+			bt_type,
+			bt_mainid,
+			bt_userid,
+			bt_cityid,
+			bt_title,
+			bt_content,
+			bt_createtime,
+			bt_starttime,
+			bt_endtime,
+			bt_state,
+			bt_finishreason,
+			bt_finishtime,
+			bt_createuser,
+			bt_createusername,
+			bt_finishuser,
+			bt_finishusername
+		) VALUES (
+			#{btId},
+			#{btType},
+			#{btMainid},
+			#{btUserid},
+			#{btCityid},
+			#{btTitle},
+			#{btContent},
+			#{btCreatetime},
+			#{btStarttime},
+			#{btEndtime},
+			#{btState},
+			#{btFinishreason},
+			#{btFinishtime},
+			#{btCreateuser},
+			#{btCreateusername},
+			#{btFinishuser},
+			#{btFinishusername}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE v_businesstask SET 	
+			bt_id = #{btId},
+			bt_type = #{btType},
+			bt_mainid = #{btMainid},
+			bt_userid = #{btUserid},
+			bt_cityid = #{btCityid},
+			bt_title = #{btTitle},
+			bt_content = #{btContent},
+			bt_createtime = #{btCreatetime},
+			bt_starttime = #{btStarttime},
+			bt_endtime = #{btEndtime},
+			bt_state = #{btState},
+			bt_finishreason = #{btFinishreason},
+			bt_finishtime = #{btFinishtime},
+			bt_createuser = #{btCreateuser},
+			bt_createusername = #{btCreateusername},
+			bt_finishuser = #{btFinishuser},
+			bt_finishusername = #{btFinishusername}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM v_businesstask
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

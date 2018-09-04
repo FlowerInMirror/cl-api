@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.api.special.dao.SpecialMatRelevanceDao">
+    
+	<sql id="specialMatRelevanceColumns">
+		a.smr_id AS "smrID",
+		a.smr_spid AS "smrSPID",
+		a.smr_matid AS "smrMatID",
+		a.smr_status AS "smrStatus",
+		a.smr_createtime AS "smrCreateTime",
+		a.smr_updatetime AS "smrUpdateTime"
+	</sql>
+	
+	<sql id="specialMatRelevanceJoins">
+	</sql>
+    
+	<!--<select id="get" resultType="SpecialMatRelevance">-->
+		<!--SELECT-->
+			<!--<include refid="specialMatRelevanceColumns"/>-->
+		<!--FROM s_specialmatrelevance a-->
+		<!--<include refid="specialMatRelevanceJoins"/>-->
+		<!--WHERE a.id = #{id}-->
+	<!--</select>-->
+
+	<!--<select id="findList" resultType="SpecialMatRelevance">-->
+		<!--SELECT-->
+			<!--<include refid="specialMatRelevanceColumns"/>-->
+		<!--FROM s_specialmatrelevance a-->
+		<!--<include refid="specialMatRelevanceJoins"/>-->
+		<!--<where>-->
+
+		<!--</where>-->
+	<!--</select>-->
+
+	<!--<select id="findAllList" resultType="SpecialMatRelevance">-->
+		<!--SELECT-->
+			<!--<include refid="specialMatRelevanceColumns"/>-->
+		<!--FROM s_specialmatrelevance a-->
+		<!--<include refid="specialMatRelevanceJoins"/>-->
+		<!--<where>-->
+
+		<!--</where>-->
+		<!--<choose>-->
+			<!--<when test="page !=null and page.orderBy != null and page.orderBy != ''">-->
+				<!--ORDER BY ${page.orderBy}-->
+			<!--</when>-->
+			<!--<otherwise>-->
+			<!--</otherwise>-->
+		<!--</choose>-->
+	<!--</select>-->
+
+	<!--<insert id="insert">-->
+		<!--INSERT INTO s_specialmatrelevance(-->
+			<!--smr_id,-->
+			<!--smr_spid,-->
+			<!--smr_matid,-->
+			<!--smr_status,-->
+			<!--smr_createtime,-->
+			<!--smr_updatetime-->
+		<!--) VALUES (-->
+			<!--#{smrID},-->
+			<!--#{smrSPID},-->
+			<!--#{smrMatID},-->
+			<!--#{smrStatus},-->
+			<!--#{smrCreateTime},-->
+			<!--#{smrUpdateTime}-->
+		<!--)-->
+	<!--</insert>-->
+
+	<!--<update id="update">-->
+		<!--UPDATE s_specialmatrelevance SET-->
+			<!--smr_id = #{smrID},-->
+			<!--smr_spid = #{smrSPID},-->
+			<!--smr_matid = #{smrMatID},-->
+			<!--smr_status = #{smrStatus},-->
+			<!--smr_createtime = #{smrCreateTime},-->
+			<!--smr_updatetime = #{smrUpdateTime}-->
+		<!--WHERE id = #{id}-->
+	<!--</update>-->
+
+	<!--<update id="delete">-->
+		<!--DELETE FROM s_specialmatrelevance-->
+		<!--WHERE id = #{id}-->
+	<!--</update>-->
+
+    <!--// "=========================C U D=============================="-->
+
+    <!-- 专项:添加专项材料关联(专项产品ID/材料ID(专项产品1对1))
+    int addSpecialMatRelevanceByEntity(SpecialMatRelevance specialMatRelevance);-->
+    <insert id="addSpecialMatRelevanceByEntity" parameterType="SpecialMatRelevance">
+        INSERT INTO s_specialmatrelevance(
+            smr_spid,
+            smr_matid
+        ) VALUES (
+            #{smrSPID},
+            #{smrMatID}
+        )
+    </insert>
+
+    <!-- 专项: 材料关联更新(更新内容/专项关联材料ID/操作人卡号/事件地区)
+    int updateMatRelevanceByEntityVo(SpecialMatRelevanceVo specialMatRelevanceVo);-->
+    <update id="updateMatRelevanceByEntityVo" parameterType="SpecialMatRelevanceVo">
+        UPDATE s_specialmatrelevance SET
+        smr_updatetime = GETDATE(),
+        smr_matid = #{smrMatID}
+        WHERE smr_id = #{smrID}
+    </update>
+
+    <!--// "=========================GET FIND=============================="-->
+
+    <!--  产品关联材料One
+    SpecialMatRelevance findSMROneByEntity(SpecialMatRelevance specialMatRelevance);-->
+    <select id="findSMROneByEntity" parameterType="SpecialMatRelevance" resultType="SpecialMatRelevanceVo">
+        SELECT
+             smr_ID AS smrID
+            ,smr_MatID AS smrMatID
+            ,smr_SPID AS smrSPID
+            ,T1.tree_Name AS treeOneName
+            ,T2.tree_name AS treeTwoName
+            ,T3.tree_name AS matName
+            ,T4.tree_name AS matSpec
+            ,m_BrandName AS brandName
+            ,m_BrandType AS brandTypeName
+        FROM s_specialmatrelevance a
+        LEFT JOIN V_Material ON m_ID = a.smr_MatID
+        LEFT JOIN V_Tree T4 ON T4.tree_ID=m_treeFour
+        LEFT JOIN V_Tree T3 ON T3.tree_ID=m_treeThree
+        LEFT JOIN V_Tree T2 ON T2.tree_ID=m_treeTwo
+        LEFT JOIN V_Tree T1 ON T1.tree_ID=m_treeOne
+        WHERE a.smr_status = 0
+        <if test="smrSPID != null">
+            AND a.smr_spid = #{smrSPID}
+        </if>
+    </select>
+
+
+
+</mapper>

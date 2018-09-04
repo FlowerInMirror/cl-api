@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.api.jmat.dao.MaterialHandleDao">
+    
+	<sql id="materialHandleColumns">
+		a.vmh_id AS "vmhId",
+		a.vmh_mainobject AS "vmhMainobject",
+		a.vmh_auxiliaryobject AS "vmhAuxiliaryobject",
+		a.vmh_content AS "vmhContent",
+		a.vmh_type AS "vmhType",
+		a.vmh_usercard AS "vmhUsercard",
+		a.vmh_usertype AS "vmhUsertype",
+		a.vmh_cityid AS "vmhCityid",
+		a.vmh_status AS "vmhStatus",
+		a.vmh_createtime AS "vmhCreatetime",
+		a.vmh_updatetime AS "vmhUpdatetime"
+	</sql>
+	
+	<sql id="materialHandleJoins">
+	</sql>
+    
+	<select id="get" resultType="MaterialHandle">
+		SELECT 
+			<include refid="materialHandleColumns"/>
+		FROM v_materialhandle a
+		<include refid="materialHandleJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="MaterialHandle">
+		SELECT 
+			<include refid="materialHandleColumns"/>
+		FROM v_materialhandle a
+		<include refid="materialHandleJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="MaterialHandle">
+		SELECT 
+			<include refid="materialHandleColumns"/>
+		FROM v_materialhandle a
+		<include refid="materialHandleJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+
+	
+	<update id="update">
+		UPDATE v_materialhandle SET 	
+			vmh_id = #{vmhId},
+			vmh_mainobject = #{vmhMainobject},
+			vmh_auxiliaryobject = #{vmhAuxiliaryobject},
+			vmh_content = #{vmhContent},
+			vmh_type = #{vmhType},
+			vmh_usercard = #{vmhUsercard},
+			vmh_usertype = #{vmhUsertype},
+			vmh_cityid = #{vmhCityid},
+			vmh_status = #{vmhStatus},
+			vmh_createtime = #{vmhCreatetime},
+			vmh_updatetime = #{vmhUpdatetime}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM v_materialhandle
+		WHERE id = #{id}
+	</update>
+
+
+    <!-- 材料处理:添加处理
+    int saveMatHandle(MatHandleVo matHandleVo);-->
+    <insert id="saveMatHandle" parameterType="MatHandleVo" useGeneratedKeys="true" keyProperty="vmhId" keyColumn="vmh_id" >
+        INSERT INTO v_materialhandle
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="vmhMainobject != null" >
+                vmh_mainobject,
+            </if>
+            <if test="vmhAuxiliaryobject != null" >
+                vmh_auxiliaryobject,
+            </if>
+            <if test="vmhContent != null" >
+                vmh_content,
+            </if>
+            <if test="vmhType != null" >
+                vmh_type,
+            </if>
+            <if test="vmhUsercard != null" >
+                vmh_usercard,
+            </if>
+            <if test="vmhUsertype != null" >
+                vmh_usertype,
+            </if>
+            <if test="vmhCityid != null" >
+                vmh_cityid,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="vmhMainobject != null" >
+                #{vmhMainobject},
+            </if>
+            <if test="vmhAuxiliaryobject != null" >
+                #{vmhAuxiliaryobject},
+            </if>
+            <if test="vmhContent != null" >
+                #{vmhContent},
+            </if>
+            <if test="vmhType != null" >
+                #{vmhType},
+            </if>
+            <if test="vmhUsercard != null" >
+                #{vmhUsercard},
+            </if>
+            <if test="vmhUsertype != null" >
+                #{vmhUsertype},
+            </if>
+            <if test="vmhCityid != null" >
+                #{vmhCityid},
+            </if>
+        </trim>
+    </insert>
+
+    <!-- 材料处理对象,通过四级ID与城市ID检索
+    MaterialHandle findMaterialHandleByTreeFourIDAndCityID(String treeFourID, Integer city);-->
+    <select id="findMaterialHandleByTreeFourIDAndCityID" resultType="MaterialHandle">
+        SELECT
+          TOP 1
+          <include refid="materialHandleColumns"/>
+        FROM  V_MaterialHandle a
+        WHERE a.vmh_CityID = #{city}
+        AND   CAST (a.vmh_MainObject AS VARCHAR(50)) = #{treeFourID}
+        AND   a.vmh_Status = 0
+        ORDER BY a.vmh_CreateTime DESC
+    </select>
+
+    <!-- 处理总计相关数据,通过城市ID
+    Map<String,Object> findHandleDetailCountByCityID(@Param("cityID")Integer cityID);-->
+    <select id="findHandleDetailCountByCityID" parameterType="int" resultType="java.util.Map">
+        WITH VMH AS(
+        SELECT
+          -- 内排序:四级ID,用户卡号分组,处理时间降序排序
+          ROW_NUMBER() OVER(PARTITION BY vmh_MainObject,vmh_CityID ORDER BY vmh_CreateTime DESC) TopNum
+          ,vmh_Type,vmh_CreateTime,vmh_MainObject,vmh_CityID,vmh_Content
+        FROM V_MaterialHandle
+        WHERE vmh_Status = 0)
+        SELECT
+            COUNT(*) AS handelCount,
+            COUNT(CASE WHEN vmh_Type = 1 THEN 1 END) AS zCount,
+            COUNT(CASE WHEN vmh_Type = 2 THEN 1 END) AS yCount,
+            COUNT(CASE WHEN vmh_Type = 3 THEN 1 END) AS wCount,
+            COUNT(CASE WHEN vmh_Type = 4 THEN 1 END) AS xCount
+        FROM VMH AS vmh WHERE vmh.TopNum = 1 AND vmh_CityID = #{cityID}
+    </select>
+
+</mapper>

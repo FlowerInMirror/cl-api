@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.api.jmat.dao.MaterialToSuppliersDao">
+    
+	<sql id="materialToSuppliersColumns">
+		a.ms_id AS "msId",
+		a.ms_matid AS "msMatid",
+		a.ms_userid AS "msUserid",
+		a.ms_price AS "msPrice",
+		a.ms_jincheng AS "msJincheng",
+		a.ms_createtime AS "msCreatetime",
+		a.ms_updatetime AS "msUpdatetime"
+	</sql>
+	
+	<sql id="materialToSuppliersJoins">
+	</sql>
+    
+	<select id="get" resultType="MaterialToSuppliers">
+		SELECT 
+			<include refid="materialToSuppliersColumns"/>
+		FROM v_materialtosuppliers a
+		<include refid="materialToSuppliersJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="MaterialToSuppliers">
+		SELECT 
+			<include refid="materialToSuppliersColumns"/>
+		FROM v_materialtosuppliers a
+		<include refid="materialToSuppliersJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="MaterialToSuppliers">
+		SELECT 
+			<include refid="materialToSuppliersColumns"/>
+		FROM v_materialtosuppliers a
+		<include refid="materialToSuppliersJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO v_materialtosuppliers(
+			ms_id,
+			ms_matid,
+			ms_userid,
+			ms_price,
+			ms_jincheng,
+			ms_createtime,
+			ms_updatetime
+		) VALUES (
+			#{msId},
+			#{msMatid},
+			#{msUserid},
+			#{msPrice},
+			#{msJincheng},
+			#{msCreatetime},
+			#{msUpdatetime}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE v_materialtosuppliers SET 	
+			ms_id = #{msId},
+			ms_matid = #{msMatid},
+			ms_userid = #{msUserid},
+			ms_price = #{msPrice},
+			ms_jincheng = #{msJincheng},
+			ms_createtime = #{msCreatetime},
+			ms_updatetime = #{msUpdatetime}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM v_materialtosuppliers
+		WHERE id = #{id}
+	</update>
+
+    <!-- 查找材料供货商,通过材料ID
+    List<Map<String,Object>> findMatSupplierByMatID(String matID);-->
+    <select id="findMatSupplierByMatID" parameterType="String" resultType="java.util.Map">
+        -- 查找材料供货商,通过材料ID
+        SELECT ms_Price AS msPrice,ms_UserID AS msUserID
+        FROM  V_MaterialToSuppliers
+        WHERE ms_MatID=#{matID} AND ms_jincheng=0 AND ms_Price>=0.01
+		ORDER BY ms_Price DESC
+    </select>
+
+    <!-- 材料商材料关联表(材料的所有供货商): 根据四级ID/城市ID,检索满足条件的材料商关联 下架
+    int deleteMatToSuppliersByTreeFourIDAndCityID(@Param("treeFourID")String treeFourID,@Param("cityID") Integer cityID);-->
+    <update id="deleteMatToSuppliersByTreeFourIDAndCityID">
+         UPDATE V_MaterialToSuppliers
+         SET    ms_jincheng=11,ms_updateTime=GETDATE()
+         FROM   V_Material a
+         WHERE  a.m_TreeFour = #{treeFourID} AND a.m_CityID = #{cityID} AND a.m_ID = ms_MatID
+    </update>
+
+</mapper>

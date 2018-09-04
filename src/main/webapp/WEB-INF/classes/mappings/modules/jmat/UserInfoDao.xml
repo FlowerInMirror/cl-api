@@ -1,0 +1,1257 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.jmat.dao.UserInfoDao">
+    
+	<sql id="userInfoColumns">
+		a.uid AS "uid",
+		a.user_type AS "userType",
+		a.major AS "major",
+		a.contract_type AS "contractType",
+		a.user_name AS "userName",
+		a.user_level AS "userLevel",
+		a.quality_level AS "qualityLevel",
+		a.sex AS "sex",
+		a.nation AS "nation",
+		a.birthday AS "birthday",
+		a.mobile AS "mobile",
+		a.marital_status AS "maritalStatus",
+		a.now_address AS "nowAddress",
+		a.self_job AS "selfJob",
+		a.referrer AS "referrer",
+		a.idcard AS "idcard",
+		a.user_height AS "userHeight",
+		a.emergency_relation AS "emergencyRelation",
+		a.emergency_name AS "emergencyName",
+		a.emergency_mobile AS "emergencyMobile",
+		a.register_place AS "registerPlace",
+		a.bank_account_name AS "bankAccountName",
+		a.bank_account AS "bankAccount",
+		a.bank_type AS "bankType",
+		a.bank_address AS "bankAddress",
+		a.induction_date AS "inductionDate",
+		a.induction_area AS "inductionArea",
+		a.education AS "education",
+		a.education_history AS "educationHistory",
+		a.education_certificate AS "educationCertificate",
+		a.login_account AS "loginAccount",
+		a.login_passpord AS "loginPasspord",
+		a.worker_num AS "workerNum",
+		a.worker_leader_num AS "workerLeaderNum",
+		a.worker_year AS "workerYear",
+		a.lead_team_year AS "leadTeamYear",
+		a.pro_max_name AS "proMaxName",
+		a.pro_max_address AS "proMaxAddress",
+		a.pro_max_area AS "proMaxArea",
+		a.pro_type AS "proType",
+		a.pro_max_money AS "proMaxMoney",
+		a.can_visit AS "canVisit",
+		a.known_way AS "knownWay",
+		a.first_impression AS "firstImpression",
+		a.last_leaving_reason AS "lastLeavingReason",
+		a.comp_name AS "compName",
+		a.comp_register_money AS "compRegisterMoney",
+		a.comp_register_date AS "compRegisterDate",
+		a.comp_address AS "compAddress",
+		a.comp_business_license AS "compBusinessLicense",
+		a.comp_tax_id AS "compTaxId",
+		a.comp_legal_person AS "compLegalPerson",
+		a.comp_legal_cardno AS "compLegalCardno",
+		a.comp_legal_mobile AS "compLegalMobile",
+		a.comp_legal_person_email AS "compLegalPersonEmail",
+		a.comp_bank_account AS "compBankAccount",
+		a.comp_bank_type AS "compBankType",
+		a.deposit_cash AS "depositCash",
+		a.deposit_back_state AS "depositBackState",
+		a.deposit_expect_back_date AS "depositExpectBackDate",
+		a.deposit_actual_back_date AS "depositActualBackDate",
+		a.continued_charge AS "continuedCharge",
+		a.leaving_reason AS "leavingReason",
+		a.leaving_date AS "leavingDate",
+		a.is_blacklist AS "isBlacklist",
+		a.pro_test_count AS "proTestCount",
+		a.user_state AS "userState",
+		a.photo_server_url AS "photoServerUrl",
+		a.photo_file_url AS "photoFileUrl",
+		a.createtime AS "createtime",
+		a.createuser AS "createuser",
+		a.updatetime AS "updatetime",
+		a.updateuser AS "updateuser",
+		a.is_guidang AS "isGuidang",
+		a.leaving_time AS "leavingTime",
+		a.user_level_next AS "userLevelNext",
+		a.temp_original_level AS "tempOriginalLevel",
+		a.temp_level_deadline AS "tempLevelDeadline",
+		a.is_freeze AS "isFreeze",
+		a.group_isok AS "groupIsok",
+		a.photo_art_server_url AS "photoArtServerUrl",
+		a.photo_art_file_url AS "photoArtFileUrl",
+		a.achievement_level AS "achievementLevel",
+		a.user_tag AS "userTag",
+		a.not_display_in_sgpt AS "notDisplayInSgpt",
+		a.photo_checkstate AS "photoCheckstate",
+		a.photo_art_checkstate AS "photoArtCheckstate",
+		a.app_cardno AS "appCardno",
+		a.user_title_level AS "userTitleLevel",
+		a.data_sources AS "dataSources",
+		a.starlevel AS "starlevel",
+		a.paid_type AS "paidType",
+		a.comp_bank_account_name AS "compBankAccountName",
+		a.counselorlevel AS "counselorlevel",
+		a.syntheticgrade AS "syntheticgrade",
+		a.tempsyntheticgrade AS "tempsyntheticgrade",
+		a.name_checkstate AS "nameCheckstate",
+		a.idcard_checkstate AS "idcardCheckstate",
+		a.bank_amount_checkstate AS "bankAmountCheckstate",
+		a.bank_type_checkstate AS "bankTypeCheckstate",
+		a.area_type AS "areaType",
+		a.project_money_type AS "projectMoneyType",
+		a.user_join_state AS "userJoinState",
+		a.user_join_amount AS "userJoinAmount",
+		a.deviation_type AS "deviationType",
+		a.character_type AS "characterType",
+		a.customer_deviation_type AS "customerDeviationType",
+		a.customer_character_type AS "customerCharacterType",
+		a.customer_area_type AS "customerAreaType",
+		a.customer_budget_type AS "customerBudgetType",
+		a.customer_pro_type AS "customerProType",
+		a.age_type_des AS "ageTypeDes",
+		a.pro_type_des AS "proTypeDes",
+		a.area_type_des AS "areaTypeDes",
+		a.budget_type_des AS "budgetTypeDes",
+		a.focus_type_des AS "focusTypeDes",
+		a.nature_type_des AS "natureTypeDes",
+		a.degree_type_des AS "degreeTypeDes",
+		a.msgstate AS "msgstate",
+		a.stagestate AS "stagestate",
+		a.approvedesc AS "approvedesc",
+		a.temporarydesc AS "temporarydesc",
+		a.officialdesc AS "officialdesc",
+		a.user_join_date AS "userJoinDate",
+		a.receiving_order_state AS "receivingOrderState",
+		a.channel AS "channel",
+		a.wechat AS "wechat",
+		a.province AS "province",
+		a.city AS "city",
+		a.area_name AS "areaName",
+		a.experience AS "experience"
+	</sql>
+	
+	<sql id="userInfoJoins">
+	</sql>
+    
+	<select id="get" resultType="UserInfo">
+		SELECT 
+			<include refid="userInfoColumns"/>
+		FROM pm_userinfo a
+		<include refid="userInfoJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="UserInfo">
+		SELECT 
+			<include refid="userInfoColumns"/>
+		FROM pm_userinfo a
+		<include refid="userInfoJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="UserInfo">
+		SELECT 
+			<include refid="userInfoColumns"/>
+		FROM pm_userinfo a
+		<include refid="userInfoJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO pm_userinfo(
+			uid,
+			user_type,
+			major,
+			contract_type,
+			user_name,
+			user_level,
+			quality_level,
+			sex,
+			nation,
+			birthday,
+			mobile,
+			marital_status,
+			now_address,
+			self_job,
+			referrer,
+			idcard,
+			user_height,
+			emergency_relation,
+			emergency_name,
+			emergency_mobile,
+			register_place,
+			bank_account_name,
+			bank_account,
+			bank_type,
+			bank_address,
+			induction_date,
+			induction_area,
+			education,
+			education_history,
+			education_certificate,
+			login_account,
+			login_passpord,
+			worker_num,
+			worker_leader_num,
+			worker_year,
+			lead_team_year,
+			pro_max_name,
+			pro_max_address,
+			pro_max_area,
+			pro_type,
+			pro_max_money,
+			can_visit,
+			known_way,
+			first_impression,
+			last_leaving_reason,
+			comp_name,
+			comp_register_money,
+			comp_register_date,
+			comp_address,
+			comp_business_license,
+			comp_tax_id,
+			comp_legal_person,
+			comp_legal_cardno,
+			comp_legal_mobile,
+			comp_legal_person_email,
+			comp_bank_account,
+			comp_bank_type,
+			deposit_cash,
+			deposit_back_state,
+			deposit_expect_back_date,
+			deposit_actual_back_date,
+			continued_charge,
+			leaving_reason,
+			leaving_date,
+			is_blacklist,
+			pro_test_count,
+			user_state,
+			photo_server_url,
+			photo_file_url,
+			createtime,
+			createuser,
+			updatetime,
+			updateuser,
+			is_guidang,
+			leaving_time,
+			user_level_next,
+			temp_original_level,
+			temp_level_deadline,
+			is_freeze,
+			group_isok,
+			photo_art_server_url,
+			photo_art_file_url,
+			achievement_level,
+			user_tag,
+			not_display_in_sgpt,
+			photo_checkstate,
+			photo_art_checkstate,
+			app_cardno,
+			user_title_level,
+			data_sources,
+			starlevel,
+			paid_type,
+			comp_bank_account_name,
+			counselorlevel,
+			syntheticgrade,
+			tempsyntheticgrade,
+			name_checkstate,
+			idcard_checkstate,
+			bank_amount_checkstate,
+			bank_type_checkstate,
+			area_type,
+			project_money_type,
+			user_join_state,
+			user_join_amount,
+			deviation_type,
+			character_type,
+			customer_deviation_type,
+			customer_character_type,
+			customer_area_type,
+			customer_budget_type,
+			customer_pro_type,
+			age_type_des,
+			pro_type_des,
+			area_type_des,
+			budget_type_des,
+			focus_type_des,
+			nature_type_des,
+			degree_type_des,
+			msgstate,
+			stagestate,
+			approvedesc,
+			temporarydesc,
+			officialdesc,
+			user_join_date,
+			receiving_order_state,
+			channel,
+			wechat,
+			province,
+			city,
+			area_name,
+			experience
+		) VALUES (
+			#{uid},
+			#{userType},
+			#{major},
+			#{contractType},
+			#{userName},
+			#{userLevel},
+			#{qualityLevel},
+			#{sex},
+			#{nation},
+			#{birthday},
+			#{mobile},
+			#{maritalStatus},
+			#{nowAddress},
+			#{selfJob},
+			#{referrer},
+			#{idcard},
+			#{userHeight},
+			#{emergencyRelation},
+			#{emergencyName},
+			#{emergencyMobile},
+			#{registerPlace},
+			#{bankAccountName},
+			#{bankAccount},
+			#{bankType},
+			#{bankAddress},
+			#{inductionDate},
+			#{inductionArea},
+			#{education},
+			#{educationHistory},
+			#{educationCertificate},
+			#{loginAccount},
+			#{loginPasspord},
+			#{workerNum},
+			#{workerLeaderNum},
+			#{workerYear},
+			#{leadTeamYear},
+			#{proMaxName},
+			#{proMaxAddress},
+			#{proMaxArea},
+			#{proType},
+			#{proMaxMoney},
+			#{canVisit},
+			#{knownWay},
+			#{firstImpression},
+			#{lastLeavingReason},
+			#{compName},
+			#{compRegisterMoney},
+			#{compRegisterDate},
+			#{compAddress},
+			#{compBusinessLicense},
+			#{compTaxId},
+			#{compLegalPerson},
+			#{compLegalCardno},
+			#{compLegalMobile},
+			#{compLegalPersonEmail},
+			#{compBankAccount},
+			#{compBankType},
+			#{depositCash},
+			#{depositBackState},
+			#{depositExpectBackDate},
+			#{depositActualBackDate},
+			#{continuedCharge},
+			#{leavingReason},
+			#{leavingDate},
+			#{isBlacklist},
+			#{proTestCount},
+			#{userState},
+			#{photoServerUrl},
+			#{photoFileUrl},
+			#{createtime},
+			#{createuser},
+			#{updatetime},
+			#{updateuser},
+			#{isGuidang},
+			#{leavingTime},
+			#{userLevelNext},
+			#{tempOriginalLevel},
+			#{tempLevelDeadline},
+			#{isFreeze},
+			#{groupIsok},
+			#{photoArtServerUrl},
+			#{photoArtFileUrl},
+			#{achievementLevel},
+			#{userTag},
+			#{notDisplayInSgpt},
+			#{photoCheckstate},
+			#{photoArtCheckstate},
+			#{appCardno},
+			#{userTitleLevel},
+			#{dataSources},
+			#{starlevel},
+			#{paidType},
+			#{compBankAccountName},
+			#{counselorlevel},
+			#{syntheticgrade},
+			#{tempsyntheticgrade},
+			#{nameCheckstate},
+			#{idcardCheckstate},
+			#{bankAmountCheckstate},
+			#{bankTypeCheckstate},
+			#{areaType},
+			#{projectMoneyType},
+			#{userJoinState},
+			#{userJoinAmount},
+			#{deviationType},
+			#{characterType},
+			#{customerDeviationType},
+			#{customerCharacterType},
+			#{customerAreaType},
+			#{customerBudgetType},
+			#{customerProType},
+			#{ageTypeDes},
+			#{proTypeDes},
+			#{areaTypeDes},
+			#{budgetTypeDes},
+			#{focusTypeDes},
+			#{natureTypeDes},
+			#{degreeTypeDes},
+			#{msgstate},
+			#{stagestate},
+			#{approvedesc},
+			#{temporarydesc},
+			#{officialdesc},
+			#{userJoinDate},
+			#{receivingOrderState},
+			#{channel},
+			#{wechat},
+			#{province},
+			#{city},
+			#{areaName},
+			#{experience}
+		)
+	</insert>
+
+	<update id="updateUserInfoById">
+		update pm_userinfo
+		<set >
+			<if test="userType != null" >
+				user_type = #{userType,jdbcType=INTEGER},
+			</if>
+			<if test="major != null" >
+				major = #{major,jdbcType=INTEGER},
+			</if>
+			<if test="contractType != null" >
+				contract_type = #{contractType},
+			</if>
+			<if test="userName != null" >
+				user_name = #{userName},
+			</if>
+			<if test="userLevel != null" >
+				user_level = #{userLevel},
+			</if>
+			<if test="qualityLevel != null" >
+				quality_level = #{qualityLevel},
+			</if>
+			<if test="sex != null" >
+				sex = #{sex},
+			</if>
+			<if test="nation != null" >
+				nation = #{nation},
+			</if>
+			<if test="birthday != null" >
+				birthday = #{birthday},
+			</if>
+			<if test="mobile != null" >
+				mobile = #{mobile},
+			</if>
+			<if test="maritalStatus != null" >
+				marital_status = #{maritalStatus},
+			</if>
+			<if test="nowAddress != null" >
+				now_address = #{nowAddress},
+			</if>
+			<if test="selfJob != null" >
+				self_job = #{selfJob},
+			</if>
+			<if test="referrer != null" >
+				referrer = #{referrer},
+			</if>
+			<if test="idcard != null" >
+				idcard = #{idcard},
+			</if>
+			<if test="userHeight != null" >
+				user_height = #{userHeight},
+			</if>
+			<if test="emergencyRelation != null" >
+				emergency_relation = #{emergencyRelation},
+			</if>
+			<if test="emergencyName != null" >
+				emergency_name = #{emergencyName},
+			</if>
+			<if test="emergencyMobile != null" >
+				emergency_mobile = #{emergencyMobile},
+			</if>
+			<if test="registerPlace != null" >
+				register_place = #{registerPlace},
+			</if>
+			<if test="bankAccountName != null" >
+				bank_account_name = #{bankAccountName},
+			</if>
+			<if test="bankAccount != null" >
+				bank_account = #{bankAccount},
+			</if>
+			<if test="bankType != null" >
+				bank_type = #{bankType},
+			</if>
+			<if test="bankAddress != null" >
+				bank_address = #{bankAddress},
+			</if>
+			<if test="inductionDate != null" >
+				induction_date = #{inductionDate},
+			</if>
+			<if test="inductionArea != null" >
+				induction_area = #{inductionArea},
+			</if>
+			<if test="education != null" >
+				education = #{education},
+			</if>
+			<if test="educationHistory != null" >
+				education_history = #{educationHistory},
+			</if>
+			<if test="educationCertificate != null" >
+				education_certificate = #{educationCertificate},
+			</if>
+			<if test="loginAccount != null" >
+				login_account = #{loginAccount},
+			</if>
+			<if test="loginPasspord != null" >
+				login_passpord = #{loginPasspord},
+			</if>
+			<if test="workerNum != null" >
+				worker_num = #{workerNum},
+			</if>
+			<if test="workerLeaderNum != null" >
+				worker_leader_num = #{workerLeaderNum},
+			</if>
+			<if test="workerYear != null" >
+				worker_year = #{workerYear},
+			</if>
+			<if test="leadTeamYear != null" >
+				lead_team_year = #{leadTeamYear},
+			</if>
+			<if test="proMaxName != null" >
+				pro_max_Name = #{proMaxName},
+			</if>
+			<if test="proMaxAddress != null" >
+				pro_max_address = #{proMaxAddress},
+			</if>
+			<if test="proMaxArea != null" >
+				pro_max_area = #{proMaxArea},
+			</if>
+			<if test="proType != null" >
+				pro_type = #{proType},
+			</if>
+			<if test="proMaxMoney != null" >
+				pro_max_money = #{proMaxMoney},
+			</if>
+			<if test="canVisit != null" >
+				can_visit = #{canVisit},
+			</if>
+			<if test="knownWay != null" >
+				known_way = #{knownWay},
+			</if>
+			<if test="firstImpression != null" >
+				first_impression = #{firstImpression},
+			</if>
+			<if test="lastLeavingReason != null" >
+				last_leaving_reason = #{lastLeavingReason},
+			</if>
+			<if test="compName != null" >
+				comp_name = #{compName},
+			</if>
+			<if test="compRegisterMoney != null" >
+				comp_register_money = #{compRegisterMoney},
+			</if>
+			<if test="compRegisterDate != null" >
+				comp_register_date = #{compRegisterDate},
+			</if>
+			<if test="compAddress != null" >
+				comp_address = #{compAddress},
+			</if>
+			<if test="compBusinessLicense != null" >
+				comp_business_license = #{compBusinessLicense},
+			</if>
+			<if test="compTaxId != null" >
+				comp_tax_id = #{compTaxId},
+			</if>
+			<if test="compLegalPerson != null" >
+				comp_legal_person = #{compLegalPerson},
+			</if>
+			<if test="compLegalCardno != null" >
+				comp_legal_cardno = #{compLegalCardno},
+			</if>
+			<if test="compLegalMobile != null" >
+				comp_legal_mobile = #{compLegalMobile},
+			</if>
+			<if test="compLegalPersonEmail != null" >
+				comp_legal_person_email = #{compLegalPersonEmail},
+			</if>
+			<if test="compBankAccount != null" >
+				comp_bank_account = #{compBankAccount},
+			</if>
+			<if test="compBankType != null" >
+				comp_bank_type = #{compBankType},
+			</if>
+			<if test="depositCash != null" >
+				deposit_cash = #{depositCash},
+			</if>
+			<if test="depositBackState != null" >
+				deposit_back_state = #{depositBackState},
+			</if>
+			<if test="depositExpectBackDate != null" >
+				deposit_expect_back_date = #{depositExpectBackDate},
+			</if>
+			<if test="depositActualBackDate != null" >
+				deposit_actual_back_date = #{depositActualBackDate},
+			</if>
+			<if test="continuedCharge != null" >
+				continued_charge = #{continuedCharge},
+			</if>
+			<if test="leavingReason != null" >
+				leaving_reason = #{leavingReason},
+			</if>
+			<if test="leavingDate != null" >
+				leaving_date = #{leavingDate},
+			</if>
+			<if test="isBlacklist != null" >
+				is_blacklist = #{isBlacklist},
+			</if>
+			<if test="proTestCount != null" >
+				pro_test_count = #{proTestCount},
+			</if>
+			<if test="userState != null" >
+				user_state = #{userState},
+			</if>
+			<if test="photoServerUrl != null" >
+				photo_server_url = #{photoServerUrl},
+			</if>
+			<if test="photoFileUrl != null" >
+				photo_file_url = #{photoFileUrl},
+			</if>
+			<if test="createtime != null" >
+				createtime = #{createtime},
+			</if>
+			<if test="createuser != null" >
+				createuser = #{createuser},
+			</if>
+			<if test="updatetime != null" >
+				updatetime = #{updatetime},
+			</if>
+			<if test="updateuser != null" >
+				updateuser = #{updateuser},
+			</if>
+			<if test="isGuidang != null" >
+				is_guiDang = #{isGuidang},
+			</if>
+			<if test="leavingTime != null" >
+				leaving_time = #{leavingTime},
+			</if>
+			<if test="userLevelNext != null" >
+				user_level_next = #{userLevelNext},
+			</if>
+			<if test="tempOriginalLevel != null" >
+				temp_original_level = #{tempOriginalLevel},
+			</if>
+			<if test="tempLevelDeadline != null" >
+				temp_level_deadline = #{tempLevelDeadline},
+			</if>
+			<if test="isFreeze != null" >
+				is_freeze = #{isFreeze},
+			</if>
+			<if test="groupIsok != null" >
+				group_isOk = #{groupIsok},
+			</if>
+			<if test="photoArtServerUrl != null" >
+				photo_art_server_url = #{photoArtServerUrl},
+			</if>
+			<if test="photoArtFileUrl != null" >
+				photo_art_file_url = #{photoArtFileUrl},
+			</if>
+			<if test="achievementLevel != null" >
+				achievement_level = #{achievementLevel},
+			</if>
+			<if test="userTag != null" >
+				user_tag = #{userTag},
+			</if>
+			<if test="notDisplayInSgpt != null" >
+				not_display_in_sgpt = #{notDisplayInSgpt},
+			</if>
+			<if test="photoCheckstate != null" >
+				photo_checkstate = #{photoCheckstate},
+			</if>
+			<if test="photoArtCheckstate != null" >
+				photo_art_checkstate = #{photoArtCheckstate},
+			</if>
+			<if test="appCardno != null" >
+				app_cardNo = #{appCardno},
+			</if>
+			<if test="userTitleLevel != null" >
+				user_title_level = #{userTitleLevel},
+			</if>
+			<if test="dataSources != null" >
+				data_sources = #{dataSources},
+			</if>
+			<if test="starlevel != null" >
+				starlevel = #{starlevel},
+			</if>
+			<if test="paidType != null" >
+				paid_type = #{paidType},
+			</if>
+			<if test="compBankAccountName != null" >
+				comp_bank_account_name = #{compBankAccountName},
+			</if>
+			<if test="counselorlevel != null" >
+				counselorLevel = #{counselorlevel},
+			</if>
+			<if test="syntheticgrade != null" >
+				syntheticGrade = #{syntheticgrade},
+			</if>
+			<if test="tempsyntheticgrade != null" >
+				tempSyntheticGrade = #{tempsyntheticgrade},
+			</if>
+			<if test="nameCheckstate != null" >
+				name_checkstate = #{nameCheckstate},
+			</if>
+			<if test="idcardCheckstate != null" >
+				idcard_checkstate = #{idcardCheckstate},
+			</if>
+			<if test="bankAmountCheckstate != null" >
+				bank_amount_checkstate = #{bankAmountCheckstate},
+			</if>
+			<if test="bankTypeCheckstate != null" >
+				bank_type_checkstate = #{bankTypeCheckstate},
+			</if>
+			<if test="areaType != null" >
+				area_type = #{areaType},
+			</if>
+			<if test="projectMoneyType != null" >
+				project_money_type = #{projectMoneyType},
+			</if>
+			<if test="userJoinState != null" >
+				user_join_state = #{userJoinState},
+			</if>
+			<if test="userJoinAmount != null" >
+				user_join_amount = #{userJoinAmount},
+			</if>
+			<if test="deviationType != null" >
+				deviation_type = #{deviationType},
+			</if>
+			<if test="characterType != null" >
+				character_type = #{characterType},
+			</if>
+			<if test="customerDeviationType != null" >
+				customer_deviation_type = #{customerDeviationType},
+			</if>
+			<if test="customerCharacterType != null" >
+				customer_character_type = #{customerCharacterType},
+			</if>
+			<if test="customerAreaType != null" >
+				customer_area_type = #{customerAreaType},
+			</if>
+			<if test="customerBudgetType != null" >
+				customer_budget_type = #{customerBudgetType},
+			</if>
+			<if test="customerProType != null" >
+				customer_pro_type = #{customerProType},
+			</if>
+			<if test="msgstate != null" >
+				MsgState = #{msgstate},
+			</if>
+			<if test="stagestate != null" >
+				StageState = #{stagestate},
+			</if>
+			<if test="approvedesc != null" >
+				ApproveDesc = #{approvedesc},
+			</if>
+			<if test="temporarydesc != null" >
+				TemporaryDesc = #{temporarydesc},
+			</if>
+			<if test="officialdesc != null" >
+				OfficialDesc = #{officialdesc},
+			</if>
+			<if test="userJoinDate != null" >
+				user_join_date = #{userJoinDate},
+			</if>
+			<if test="receivingOrderState != null" >
+				receiving_order_state = #{receivingOrderState},
+			</if>
+			<if test="channel != null" >
+				channel = #{channel},
+			</if>
+			<if test="wechat != null" >
+				WeChat = #{wechat},
+			</if>
+			<if test="experience != null" >
+				experience = #{experience},
+			</if>
+			<if test="province != null" >
+				province = #{province},
+			</if>
+			<if test="city != null" >
+				city = #{city},
+			</if>
+		</set>
+		where uid = #{uid}
+	</update>
+	<update id="delete">
+		DELETE FROM pm_userinfo
+		WHERE id = #{id}
+	</update>
+
+
+	<!-- user_type=3 分类:1 项目经理,2分项经理,3材料商,4,临时材料商 -->
+	<!-- 查询材料人员一段 -->
+	<select id="findUserInfoList" resultType="UserInfoOneSection">
+		WITH k AS(
+		select uid,handType,topNum = ROW_NUMBER() OVER(PARTITION BY uid ORDER BY createTime DESC)
+		from rsgl_userHandStatus
+		where affairType=2
+		)
+		SELECT
+		T1.uid AS id,
+		T1.rs_app_id as appId,
+		T1.induction_area AS inductionArea,
+		T1.induction_date AS inductionDate,
+		T1.user_name AS userName,
+		ISNULL(z_one,0) AS zOne,
+		ISNULL(z_two,0) AS zTwo,
+		ISNULL(z_three,0) AS zThree,
+		ISNULL(z_four,0) AS zFour,
+		ISNULL(z_five,0) AS zFive,
+		ISNULL(z_six,0) AS zSix,
+		--1正常2整改3奖罚4淘汰
+		k.handType,
+		--是否入住：默认0，未入住，1入住
+		isnull(t3.pmj_joinState,0) as pmjJoinState
+		FROM
+		pm_userinfo T1
+		LEFT JOIN pm_userinfo_sup T2 ON T1.uid = T2.uid
+		LEFT JOIN k  on k.uid = T1.uid and topNum=1
+		left join pm_userinfo_join T3 on T3.uid = t1.uid
+		WHERE
+		T1.user_type = 3
+		--状态 :1 临时人员,2 正式人员, 3.停工,4 待离职审批(  正式人员先经过集团审批批),51临时待离职, 52正式待离职,6,已离职未提档 7,已离职
+		AND user_state IN (1,2)
+		--是否冻结:0 未冻结 1 已冻结 ;冻结的项目经理不可以发包和批款等   2不可用
+		AND is_freeze=0
+		--是否黑名单 0 不是   1 是
+		AND is_blacklist=0
+	</select>
+	<!-- 用户资料二三段-->
+	<select id="findUserInfoTwoAndThreeSectionById" resultType="UserInfoTwoAndThreeSection">
+	  SELECT
+		user_name as userName,
+		mobile,
+		photo_server_url as photoServerUrl,
+		photo_file_url as photoFileUrl,
+		bank_account_name as bankAccountName,
+		bank_account as bankAccount,
+		bank_type as bankType,
+		bank_address as bankAddress,
+		paid_type as paidType,
+		comp_bank_account_name as compBankAccountName,
+		comp_bank_account as compBankAccount,
+		comp_bank_type as compBankType,
+		contract_type as contractType,
+		comp_name as compName,
+		comp_address as compAddress
+	FROM
+		pm_userinfo
+	WHERE
+		user_type = 3 and uid=#{id}
+	</select>
+	<!-- 材料商 配送统计 -->
+	<select id="findSuppliersOrderStatisticsById" resultType="SuppliersOrderStatistics">
+		DECLARE @TreeCount INT
+		DECLARE @MatCount INT --材料数量（不包含临时配送产生的材料）
+		DECLARE @ProCount INT --项目数量
+		DECLARE @ProHasCount INT --项目数量（已结）
+		DECLARE @TotalMoney decimal(18,2) --配送总额
+		DECLARE @PaidMoney decimal(18,2) --已付金额
+		DECLARE @NoConfirmMoney decimal(18,2) --未确认金额
+		DECLARE @WaitPaidMoney decimal(18,2) --待付款金额
+		DECLARE @OrderCount INT --配送次数
+
+		DECLARE @MatCountToOrder INT --已配送材料数（固定）
+		DECLARE @MatCountToOrderTemp INT --已配送材料数（临时）
+		DECLARE @PaidCount INT --已付配送个数
+		DECLARE @UnPaidCount INT --待付配送个数
+		DECLARE @AcceptCount INT --待收货
+		DECLARE @PSZCount INT --配送中
+		DECLARE @WJDCount INT -- 待接单
+		DECLARE @MonthCount INT -- 本月订单
+		DECLARE @ExpectedOrderProCount INT --预计订单-项目个数
+		DECLARE @ExpectedOrderMoney decimal(18,2) --预计订单-总额
+		DECLARE @ExpectedOrderMoneyToDis decimal(18,2) --预计订单-配送额
+		DECLARE @ExpectedOrderMoneyToDisMat decimal(18,2) --预计订单-配送额-材料
+		DECLARE @lastCreateTime datetime;--最后创建订单时间
+
+
+		DECLARE @VisitMark INT--回访标记
+
+		--回访标记
+		SELECT TOP 1 @VisitMark=v_mark
+		FROM V_Visit
+		WHERE v_userID=#{uid} AND v_type=2 AND v_jincheng=0
+		ORDER BY v_ID DESC
+
+		--获取二级分类
+		SELECT @TreeCount=COUNT(1)
+		FROM V_TreeToSuppliers
+		WHERE ts_UserID=#{uid} AND ts_jincheng=0
+
+
+		--获取材料数量
+		SELECT @MatCount=COUNT(1)
+		FROM V_MaterialToSuppliers
+		LEFT JOIN V_Material ON ms_MatID=m_ID
+		WHERE ms_UserID=#{uid} AND ms_jincheng=0 AND m_jincheng=0
+
+		--配送总额,已付金额
+		;WITH K AS (
+		SELECT pi_ID,ISNULL(SUM(po_TotalMoney),0)po_TotalMoney,ISNULL(SUM(po_PaidMoney),0) po_PaidMoney
+		--配送次数
+		,COUNT(1) OrderCount
+		,COUNT(CASE WHEN po_PaidMoney>=0.01 THEN 1 END) PaidCountToOrder
+		,COUNT(CASE WHEN po_State=64 THEN 1 END) PaidCount
+		,COUNT(CASE WHEN po_State|48=48 THEN 1 END) UnPaidCount
+		,SUM(CASE WHEN po_State|48=48 THEN po_TotalMoney-po_PaidMoney END) WaitPaidMoney
+		,SUM(CASE WHEN po_State|15=15 THEN po_TotalMoney END )NoConfirmMoney
+		,COUNT(CASE WHEN po_State=8 THEN 1 END) AcceptCount
+		,COUNT(CASE WHEN po_State|6=6 THEN 1 END) PSZCount
+		,COUNT(CASE WHEN po_State=1 THEN 1 END) WJDCount
+		,COUNT(CASE WHEN YEAR(po_OrderTime)=YEAR(GETDATE()) AND MONTH(po_OrderTime)=MONTH(GETDATE())  THEN 1 END) MonthCount
+		,MAX(po_createTime) lastCreateTime
+		FROM V_ProInfoOrder
+		LEFT JOIN V_ProInfo ON pi_ID=po_PIID
+		WHERE po_UserID=#{uid} AND po_jincheng=0 AND po_TotalMoney>=0.01
+		GROUP BY pi_ID
+		)
+		SELECT @ProCount=COUNT(1)
+		,@ProHasCount = COUNT(CASE WHEN OrderCount=PaidCount THEN 1 END )
+		,@TotalMoney=ISNULL(SUM(po_TotalMoney),0),@PaidMoney=ISNULL(SUM(po_PaidMoney),0)
+		,@WaitPaidMoney =SUM(WaitPaidMoney)
+		,@NoConfirmMoney=SUM(NoConfirmMoney)
+		--配送次数
+		,@OrderCount = SUM(OrderCount)
+		,@PaidCount=SUM(PaidCountToOrder)
+		,@UnPaidCount=SUM(UnPaidCount)
+		,@AcceptCount = SUM(AcceptCount)
+		,@PSZCount=SUM(PSZCount)
+		,@WJDCount=SUM(WJDCount)
+		,@lastCreateTime=MAX(lastCreateTime)
+		FROM K
+
+		--已配送材料数（固定）,已配送材料数（临时）
+		;WITH K AS (
+		SELECT pod_MatID,pod_Type
+		FROM V_ProInfoOrder
+		LEFT JOIN V_ProInfoOrderDetail ON po_ID=pod_poID
+		LEFT JOIN V_ProInfo ON pi_ID=po_PIID
+		WHERE po_UserID=#{uid} AND po_jincheng=0 AND pod_jincheng=0 AND pod_AlreadyCount>=0.01
+		GROUP BY pod_MatID,pod_Type
+		)
+		SELECT @MatCountToOrder = COUNT(CASE WHEN pod_Type=1 THEN 1 END)
+		,@MatCountToOrderTemp = COUNT(CASE WHEN pod_Type!=1 THEN 1 END)
+		FROM K
+
+		--//预计订单
+		;WITH DIS AS (
+		--个人配送量
+		SELECT po_rwdID,SUM(pod_AlreadyCount*pod_MatPrice) MatDisMoney
+		FROM V_ProInfoOrder
+		LEFT JOIN V_ProInfoOrderDetail ON po_ID=pod_poID
+		WHERE po_UserID=#{uid} AND po_TotalMoney>=0.01 AND po_jincheng=0 AND pod_jincheng=0
+		GROUP BY po_rwdID
+		)
+		,K AS(
+		SELECT po_rwdID disRwdID,SUM(po_TotalMoney) DisMoney
+		FROM V_ProInfoOrder
+		WHERE po_UserID=#{uid} AND po_TotalMoney>=0.01 AND po_jincheng=0
+		GROUP BY po_rwdID
+		)
+		SELECT @ExpectedOrderProCount=COUNT(1),@ExpectedOrderMoney=SUM(pmd_PlanMoney),@ExpectedOrderMoneyToDisMat=SUM(MatDisMoney)
+		,@ExpectedOrderMoneyToDis=SUM(DisMoney)
+		FROM V_ProinfoMaterialDivided
+		LEFT JOIN DIS ON po_rwdID=pmd_rwdID
+		LEFT JOIN K ON disRwdID=pmd_rwdID
+		LEFT JOIN V_ProInfo ON pi_rwdID=pmd_rwdID
+		WHERE pmd_UserID=#{uid} AND pi_jincheng=0 AND pi_APPPushState=1 AND pi_proState=1 AND pi_zsState>=-1
+
+	SELECT @VisitMark AS visitMark--回访标记
+	--材料数量
+	,ISNULL(@MatCount,0) AS matCount,ISNULL(@TreeCount,0) AS treeCount
+	--配送项目数，已结项目数
+	,ISNULL(@ProCount,0) AS proCount,ISNULL(@ProHasCount,0) AS proHasCount
+	--已配送材料数量
+	,ISNULL(@MatCountToOrder+@MatCountToOrderTemp,0) AS matCountToOrder
+	--总额，已付总额 ,待付款金额，未确认金额
+	,ISNULL(@TotalMoney,0.00) AS totalMoney,ISNULL(@PaidMoney,0.00) AS paidMoney,ISNULL(@WaitPaidMoney,0) AS waitPaidMoney,ISNULL(@NoConfirmMoney,0) AS noConfirmMoney
+	--配送单个数，已付（配送单）个数，待付（配送单）个数，待收货（配送单）个数
+	,ISNULL(@OrderCount,0) AS orderCount,ISNULL(@PaidCount,0) AS paidCount,ISNULL(@UnPaidCount,0) AS unPaidCount,ISNULL(@AcceptCount,0) AS acceptCount
+	--配送中，未接单
+	,ISNULL(@PSZCount,0) AS disCount,ISNULL(@WJDCount,0) AS waitCount
+	,ISNULL(@MonthCount,0) AS monthCount
+	--预计订单-项目个数
+	,ISNULL(@ExpectedOrderProCount,0) AS expectedOrderProCount
+	--预计订单金额，预计订单-配送金额，预计订单-配送金额材料
+	,ISNULL(@ExpectedOrderMoney,0.00) AS expectedOrderMoney,ISNULL(@ExpectedOrderMoneyToDis,0.00) AS expectedOrderMoneyToDis,ISNULL(@ExpectedOrderMoneyToDisMat,0.00) AS expectedOrderMoneyToDisMat,ISNULL(@lastCreateTime,36600) lastCreateTime
+	</select>
+	<!-- 用户人员订单二段 获取配送单-->
+	<select id="DeliveryOrderListByUtils" resultType="DeliveryOrder">
+	WITH LLL AS (
+    SELECT po_ID as poId,po_rwdID as rwdId,pi_ContractNo contractNo
+    ,po_TotalMoney as totalMoney,po_PaidMoney as paidMoney,po_State as state,po_OrderNumber as orderNumber,po_OrderType as orderType
+    ,po_UserID as userId,po_UserName as userName,po_UserPhone as userPhone
+    --时间相关（配送日期，下单日期，接单日期，申请收货日期，确认收货日期，支付日期）
+    ,po_OrderTime as orderTime,po_SendTime as sendTime,po_AcceptTime as acceptTime,po_ApplyTime as applyTime,po_ReceiptTime as receiptTime,po_PaidTime as paidTime
+    ,ISNULL(po_updateTime,po_createTime)updateTime
+    ,pi_CityID cityId,pi_proName proName,pi_proAddress proAddr,pi_proState proState
+    ,pi_xmjlID managerId,pi_xmjlName managerName,pi_xmjlPhone managerPhone
+    ,ISNULL(poe_Score,0) evaluateStar,poe_Remark evaluateRemark
+    FROM V_ProInfoOrder
+    LEFT JOIN V_ProInfo ON po_PIID=pi_ID
+    LEFT JOIN V_ProInfoOrderEvaluate ON po_ID=poe_POID AND poe_EType=101 AND poe_Status=1
+    WHERE po_jincheng=0 AND po_TotalMoney>=0.01
+	<!-- 材料商 -->
+	<if test="userId>=1"> and po_UserID = #{userId}</if>
+	<!-- 配送单ID -->
+    <if test="poId!=''and null!=poId"> and po_ID = #{poId}</if>
+	<!-- 任务单 -->
+    <if test="rwdId!=''and null!=rwdId"> and po_rwdID = #{rwdId}</if>
+	<!-- 配送状态 -->
+	<if test="poState>=1"> and po_State = #{poState}</if>
+	<!-- 根据项目经理 -->
+	<if test="managerId>=1"> and pi_xmjlID = #{managerId}</if>
+	<!-- 地区 -->
+	<if test="cityId>=1"> and pi_CityID = #{cityId}</if>
+	<!--  -->
+	<if test="ssContent!='' and null!=rwdId"> and (po_OrderNumber LIKE '%#{ssContent}%' OR pi_ContractNo LIKE '%#{ssContent}%') </if>
+	<!-- 是否查询当前月订单-->
+	<if test="isOrderMonth">AND YEAR(po_OrderTime)=Year(getDate()) AND Month(po_OrderTime)=Month(getDate())</if>
+    )
+    SELECT *
+    FROM LLL
+	</select>
+
+	<!-- 二段状态 获取人员详情信息-->
+	<select id="findSuppliersInfo" resultType="UserInfoOneSection">
+ 	DECLARE @LoginCount INT
+    DECLARE @LoginFirst DATETIME
+    DECLARE @LoginLast DATETIME
+    DECLARE @NowMonth VARCHAR(20) =  CAST(YEAR(GETDATE()) AS VARCHAR(10)) + '-' + Right(100+Month(GetDate()),2) + '-01'
+    DECLARE @TotalScore decimal(18,2)
+    DECLARE @MonthScore decimal(18,2)
+    DECLARE @WDStateToIntegral INT
+
+    SELECT @LoginCount=COUNT(1),@LoginFirst=MIN(createtime),@LoginLast=MAX(createtime)
+    FROM sys_user_behavior
+    WHERE usertype=3 AND behavior_category=15000 AND userno=#{uid}
+
+    --获取人事积分
+    SELECT @TotalScore=SUM(CASE WHEN ir_State>=2 THEN ir_Score END)
+    ,@MonthScore=SUM(CASE WHEN ir_State>=2 AND ir_CheckTime>=@NowMonth THEN ir_Score END)
+    ,@WDStateToIntegral=MAX(CASE WHEN ir_State=1 THEN 1 END)
+    FROM pm_IntegralRecording
+    WHERE uid=#{uid} AND ir_Status=1
+
+    ;WITH Train AS(
+    --在培训中
+    SELECT [uid] kuid,tud_flow,TrainRowNum = ROW_NUMBER() OVER(PARTITION BY [uid] ORDER BY tud_create_time DESC)
+    FROM train_user_detail
+    WHERE tud_jincheng=0 AND tud_flow_state=1
+    )
+    ,A AS (
+    SELECT UID aUid
+    ,MIN(InfoType) InfoType
+    FROM dbo.InfoAuditSwitch
+    WHERE SystemType=2 AND SwitchStatus=0
+    GROUP BY UID
+    )
+    SELECT T1.[uid] ,[user_name] as userName,comp_name as compName,comp_address as compAddress,comp_register_money as compRegisterMoney
+    ,sex,mobile,login_account as loginAccount,login_passpord as loginPasspord
+    ,induction_area as inductionArea,induction_date as inductionDate,quality_level as qualityLevel,tempSyntheticGrade
+    ,user_type as userType,user_state as userState,is_freeze as isFreeze,is_blacklist as isBlacklist
+    ,idcard,photo_server_url as photoServerUrl,photo_file_url as photoFileUrl
+    ,photo_art_server_url as photoArtServerUrl,photo_art_file_url as photoArtFileUrl
+    ,referrer
+    ,paid_type AS paidType,contract_type AS contractType
+    --银行卡信息
+    ,bank_account AS  bankAccount,bank_account_name AS bankAccountName,bank_type AS bankType,bank_address as bankAddress
+    ,T3.dicname as bankTypeName
+    --对公账户
+    ,comp_bank_account as compBankAccount,comp_bank_account_name AS compBankAccountName
+    ,T6.dicname compBankTypeName
+    ,tud_flow AS orderCountnew
+    --配送评价问题
+    ,ISNULL(InfoType,0) orderIssue
+    --扩展属性
+    ,ISNULL(z_one,3)zOne,ISNULL(z_two,0) AS zTwo,ISNULL(z_three,0) AS zThree,ISNULL(z_four,0) AS zFour,ISNULL(z_five,0) AS zFive,ISNULL(z_six,0) AS zSix,z_oneTime AS zOneTime,z_twoTime as zTwoTime,z_threeTime as zThreeTime,z_fourTime AS zFourTime,z_fiveTime AS zFiveTime,z_sixTime AS zSixTime,z_one_remark AS zOneRemark,z_two_remark AS zTwoRemark,z_three_remark AS zThreeRemark,z_four_remark AS zFourRemark,z_five_remark AS zFiveRemark,z_six_remark AS zSixRemark
+    --培训状态
+    ,z_train_state trainState
+    ,@LoginCount AS loginCount,@LoginFirst AS loginFirst ,@LoginLast AS loginLast
+    --人事积分相关
+    ,@TotalScore totalScore,@MonthScore monthScore,ISNULL(@WDStateToIntegral,0) wdStateToIntegral
+    --占位费，加盟等级,加盟费
+    ,pmj_OccupancyFee as pmjOccupancyFee,ISNULL(pmj_JoinState,0) as pmjJoinState,ISNULL(pmj_JoinLevel,0) as pmjJoinLevel,pmj_JoinFee as pmjJoinFee,pmj_JoinTime as pmjJoinTime
+    --店铺信息
+    ,pmj_StoreName as pmjStoreName,pmj_StorePhone as pmjStorePhone,pmj_StoreScore as pmjStoreScore,pmj_StoreState as pmjStoreState
+    --主营：品牌
+    ,education_certificate as educationCertificate
+    FROM pm_userinfo T1
+    LEFT JOIN sys_dic_info T3 ON T3.dic_type_code='15' AND T3.diccode=bank_type
+    LEFT JOIN Train ON T1.[uid]=kuid AND TrainRowNum=1
+    LEFT JOIN sys_dic_info T6 ON T6.dic_type_code='15' AND T6.diccode=T1.comp_bank_type
+    LEFT JOIN A ON A.aUid=T1.uid
+    LEFT JOIN pm_userinfo_sup T ON T.uid=T1.uid
+    LEFT JOIN pm_userinfo_join T2 ON T2.uid=T1.uid
+    where T1.uid=#{uid}
+	</select>
+	<!-- 项目统计 -->
+	<select id="proInfoStatisticsById" resultType="proInfoStatistics">
+	WITH K AS (
+    SELECT po_PIID,ISNULL(SUM(po_TotalMoney),0)TotalMoney,ISNULL(SUM(po_PaidMoney),0) PaidMoney
+    --配送次数
+    ,COUNT(1) OrderCount
+    FROM V_ProInfoOrder
+    WHERE po_UserID=#{uid} AND po_jincheng=0 AND po_TotalMoney>=0.01
+    GROUP BY po_PIID
+    )
+    SELECT  pi_id as piId,pi_rwdID as piRwdId ,pi_ContractNo as piContractNo,pi_proName as piProName,OrderCount as orderCount,TotalMoney as totalMoney,PaidMoney as paidMoney
+    FROM K
+    LEFT JOIN V_ProInfo ON pi_ID=po_PIID
+    WHERE pi_jincheng=0
+	</select>
+
+	<!--根据材料商获取罚款记录,需要切换数据库-->
+	<select id="fineItemsBySearchUtil" resultType="UserFine">
+	SELECT T1.OrderId AS rwdId,T2.Number AS contractNo,T2.Name AS proName,FineName AS userName
+    ,(CASE WHEN FineState=3 THEN 3 WHEN FineCheckime>='' THEN 2 ELSE 1 END )fineState
+    ,FineMoney as fineMoney,FineTime as fineTime,FineSubject as fineSubject,FineRemark as fineRemark
+    ,FineOperator as fineOperator,FineOperatorType as fineOperatorType,FineSourceType as fineSourceType
+    ,CAST(T1.[Id] AS INT) AS fineID,FinediquId AS fineCity
+    ,FineImageUrl as fineImageUrl,FineCheckRemark as fineCheckRemark,FineCheckime AS fineCheckTime
+    FROM GC_ProjectFines T1
+    LEFT JOIN FA_Bill T2 ON T1.OrderId=T2.OrderID AND T2.Type=1
+    WHERE FineMark=#{userId} AND FineJinCheng=1
+    <if test="userState==3">AND T1.FineState=3 </if>
+    <if test="userState==2">AND T1.FineState!=3 AND T1.FineCheckime>=''</if>
+    <if test="userState==1">AND T1.FineState!=3 AND T1.FineCheckime IS NULL</if>
+    <if test="timeType==1">AND T1.FineTime BETWEEN #{startTime} AND #{endTime}</if>
+    <if test="timeType==2">AND T1.FineTime >= #{startTime}</if>
+    <if test="timeType==3">AND T1.FineTime <![CDATA[<=]]> #{endTime}</if>
+	Order By T1.FineTime DESC
+	</select>
+	<!--获取人员资料（包含审核的资料）-->
+	<select id="findUserAttrInfoItemsToReview" resultType="UserAttrInfo">
+		;WITH K AS (
+		--新上传的未审核的资料
+		SELECT *
+		FROM dbo.pm_attr_info
+		WHERE uid=#{uid} AND user_type<![CDATA[<=4]]> AND isdelete=2
+		UNION ALL
+		--人事资料
+		SELECT *
+		FROM dbo.pm_attr_info
+		WHERE uid=#{uid} AND user_type<![CDATA[<=4]]> AND isdelete=0
+		AND NOT EXISTS (SELECT 1 FROM pm_attr_info T1 WHERE T1.uid=#{uid} AND T1.user_type<![CDATA[<=4]]> AND T1.isdelete=2
+		AND pm_attr_info.attr_modelid=T1.attr_old_attrid )
+		)
+		SELECT attr_infoid as attrInfoid ,attr_modelid as attrModelid,K.attr_stage as attrStage,user_type as userType,major,contract_type as contractType,
+		attr_server_url as attrServerUrl,attr_file_url as attrFileUrl ,K.attr_file_type as attrFileType,K.isdelete as isDelete ,K.createtime as createTime,K.createuser as createUser,K.updatetime as updateTime,K.updateuser as updateUser,
+		uid,attr_qualified_state as attrQualifiedState,attr_qualified_remark as attrQualifiedRemark,attr_old_attrid as attrOldAttrId
+		,pm_attr_typename AS pmAttrTypeName,attr_name as attrName,remark
+		FROM K
+		LEFT JOIN pm_attr_model ON attr_modelid=pm_attr_mode_id
+	</select>
+	<!--根据材料商的ID获取资料审核结果权限集合-->
+	<select id="findInfoAuditSwitchById" resultType="InfoAuditSwitch">
+		SELECT ID as id,UID as uid ,CreateTime as createTime,SystemType as systemType,InfoType as infoType,SwitchStatus as switchStatus,UpdateTime as updateTime,UpdateUserNo as updateUserNo FROM dbo.InfoAuditSwitch WHERE UID=#{uid}
+		<if test="systemType>=1">AND SystemType = #{systemType}</if>
+		<if test="infoType>=1"> AND InfoType = #{infoType}</if>
+	</select>
+
+	<select id="findMaterialTreeClassByUserIdAndCityId" resultType="TreeViewList">
+	SELECT T1.tree_Name treeOneName,T2.tree_Name treeTwoName
+    ,T1.tree_ID treeOneId,T2.tree_ID treeTwoId
+    ,MAX(CASE WHEN ts_UserId>=0 THEN 1 ELSE 0 END) perfectState
+    --二级分类下的材料量
+    ,COUNT(1) matCount
+    ,MAX(ts_createTime) AS createTime
+    --我的材料：个数
+    ,COUNT(CASE WHEN ms_UserID>=0 THEN 1 END)matCountToTemp
+    FROM V_Tree T2
+    LEFT JOIN V_Tree T1 ON T1.tree_ID=T2.tree_ParentID
+    LEFT JOIN V_TreeToSuppliers ON T2.tree_ID=ts_TreeID AND ts_UserID=#{uid} AND ts_jincheng=0
+    LEFT JOIN V_Material ON T2.tree_ID=m_TreeTwo AND m_CityID=#{area} AND m_jincheng=0 AND m_UpdateState=1
+    LEFT JOIN V_MaterialToSuppliers ON ms_UserID=#{uid} AND ms_MatID=m_ID AND ms_jincheng=0 AND ms_Price>=0.01
+    WHERE T2.tree_Level=2 AND T2.tree_jincheng=0
+    GROUP BY T1.tree_Name,T2.tree_Name,T1.tree_ID,T2.tree_ID,T1.tree_createTime,T2.tree_createTime
+    ORDER BY T1.tree_createTime,T2.tree_createTime
+	</select>
+	<!-- 主营-->
+	<select id="findMaterialTreeClassById" resultType="TreeViewList">
+		SELECT T2.tree_Name AS treeTwoName
+		FROM V_TreeToSuppliers
+		LEFT JOIN V_Tree T2 ON T2.tree_ID=ts_TreeID
+		LEFT JOIN V_Tree T1 ON T2.tree_ParentID = T1.tree_ID
+		WHERE T2.tree_Level=2 AND T2.tree_jincheng=0 AND ts_jincheng=0 AND ts_UserID=#{uid}
+		ORDER BY T1.tree_createTime,T2.tree_createTime
+	</select>
+	<!-- 材料个数-->
+	<select id="findMaterialById" resultType="Integer">
+		SELECT COUNT(1)
+		FROM V_MaterialToSuppliers
+		WHERE ms_UserID=#{uid} AND ms_jincheng=0 AND ms_Price>=0.01
+	</select>
+
+	<!-- 查找用户订单数目-->
+	<select id="findUserOrderStatistics" resultType="SuppliersOrderStatistics">
+		--lastCreateTime最后一次订单日期,orderCount int--订单数目
+		with K as(
+		select
+		T1.po_ID,
+		T1.po_UserID,
+		T1.po_createTime,
+		T2.poe_Score
+		from v_proInfoOrder T1
+		LEFT JOIN V_ProInfoOrderEvaluate T2 ON po_ID=poe_POID AND poe_EType=101 AND poe_Status=1
+		WHERE T1.po_jincheng=0
+		)
+		select po_UserID AS uid,
+		Count(1) orderCount,
+		MAX(po_createTime) lastCreateTime,
+		COUNT(CASE WHEN poe_Score>0 THEN poe_Score END) orderEvaluateCount,
+		COUNT(CASE WHEN poe_Score>=3 THEN poe_Score END) orderEvaluateToGood
+		from K group by k.po_UserID
+	</select>
+
+</mapper>

@@ -1,0 +1,360 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.jmat.dao.DataBehaviorDao">
+    
+	<sql id="dataBehaviorColumns">
+		a.db_id AS "dbId",
+		a.db_class AS "dbClass",
+		a.db_operattype AS "dbOperattype",
+		a.db_operatuser AS "dbOperatuser",
+		a.db_mainid AS "dbMainid",
+		a.db_eventid AS "dbEventid",
+		a.db_position AS "dbPosition",
+		a.db_content AS "dbContent",
+		a.db_data AS "dbData",
+		a.db_state AS "dbState",
+		a.db_ifread AS "dbIfread",
+		a.db_readtime AS "dbReadtime",
+		a.db_jincheng AS "dbJincheng",
+		a.db_createtime AS "dbCreatetime",
+		a.db_updatetime AS "dbUpdatetime",
+		a.db_operatecityid AS "dbOperatecityid",
+		a.db_cityid AS "dbCityid"
+	</sql>
+	
+	<sql id="dataBehaviorJoins">
+	</sql>
+    
+	<select id="get" resultType="DataBehavior">
+		SELECT 
+			<include refid="dataBehaviorColumns"/>
+		FROM data_behavior a
+		<include refid="dataBehaviorJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="DataBehavior">
+		SELECT 
+			<include refid="dataBehaviorColumns"/>
+		FROM data_behavior a
+		<include refid="dataBehaviorJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="DataBehavior">
+		SELECT 
+			<include refid="dataBehaviorColumns"/>
+		FROM data_behavior a
+		<include refid="dataBehaviorJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert" >
+		INSERT INTO data_behavior(
+          db_Class,db_OperatType,db_OperatUser,db_MainID,db_EventID,db_Position,db_Content,db_Data,db_State,db_CityID
+		) VALUES (
+	      #{dbClass},#{dbOperattype},#{dbOperatuser},#{dbMainid},#{dbEventid},#{dbPosition},#{dbContent},#{dbData},#{dbState},#{dbCityid}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE data_behavior SET 	
+			db_id = #{dbId},
+			db_class = #{dbClass},
+			db_operattype = #{dbOperattype},
+			db_operatuser = #{dbOperatuser},
+			db_mainid = #{dbMainid},
+			db_eventid = #{dbEventid},
+			db_position = #{dbPosition},
+			db_content = #{dbContent},
+			db_data = #{dbData},
+			db_state = #{dbState},
+			db_ifread = #{dbIfread},
+			db_readtime = #{dbReadtime},
+			db_jincheng = #{dbJincheng},
+			db_createtime = #{dbCreatetime},
+			db_updatetime = #{dbUpdatetime},
+			db_operatecityid = #{dbOperatecityid},
+			db_cityid = #{dbCityid}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM data_behavior
+		WHERE id = #{id}
+	</update>
+	
+	<!--查找材料调整,通过子库最近数据POJO 	
+	public Integer findMatAdjustBySubLibraryRecentData(SubLibraryRecentData subLibraryRecentData); -->
+	<select id="findMatAdjustBySubLibraryRecentData"  parameterType="SubLibraryRecentData" resultType="Integer" >
+		--获得材料调整数量
+		SELECT
+			COUNT (1)
+		FROM
+			Data_Behavior a
+		WHERE
+			a.db_Class IN (
+			#{M_A_SL_BRAND_ADD}, 
+			#{M_A_SL_BRAND_SAVE}, 
+			#{M_A_TS_MAT_SEARCH}, 
+			#{M_A_TS_BASE_SAVE}, 
+			#{M_A_TS_PARA_SAVE}, 
+			#{M_A_TS_STANDARD_INFO_SAVE}, 
+			#{M_A_TS_STANDARD_ITEM_SAVE}, 
+			#{M_A_TS_ATTR_ITEM})
+		AND a.db_CityID IN (0, #{cityID})
+		AND a.db_jincheng = 0
+		AND a.db_createTime >=CONVERT(datetime,CONVERT(char(8),GETDATE(),120)+'1')
+	</select>
+	
+	<!--查找照片调整,通过子库最近数据POJO 	
+	public Integer findPhotoAdjustBySubLibraryRecentData(SubLibraryRecentData subLibraryRecentData); -->
+	<select id="findPhotoAdjustBySubLibraryRecentData"  parameterType="SubLibraryRecentData" resultType="Integer" >
+		--获得价钱调整数量
+		SELECT
+			count(1)
+		FROM
+			Data_Behavior a
+		WHERE
+			a.db_Class = #{M_A_SL_BRAND_PHOTO}
+		AND a.db_CityID IN (0, #{cityID})
+		AND a.db_jincheng = 0
+		AND a.db_createTime >=CONVERT(datetime,CONVERT(char(8),GETDATE(),120)+'1')
+	</select>
+
+	<!--查找价格调整,通过子库最近数据POJO	 
+	public Integer findPriceAdjustBySubLibraryRecentData(SubLibraryRecentData subLibraryRecentData);-->
+	<select id="findPriceAdjustBySubLibraryRecentData"  parameterType="SubLibraryRecentData" resultType="Integer" >
+		--获得价钱调整数量
+		SELECT
+			count(1)
+		FROM
+			Data_Behavior a
+		WHERE
+			a.db_Class =#{M_A_SL_BRAND_PRICE}
+		AND a.db_CityID IN (0, #{cityID})
+		AND a.db_jincheng = 0
+		AND a.db_OperatType = 6
+		AND a.db_createTime >=CONVERT(datetime,CONVERT(char(8),GETDATE(),120)+'1')
+	</select>
+	
+	<!--查找子库起始页二段-操作记录数据,通过城市ID 	
+	public Map<String, Object> findIndexTwoSectionOperationNoteByCityID(SubLibraryRecentData subLibraryRecentData); -->
+	<select id="findIndexTwoSectionOperationNoteByCityID"  parameterType="SubLibraryRecentData" resultType="java.util.Map" >
+		--获取:materialCount 材料总数,photoCount 照片总数,priceCount 价格总数 操作记录Map
+		WITH mat AS (
+		-- 获取指定地区下的材料操作总数
+				SELECT
+					COUNT (1) AS materialCount
+				FROM
+					Data_Behavior a
+				WHERE
+					a.db_Class IN (
+					#{M_A_SL_BRAND_ADD}, 
+					#{M_A_SL_BRAND_SAVE}, 
+					#{M_A_TS_MAT_SEARCH}, 
+					#{M_A_TS_BASE_SAVE}, 
+					#{M_A_TS_PARA_SAVE}, 
+					#{M_A_TS_STANDARD_INFO_SAVE}, 
+					#{M_A_TS_STANDARD_ITEM_SAVE}, 
+					#{M_A_TS_ATTR_ITEM})
+				AND a.db_CityID IN (0, #{cityID})
+				AND a.db_jincheng = 0
+				AND a.db_createTime BETWEEN #{startTime} AND #{terminalTime}
+		), pho AS (
+		-- 获取指定地区下的照片操作总数
+				SELECT
+					COUNT(1) AS photoCount
+				FROM
+					Data_Behavior a
+				WHERE
+					a.db_Class = #{M_A_SL_BRAND_PHOTO}
+				AND a.db_CityID IN (0, #{cityID})
+				AND a.db_jincheng = 0
+				AND a.db_createTime BETWEEN #{startTime} AND #{terminalTime}
+		), pri AS (
+		-- 获取指定地区下的价钱操作总数
+				SELECT
+					COUNT(1) AS priceCount
+				FROM
+					Data_Behavior a
+				WHERE
+					a.db_Class =#{M_A_SL_BRAND_PRICE}
+				AND a.db_CityID IN (0, #{cityID})
+				AND a.db_jincheng = 0
+				AND a.db_OperatType = 6
+				AND a.db_createTime BETWEEN #{startTime} AND #{terminalTime}
+		)
+		SELECT mat.materialCount , pho.photoCount , pri.priceCount 
+		FROM mat,pho,pri;
+	</select>
+	
+	<!--查找材料操作记录,通过子库最近操作数据模型对象：开始时间/结束时间/起始行数/结束行数/地区ID   	
+	public List<OperationNoteMaterial> findMaterialOperationNoteBySubLibraryRecentData(SubLibraryRecentData subLibraryRecentData); -->
+	<select id="findMaterialOperationNoteBySubLibraryRecentData" parameterType="SubLibraryRecentData" resultType="OperationNoteMaterial" >
+		--获取操作记录相关项 - 材料 (分页)
+		WITH c AS (
+		SELECT
+		  ROW_NUMBER() OVER (ORDER BY a.db_createTime DESC) AS rowNum,
+			a.db_MainID AS mainID,
+			b.dc_ClassName AS className,
+			b.dc_ClassCode AS classCode,
+			a.db_Content AS content,
+			a.db_createTime AS operateTime
+		FROM
+			Data_Behavior AS a
+		LEFT JOIN Data_Class AS b ON a.db_Class = b.dc_ID
+    	WHERE
+    		a.db_Class IN (
+    		#{M_A_SL_BRAND_ADD}, 
+    		#{M_A_SL_BRAND_SAVE}, 
+    		#{M_A_TS_MAT_SEARCH}, 
+    		#{M_A_TS_BASE_SAVE}, 
+    		#{M_A_TS_PARA_SAVE}, 
+    		#{M_A_TS_STANDARD_INFO_SAVE}, 
+    		#{M_A_TS_STANDARD_ITEM_SAVE}, 
+    		#{M_A_TS_ATTR_ITEM})
+    	AND a.db_CityID IN (0, #{cityID})
+    	AND a.db_jincheng = 0
+		<if test="null != startTime and null != terminalTime">
+			AND a.db_createTime BETWEEN #{startTime} AND #{terminalTime} 
+		</if>
+		)
+		SELECT * FROM c WHERE c.rowNum BETWEEN #{beginRowNum} AND #{endRowNum}
+	</select>
+	
+	<!--查找材料操作总记录数,通过子库最近操作数据模型对象：开始时间/结束时间/起始行数/结束行数/地区ID   	
+	public Integer findMaterialOperationNoteCountBySubLibraryRecentData(SubLibraryRecentData subLibraryRecentData); -->
+	<select id="findMaterialOperationNoteCountBySubLibraryRecentData" parameterType="SubLibraryRecentData" resultType="Integer" >
+		--获取操作记录总数 - 材料操作记录
+		SELECT
+		   COUNT(1)
+		FROM
+			Data_Behavior AS a
+		LEFT JOIN Data_Class AS b ON a.db_Class = b.dc_ID
+    	WHERE
+    		a.db_Class IN (
+    		#{M_A_SL_BRAND_ADD}, 
+    		#{M_A_SL_BRAND_SAVE}, 
+    		#{M_A_TS_MAT_SEARCH}, 
+    		#{M_A_TS_BASE_SAVE}, 
+    		#{M_A_TS_PARA_SAVE}, 
+    		#{M_A_TS_STANDARD_INFO_SAVE}, 
+    		#{M_A_TS_STANDARD_ITEM_SAVE}, 
+    		#{M_A_TS_ATTR_ITEM})
+    	AND a.db_CityID IN (0, #{cityID})
+    	AND a.db_jincheng = 0
+		<if test="null!=startTime and null!=terminalTime">
+			AND a.db_createTime BETWEEN #{startTime} AND #{terminalTime} 
+		</if>
+	</select>
+	
+	<!--查找"价钱"操作总记录数,通过子库最近操作数据模型对象. 	
+	public Integer findOperationNotePriceCountBySubLibraryRecentData(SubLibraryRecentData subLibraryRecentData); -->
+	<select id="findOperationNotePriceCountBySubLibraryRecentData" parameterType="SubLibraryRecentData" resultType="Integer" >
+		--获取操作记录总数 - 价格
+		SELECT
+		   COUNT(1)
+		FROM
+			Data_Behavior AS a
+		LEFT JOIN Data_Class AS b ON a.db_Class = b.dc_ID
+    	WHERE
+    		a.db_Class IN (#{M_A_SL_BRAND_PRICE})
+    	AND a.db_CityID IN (0, #{cityID})
+    	AND a.db_jincheng = 0
+    	AND a.db_OperatType = 6
+		<if test="null!=startTime and null!=terminalTime">
+			AND a.db_createTime BETWEEN #{startTime} AND #{terminalTime} 
+		</if>
+	</select>
+	
+	<!--查找"价格"操作记录,通过子库最近操作数据模型对象. 	
+	public List<OperationNotePrice> findOperationNotePriceBySubLibraryRecentData(SubLibraryRecentData subLibraryRecentData); -->
+	<select id="findOperationNotePriceBySubLibraryRecentData" parameterType="SubLibraryRecentData" resultType="OperationNotePrice" >
+		--获取操作记录相关项 - 价格 (分页)
+		WITH c AS (
+		SELECT
+		  ROW_NUMBER() OVER (ORDER BY a.db_createTime DESC) AS rowNum,
+			a.db_MainID AS mainID,
+			b.dc_ClassName AS className,
+			b.dc_ClassCode AS classCode,
+			a.db_Content AS content,
+			a.db_createTime AS operateTime
+		FROM
+			Data_Behavior AS a
+		LEFT JOIN Data_Class AS b ON a.db_Class = b.dc_ID
+    	WHERE
+    		a.db_Class IN (#{M_A_SL_BRAND_PRICE})
+    	AND a.db_CityID IN (0, #{cityID})
+    	AND a.db_jincheng = 0
+    	AND a.db_OperatType = 6
+		<if test="null != startTime and null != terminalTime">
+			AND a.db_createTime BETWEEN #{startTime} AND #{terminalTime} 
+		</if>
+		)
+		SELECT * FROM c WHERE c.rowNum BETWEEN #{beginRowNum} AND #{endRowNum}
+	</select>
+	
+	<!--查找"照片"操作总记录数,通过子库最近操作数据模型对象. 
+	public Integer findOperationNotePhotoCountBySubLibraryRecentData(SubLibraryRecentData subLibraryRecentData); -->
+	<select id="findOperationNotePhotoCountBySubLibraryRecentData" parameterType="SubLibraryRecentData" resultType="Integer" >
+		--获取操作记录总数 - 照片
+		SELECT
+		   COUNT(1)
+		FROM
+			Data_Behavior AS a
+		LEFT JOIN Data_Class AS b ON a.db_Class = b.dc_ID
+    	WHERE
+    		a.db_Class IN (#{M_A_SL_BRAND_PHOTO})
+    	AND a.db_CityID IN (0, #{cityID})
+    	AND a.db_jincheng = 0
+		<if test="null!=startTime and null!=terminalTime">
+			AND a.db_createTime BETWEEN #{startTime} AND #{terminalTime} 
+		</if>
+	</select>
+	
+	<!--查找"照片"操作记录,通过子库最近操作数据模型对象. 	
+	public List<OperationNotePhoto> findOperationNotePhotoBySubLibraryRecentData(SubLibraryRecentData subLibraryRecentData); -->
+		<select id="findOperationNotePhotoBySubLibraryRecentData" parameterType="SubLibraryRecentData" resultType="OperationNotePhoto" >
+		--获取操作记录相关项 - 照片 (分页)
+		WITH c AS (
+		SELECT
+		  ROW_NUMBER() OVER (ORDER BY a.db_createTime DESC) AS rowNum,
+			a.db_MainID AS mainID,
+			b.dc_ClassName AS className,
+			b.dc_ClassCode AS classCode,
+			a.db_Content AS content,
+			a.db_createTime AS operateTime
+		FROM
+			Data_Behavior AS a
+		LEFT JOIN Data_Class AS b ON a.db_Class = b.dc_ID
+    	WHERE
+    		a.db_Class IN (#{M_A_SL_BRAND_PHOTO})
+    	AND a.db_CityID IN (0, #{cityID})
+    	AND a.db_jincheng = 0
+		<if test="null != startTime and null != terminalTime">
+			AND a.db_createTime BETWEEN #{startTime} AND #{terminalTime} 
+		</if>
+		)
+		SELECT * FROM c WHERE c.rowNum BETWEEN #{beginRowNum} AND #{endRowNum}
+	</select>
+	
+</mapper>

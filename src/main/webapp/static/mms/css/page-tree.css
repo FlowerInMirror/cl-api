@@ -1,0 +1,26 @@
+/*编辑和删除按钮*/
+.mr2{margin-right: 2px;}
+.public-edit,.public-dele,.public-save{width: 16px;height: 16px;}
+.public-edit{background: url(../images/pic/op_ico_1.png) no-repeat;}
+.public-dele{background: url(../images/pic/op_ico_2.png) no-repeat;}
+.public-save{background: url(../images/pic/op_ico_3.png) no-repeat;}
+.tree{background: #eaeaea ;}
+.tree-h3{background: #f5f5f5;height: 40px;line-height: 40px;font-weight: 200;font-size: 14px;margin-bottom: 1px;}
+.tree-h3 i{width: 20px;height: 20px;margin: 10px 10px 0 10px;}
+.tree-first-ico{background: url(../images/pic/op_ico_10.png) no-repeat;}
+.tree-second-ico{background: url(../images/pic/op_ico_9.png) no-repeat;}
+.tree-third-ico{background: url(../images/pic/op_ico_8.png) no-repeat;}
+.tree-four-ico{background: url(../images/pic/op_ico_7.png) no-repeat;}
+
+.tree-scroll{padding:10px;overflow: hidden;overflow-y: auto;background: #fff;}
+.tree li{height: 28px;border-radius:4px;margin-bottom: 5px;}
+.tree li p{height: 28px;line-height: 28px;}
+.tree li a{display: block;padding:0 10px;border-radius: 3px;}
+.tree li p .public-edit,.tree li p .public-dele{margin-top: 6px;}
+.savebtn{position: absolute;right: 0;top:0;}
+.tree-edit-input{margin-right: 65px;overflow: hidden;}
+.tree li a:hover,.tree .active a{color: #000;background: #eaf4fe;}
+.tree-foot{background: #fff;height: 40px;padding: 8px 0; border-top: 1px solid #eaeaea;}
+.tree-foot-input{margin-right: 65px;padding-left:10px;overflow: hidden;}
+.tree-foot-input input{height:24px;line-height:24px;}
+.tree-foot-save{position: absolute;right: 10px;top: 8px;}

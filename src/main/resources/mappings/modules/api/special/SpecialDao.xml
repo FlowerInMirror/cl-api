@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.api.special.dao.SpecialDao">
+
+    <!--"=================================== SQL片段 开始 ==================================="-->
+
+    <!--类别-->
+    <sql id="majorCampTypeColumns">
+        mct_treetwoid AS "mctTreetwoid",
+        mct_name AS "mctName",
+        mct_order AS "mctOrder",
+        mct_status AS "mctStatus",
+        mct_createtime AS "mctCreatetime",
+        mct_updatetime AS "mctUpdatetime"
+    </sql>
+
+    <!--类别项-->
+    <sql id="majorCampTypeItemColumns">
+        mcti_id AS "mctiId",
+        mcti_mctid AS "mctiMctid",
+        mcti_DealerID AS "mctiDealerID",
+        mcti_name AS "mctiName",
+        mcti_order AS "mctiOrder",
+        mcti_Type AS "mctiType",
+        mcti_status AS "mctiStatus",
+        mcti_createtime AS "mctiCreatetime",
+        mcti_updatetime AS "mctiUpdatetime"
+    </sql>
+
+    <!--组合套餐价格最高与最低-->
+    <sql id="majorCampGroupPriceMaxAndMin">
+        WITH MCG AS
+        (
+            SELECT
+            mcg_SPID,
+            MAX (mcg_Price) maxPrice,
+            MIN (mcg_Price) minPrice
+            FROM M_MajorCampGroup
+            GROUP BY mcg_SPID
+        )
+    </sql>
+
+    <!--"================================= resultMap 开始 ==================================="-->
+
+    <!--主营属性类别类别项:一对多输出映射实现-->
+    <resultMap type="MajorCampCategorysVo" id="majorCampCategorysMaps">
+        <id column="mct_ID" property="mctId"/>
+        <!--<collection column="mctId" property="categoryItem" ofType="MajorCampTypeItem"  select="findCategoryItemsByCategoryIDAndZXUserID"/>-->
+    </resultMap>
+
+    <!--"================================= FIND/GET 开始 ==================================="-->
+
+    <!--// 添加专项产品:获取所有类别与类别项(含材料商专属类别项) @depict 根据主营二级科目ID/材料商ID检索 @author ljc @createTime 2018-8-22 14:50:43-->
+    <!--List<MajorCampCategorysVo> findAddCategorysByTreeTwoIDAndZXUserID(String treeTwoID, String zxUserID);-->
+    <select id="findAddCategorysByTreeTwoIDAndZXUserID" resultMap="majorCampCategorysMaps" >
+        SELECT
+         mct_id
+        ,<include refid="majorCampTypeColumns"/>
+        ,#{zxUserID} AS zxUserID
+        FROM  M_MajorCampType
+        WHERE mct_TreeTwoID = #{treeTwoID} AND mct_Status = 0
+        ORDER BY CASE WHEN mct_Order IS NULL THEN 999 ELSE 0 END,mct_updatetime,mct_CreateTime
+    </select>
+
+    <!--// 类别项集,通过类别ID与材料商ID检索 @author ljc @createTime 2018-8-22 14:24:41-->
+    <!--List<MajorCampTypeItem> findCategoryItemsByCategoryIDAndZXUserID(@Param("mctId") Integer mctId,@Param("zxUserID") Integer zxUserID );-->
+    <select id="findCategoryItemsByCategoryIDAndZXUserID" resultType="MajorCampTypeItem" >
+        WITH categoryItem AS (
+            SELECT
+            <include refid="majorCampTypeItemColumns"/>
+            FROM M_MajorCampTypeItem
+            WHERE mcti_Status = 0 AND mcti_Type = 0 AND mcti_MCTID = #{mctId}
+            UNION ALL
+            SELECT
+              *
+            FROM M_MajorCampTypeItem
+            WHERE mcti_Status = 0 AND mcti_Type = 1 AND mcti_MCTID = #{mctId} AND mcti_DealerID = #{zxUserID}
+        )
+        SELECT * FROM categoryItem
+        ORDER BY CASE WHEN mctiOrder IS NULL THEN 999 ELSE 0 END,mctiUpdatetime,mctiCreatetime
+    </select>
+
+    <!--// 浏览专项产品:针对专项产品获取类别相机,通过类别ID和材料商ID @author ljc @createTime 2018-8-26 21:51:42-->
+    <!--List<MajorCampTypeItem> findCategoryItemByCategoryIDAndZXUserID(Integer spcMctid, Integer spDealerID);-->
+    <select id="findCategoryItemByCategoryIDAndZXUserID" resultType="MajorCampTypeItem" >
+        WITH categoryItem AS (
+        SELECT
+        <include refid="majorCampTypeItemColumns"/>
+        FROM M_MajorCampTypeItem
+        WHERE mcti_Status = 0 AND mcti_Type = 0 AND mcti_MCTID = #{mctId}
+        UNION ALL
+        SELECT
+        *
+        FROM M_MajorCampTypeItem
+        WHERE mcti_Status = 0 AND mcti_Type = 1 AND mcti_MCTID = #{mctId} AND mcti_DealerID = #{zxUserID}
+        )
+        SELECT * FROM categoryItem
+        ORDER BY CASE WHEN mctiOrder IS NULL THEN 999 ELSE 0 END,mctiUpdatetime,mctiCreatetime
+    </select>
+
+    <!--// 浏览专项产品:针对专项产品获取类别相机,通过类别ID和产品ID @author ljc @createTime 2018-8-26 21:51:42-->
+    <!--List<MajorCampTypeItem> findCategoryItemsByCategoryIDAndProID(@Param("spcMctid") Integer spcMctid,@Param("proID") String proID);-->
+    <select id="findCategoryItemsByCategoryIDAndProID" resultType="MajorCampTypeItem" >
+        WITH categoryItem AS
+		(
+            -- 集团类别项
+            SELECT mcti_ID AS mctiId,mcti_MCTID AS mctiMctid,mcti_Name AS mctiName,mcti_Order AS mctiOrder,mcti_Type AS mctiType,0 AS mmdiID,mcti_CreateTime AS mctiCreatetime,mcti_UpdateTime AS mctiUpdatetime FROM S_SpecialProductCategory  spc1
+            LEFT JOIN M_MajorCampTypeItem  ON spc1.spc_ItemID = mcti_ID AND mcti_Status = 0
+            WHERE spc1.spc_Status = 0 AND spc1.spc_SPID = #{proID} AND spc1.spc_MCTID = #{spcMctid} AND spc1.spc_Type = 0
+            UNION
+            -- 材料商自定义项
+            SELECT mmdi_ItemID,spc2.spc_MCTID,mmdi_Name,mmdi_Order,mmdi_Type,mmdi_ID,mmdi_CreateTime,mmdi_UpdateTime FROM S_SpecialProductCategory spc2
+            LEFT JOIN M_MajorMaterialDealerItem ON spc2.spc_ItemID = mmdi_ItemID AND mmdi_SPID = #{proID} AND mmdi_Status = 0
+            WHERE spc2.spc_Status = 0 AND spc2.spc_SPID = #{proID} AND spc2.spc_MCTID =  #{spcMctid} AND spc2.spc_Type = 1
+        )
+        SELECT * FROM categoryItem
+        ORDER BY CASE WHEN mctiOrder IS NULL THEN 999 ELSE 0 END,mctiUpdatetime,mctiCreatetime
+    </select>
+
+    <!--// 编辑专项产品(编辑默认类别项回显):针对专项产品获取类别相机,通过类别ID和产品ID @author ljc @createTime 2018-8-27 20:32:30-->
+    <!--List<MajorCampTypeItem> findEditCategoryItemsByCategoryIDAndProID(@Param("spcMctid")Integer mctId,@Param("proID") String proID);-->
+    <select id="findEditCategoryItemsByCategoryIDAndProID" resultType="MajorCampTypeItem" >
+        WITH categoryItem AS (
+            SELECT mcti_ID AS mctiId,mcti_MCTID AS mctiMctid,mcti_Name AS mctiName,mcti_Order AS mctiOrder,mcti_Type AS mctiType,0 AS mmdiID,mcti_CreateTime AS mctiCreatetime,mcti_UpdateTime AS mctiUpdatetime
+            FROM M_MajorCampTypeItem
+            WHERE mcti_Status = 0 AND mcti_Type = 0 AND mcti_MCTID = #{spcMctid}
+            UNION ALL
+            SELECT a.mmdi_ItemID,b.mcti_MCTID,a.mmdi_Name,a.mmdi_Order,a.mmdi_Type,a.mmdi_ID,a.mmdi_CreateTime,a.mmdi_UpdateTime
+            FROM M_MajorMaterialDealerItem a
+            LEFT JOIN M_MajorCampTypeItem b ON a.mmdi_ItemID = b.mcti_ID
+            WHERE mmdi_Status = 0 AND mmdi_SPID = #{proID} AND b.mcti_MCTID = #{spcMctid}
+        )
+        SELECT * FROM categoryItem
+        ORDER BY CASE WHEN mctiOrder IS NULL THEN 999 ELSE 0 END,mctiUpdatetime,mctiCreatetime
+    </select>
+
+
+</mapper>

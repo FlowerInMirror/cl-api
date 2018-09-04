@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.jmat.dao.AttrModelDao">
+    
+	<sql id="attrModelColumns">
+		a.pm_attr_mode_id AS "pmAttrModeId",
+		a.attr_name AS "attrName",
+		a.remark AS "remark",
+		a.templ_url AS "templUrl",
+		a.attr_file_type AS "attrFileType",
+		a.attr_stage AS "attrStage",
+		a.ismust AS "ismust",
+		a.isdelete AS "isdelete",
+		a.createtime AS "createtime",
+		a.createuser AS "createuser",
+		a.updatetime AS "updatetime",
+		a.updateuser AS "updateuser",
+		a.pm_attr_type AS "pmAttrType",
+		a.pm_attr_typename AS "pmAttrTypename"
+	</sql>
+	
+	<sql id="attrModelJoins">
+	</sql>
+    
+	<select id="get" resultType="AttrModel">
+		SELECT 
+			<include refid="attrModelColumns"/>
+		FROM pm_attr_model a
+		<include refid="attrModelJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="AttrModel">
+		SELECT 
+			<include refid="attrModelColumns"/>
+		FROM pm_attr_model a
+		<include refid="attrModelJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="AttrModel">
+		SELECT 
+			<include refid="attrModelColumns"/>
+		FROM pm_attr_model a
+		<include refid="attrModelJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO pm_attr_model(
+			pm_attr_mode_id,
+			attr_name,
+			remark,
+			templ_url,
+			attr_file_type,
+			attr_stage,
+			ismust,
+			isdelete,
+			createtime,
+			createuser,
+			updatetime,
+			updateuser,
+			pm_attr_type,
+			pm_attr_typename
+		) VALUES (
+			#{pmAttrModeId},
+			#{attrName},
+			#{remark},
+			#{templUrl},
+			#{attrFileType},
+			#{attrStage},
+			#{ismust},
+			#{isdelete},
+			#{createtime},
+			#{createuser},
+			#{updatetime},
+			#{updateuser},
+			#{pmAttrType},
+			#{pmAttrTypename}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE pm_attr_model SET 	
+			pm_attr_mode_id = #{pmAttrModeId},
+			attr_name = #{attrName},
+			remark = #{remark},
+			templ_url = #{templUrl},
+			attr_file_type = #{attrFileType},
+			attr_stage = #{attrStage},
+			ismust = #{ismust},
+			isdelete = #{isdelete},
+			createtime = #{createtime},
+			createuser = #{createuser},
+			updatetime = #{updatetime},
+			updateuser = #{updateuser},
+			pm_attr_type = #{pmAttrType},
+			pm_attr_typename = #{pmAttrTypename}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM pm_attr_model
+		WHERE id = #{id}
+	</update>
+
+</mapper>

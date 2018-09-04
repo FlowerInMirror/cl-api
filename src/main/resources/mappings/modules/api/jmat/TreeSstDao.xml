@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.api.jmat.dao.TreeSstDao">
+    
+	<sql id="treeSstColumns">
+		a.ts_id AS "tsId",
+		a.ts_treeid AS "tsTreeid",
+		a.ts_treelevel AS "tsTreelevel",
+		a.ts_type AS "tsType",
+		a.ts_typestate AS "tsTypestate",
+		a.ts_fixedvalue AS "tsFixedvalue",
+		a.ts_appcitys AS "tsAppcitys",
+		a.ts_createtime AS "tsCreatetime",
+		a.ts_updatetime AS "tsUpdatetime",
+		a.ts_jincheng AS "tsJincheng"
+	</sql>
+	
+	<sql id="treeSstJoins">
+	</sql>
+    
+	<select id="get" resultType="TreeSst">
+		SELECT 
+			<include refid="treeSstColumns"/>
+		FROM v_treesst a
+		<include refid="treeSstJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="TreeSst">
+		SELECT 
+			<include refid="treeSstColumns"/>
+		FROM v_treesst a
+		<include refid="treeSstJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="TreeSst">
+		SELECT 
+			<include refid="treeSstColumns"/>
+		FROM v_treesst a
+		<include refid="treeSstJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO v_treesst(
+			ts_id,
+			ts_treeid,
+			ts_treelevel,
+			ts_type,
+			ts_typestate,
+			ts_fixedvalue,
+			ts_appcitys,
+			ts_createtime,
+			ts_updatetime,
+			ts_jincheng
+		) VALUES (
+			#{tsId},
+			#{tsTreeid},
+			#{tsTreelevel},
+			#{tsType},
+			#{tsTypestate},
+			#{tsFixedvalue},
+			#{tsAppcitys},
+			#{tsCreatetime},
+			#{tsUpdatetime},
+			#{tsJincheng}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE v_treesst SET 	
+			ts_id = #{tsId},
+			ts_treeid = #{tsTreeid},
+			ts_treelevel = #{tsTreelevel},
+			ts_type = #{tsType},
+			ts_typestate = #{tsTypestate},
+			ts_fixedvalue = #{tsFixedvalue},
+			ts_appcitys = #{tsAppcitys},
+			ts_createtime = #{tsCreatetime},
+			ts_updatetime = #{tsUpdatetime},
+			ts_jincheng = #{tsJincheng}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM v_treesst
+		WHERE id = #{id}
+	</update>
+	
+	<!--通过四级科目ID,查找科目树设置. 
+	public TreeSst findTreeSstByTreeID(@Param("treeFourID")String treeFourID); -->
+	<select id="findTreeSstByTreeID"  parameterType="String"  resultType="TreeSst">
+		SELECT 
+			<include refid="treeSstColumns"/>
+		FROM v_treesst a
+		WHERE a.ts_TreeID = #{treeFourID}
+		AND a.ts_Type = 16
+		AND a.ts_TypeState != 0
+		AND a.ts_jincheng = 0
+	</select>
+		
+	<!--更新分类 	
+	public int updateTypeStateByTreeID(@Param("treeID")String treeID,@Param("type") Integer type,@Param("updateTime")Date date); -->
+	<update id="updateTypeStateByTreeID"  >
+		UPDATE v_treesst 
+		SET ts_typestate = #{type},ts_updatetime = GETDATE()
+		WHERE ts_treeid = #{treeID}
+		AND ts_Type=16 
+		AND ts_jincheng=0
+	</update>
+	
+	<!--保存 新增标准- 科目树设置 	
+		插入字段:ID,四级ID,树等级,设定16类型,设定状态,
+	public void saveCityNewlyIncreased(@Param("treeSstID")String treeSstID,@Param("treeFourID") String treeFourID,@Param("type") Integer type,@Param("classify") Integer classify); -->
+	<insert id="saveCityNewlyIncreased">
+		INSERT INTO v_treesst(
+			ts_id,
+			ts_treeid,
+			ts_treelevel,
+			ts_type,
+			ts_typestate
+		) VALUES (
+			#{treeSstID},
+			#{treeFourID},
+			#{treeLevel},
+			#{type},
+			#{classify}
+		)
+	</insert>
+	
+</mapper>

@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.api.jmat.dao.VisitDao">
+
+    <sql id="visitColumns">
+        a.v_id AS "vId",
+        a.v_type AS "vType",
+        a.v_operattype AS "vOperattype",
+        a.v_piid AS "vPiid",
+        a.v_userid AS "vUserid",
+        a.v_mark AS "vMark",
+        a.v_content AS "vContent",
+        a.v_kahao AS "vKahao",
+        a.v_jincheng AS "vJincheng",
+        a.v_createtime AS "vCreatetime",
+        a.v_updatetime AS "vUpdatetime"
+    </sql>
+
+    <sql id="visitJoins">
+    </sql>
+
+    <select id="get" resultType="Visit">
+        SELECT
+        <include refid="visitColumns"/>
+        FROM v_visit a
+        <include refid="visitJoins"/>
+        WHERE a.id = #{id}
+    </select>
+
+    <select id="findList" resultType="Visit">
+        SELECT
+        <include refid="visitColumns"/>
+        FROM v_visit a
+        <include refid="visitJoins"/>
+        <where>
+
+        </where>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+            </otherwise>
+        </choose>
+    </select>
+
+    <select id="findAllList" resultType="Visit">
+        SELECT
+        <include refid="visitColumns"/>
+        FROM v_visit a
+        <include refid="visitJoins"/>
+        <where>
+
+        </where>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+            </otherwise>
+        </choose>
+    </select>
+
+    <insert id="insert">
+        INSERT INTO v_visit(
+        v_id,
+        v_type,
+        v_operattype,
+        v_piid,
+        v_userid,
+        v_mark,
+        v_content,
+        v_kahao,
+        v_jincheng,
+        v_createtime,
+        v_updatetime
+        ) VALUES (
+        #{vId},
+        #{vType},
+        #{vOperattype},
+        #{vPiid},
+        #{vUserid},
+        #{vMark},
+        #{vContent},
+        #{vKahao},
+        #{vJincheng},
+        #{vCreatetime},
+        #{vUpdatetime}
+        )
+    </insert>
+
+    <update id="update">
+        UPDATE v_visit SET
+        v_id = #{vId},
+        v_type = #{vType},
+        v_operattype = #{vOperattype},
+        v_piid = #{vPiid},
+        v_userid = #{vUserid},
+        v_mark = #{vMark},
+        v_content = #{vContent},
+        v_kahao = #{vKahao},
+        v_jincheng = #{vJincheng},
+        v_createtime = #{vCreatetime},
+        v_updatetime = #{vUpdatetime}
+        WHERE id = #{id}
+    </update>
+
+    <update id="delete">
+        DELETE FROM v_visit
+        WHERE id = #{id}
+    </update>
+
+    <!-- 添加回访信息
+    int saveVisit(VisitVo visitVo);-->
+    <insert id="saveVisit" parameterType="VisitVo" >
+        INSERT INTO v_visit
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="vId != null" >
+                v_ID,
+            </if>
+            <if test="vType != null" >
+                v_type,
+            </if>
+            <if test="vOperattype != null" >
+                v_OperatType,
+            </if>
+            <if test="vPiid != null" >
+                v_piID,
+            </if>
+            <if test="vUserid != null" >
+                v_userID,
+            </if>
+            <if test="vMark != null" >
+                v_mark,
+            </if>
+            <if test="vContent != null" >
+                v_content,
+            </if>
+            <if test="vKahao != null" >
+                v_kahao,
+            </if>
+            <if test="vJincheng != null" >
+                v_jincheng,
+            </if>
+            <if test="vCreatetime != null" >
+                v_createTime,
+            </if>
+            <if test="vUpdatetime != null" >
+                v_updateTime
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="vId != null" >
+                #{vId,jdbcType=INTEGER},
+            </if>
+            <if test="vType != null" >
+                #{vType,jdbcType=INTEGER},
+            </if>
+            <if test="vOperattype != null" >
+                #{vOperattype,jdbcType=INTEGER},
+            </if>
+            <if test="vPiid != null" >
+                #{vPiid,jdbcType=CHAR},
+            </if>
+            <if test="vUserid != null" >
+                #{vUserid,jdbcType=INTEGER},
+            </if>
+            <if test="vMark != null" >
+                #{vMark,jdbcType=INTEGER},
+            </if>
+            <if test="vContent != null" >
+                #{vContent},
+            </if>
+            <if test="vKahao != null" >
+                #{vKahao,jdbcType=VARCHAR},
+            </if>
+            <if test="vJincheng != null" >
+                #{vJincheng},
+            </if>
+            <if test="vCreatetime != null" >
+                #{vCreatetime},
+            </if>
+            <if test="vUpdatetime != null" >
+                #{vUpdatetime},
+            </if>
+        </trim>
+    </insert>
+
+    <!-- 回访记录:加载回访 通过回访记录包装类
+    List<VisitVo> loadVisitByVisitVo(VisitVo visitVo);-->
+    <select id="loadVisitByVisitVo" resultType="VisitVo">
+        SELECT
+          <include refid="visitColumns"/>
+            ,a.v_createtime AS "createTime"
+            ,a.v_updatetime AS "updateTime"
+        FROM v_visit a
+        WHERE  a.v_jincheng = 0
+        <if test="vId != null" >
+            AND a.v_id = #{vId}
+        </if>
+        <if test="vType != null" >
+            AND a.v_type = #{vType}
+        </if>
+        <if test="vOperattype != null" >
+            AND a.v_operattype = #{vOperattype}
+        </if>
+        <if test="vPiid != null" >
+            AND CAST (a.v_piid AS VARCHAR(50)) = #{vPiid}
+        </if>
+        <if test="vUserid != null" >
+            AND a.v_userid = #{vUserid}
+        </if>
+        <if test="vMark != null" >
+            AND a.v_mark = #{vMark}
+        </if>
+        <if test="vContent != null" >
+            AND a.v_content = #{vContent}
+        </if>
+        <if test="vKahao != null" >
+            AND a.v_kahao = #{vKahao}
+        </if>
+        <if test="vJincheng != null" >
+            AND a.v_jincheng = #{vJincheng}
+        </if>
+        <if test="vCreatetime != null" >
+            AND a.v_createtime = #{vCreatetime}
+        </if>
+        <if test="vUpdatetime != null" >
+            AND a.v_updatetime = #{vUpdatetime}
+        </if>
+    </select>
+
+</mapper>

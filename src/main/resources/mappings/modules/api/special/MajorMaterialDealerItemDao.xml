@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.api.special.dao.MajorMaterialDealerItemDao">
+    
+	<sql id="majorMaterialDealerItemColumns">
+		a.mmdi_id AS "mmdiId",
+		a.mmdi_ItemID  AS "mmdiItemid",
+		a.mmdi_spid AS "mmdiSpid",
+		a.mmdi_name AS "mmdiName",
+		a.mmdi_order AS "mmdiOrder",
+		a.mmdi_type AS "mmdiType",
+		a.mmdi_status AS "mmdiStatus",
+		a.mmdi_createtime AS "mmdiCreatetime",
+		a.mmdi_updatetime AS "mmdiUpdatetime"
+	</sql>
+	
+	<sql id="majorMaterialDealerItemJoins">
+	</sql>
+    
+	<select id="get" resultType="MajorMaterialDealerItem">
+		SELECT 
+			<include refid="majorMaterialDealerItemColumns"/>
+		FROM m_majormaterialdealeritem a
+		<include refid="majorMaterialDealerItemJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="MajorMaterialDealerItem">
+		SELECT 
+			<include refid="majorMaterialDealerItemColumns"/>
+		FROM m_majormaterialdealeritem a
+		<include refid="majorMaterialDealerItemJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="MajorMaterialDealerItem">
+		SELECT 
+			<include refid="majorMaterialDealerItemColumns"/>
+		FROM m_majormaterialdealeritem a
+		<include refid="majorMaterialDealerItemJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO m_majormaterialdealeritem(
+			mmdi_id,
+			mmdi_ItemID ,
+			mmdi_spid,
+			mmdi_name,
+			mmdi_order,
+			mmdi_type,
+			mmdi_status,
+			mmdi_createtime,
+			mmdi_updatetime
+		) VALUES (
+			#{mmdiId},
+			#{mmdiItemid},
+			#{mmdiSpid},
+			#{mmdiName},
+			#{mmdiOrder},
+			#{mmdiType},
+			#{mmdiStatus},
+			#{mmdiCreatetime},
+			#{mmdiUpdatetime}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE m_majormaterialdealeritem SET 	
+			mmdi_id = #{mmdiId},
+			mmdi_ItemID  = #{mmdiItemid},
+			mmdi_spid = #{mmdiSpid},
+			mmdi_name = #{mmdiName},
+			mmdi_order = #{mmdiOrder},
+			mmdi_type = #{mmdiType},
+			mmdi_status = #{mmdiStatus},
+			mmdi_createtime = #{mmdiCreatetime},
+			mmdi_updatetime = #{mmdiUpdatetime}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM m_majormaterialdealeritem
+		WHERE id = #{id}
+	</update>
+
+
+    <!--// "============================== CUD =============================="-->
+
+    <!--// 专项产品:添加材料商自定义(类别项),通过实体包装类 @auhtor ljc @createTime 2018-8-23 20:35:48-->
+    <!--int addDealerCategoryItemByEntityVo(MajorMaterialDealerItemVo majorMaterialDealerItemVo);-->
+    <insert id="addDealerCategoryItemByEntityVo" parameterType="MajorMaterialDealerItemVo" useGeneratedKeys="true" keyProperty="mmdiId">
+        INSERT INTO m_majormaterialdealeritem(
+            mmdi_ItemID,
+            mmdi_spid,
+            mmdi_name
+        ) VALUES (
+            #{mmdiItemid},
+            #{mmdiSpid},
+            #{mmdiName}
+        )
+    </insert>
+
+    <!--// 添加:材料商自定义项集(类别项ID/产品ID/名称) @author ljc @createTime 2018-8-26 17:50:01-->
+    <!--int addDealerCategoryItemsByEntitys(List<MajorMaterialDealerItem> majorMaterialDealerItems);-->
+    <insert id="addDealerCategoryItemsByEntitys">
+        INSERT INTO m_majormaterialdealeritem
+          (mmdi_ItemID,mmdi_spid,mmdi_name)
+        VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+          (#{item.mmdiItemid},#{item.mmdiSpid},#{item.mmdiName})
+        </foreach>
+    </insert>
+
+    <!--// 专项产品:更新材料商自定义(类别项),通过实体包装类 @auhtor ljc @createTime 2018-8-23 20:35:51-->
+    <!--int updateDealerCategoryItemByEntityVo(MajorMaterialDealerItemVo majorMaterialDealerItemVo);-->
+    <update id="updateDealerCategoryItemByEntityVo" parameterType="MajorMaterialDealerItemVo">
+        UPDATE m_majormaterialdealeritem
+        <set>
+          mmdi_updatetime = GETDATE(),
+            <if test="mmdiItemid != null">
+                mmdi_ItemID  = #{mmdiItemid},
+            </if>
+            <if test="mmdiSpid != null">
+                mmdi_spid = #{mmdiSpid},
+            </if>
+            <if test="mmdiOrder != null">
+                mmdi_order = #{mmdiOrder},
+            </if>
+            <if test="mmdiType != null">
+                mmdi_type = #{mmdiType}
+            </if>
+        </set>
+        WHERE mmdi_id = #{mmdiId}
+    </update>
+
+    <!--// 专项产品:删除材料商自定义(类别项)API,通过实体包装类 @auhtor ljc @createTime 2018-8-23 20:35:54-->
+    <!--int deleteDealerCategoryItemByEntityVo(MajorMaterialDealerItemVo majorMaterialDealerItemVo);-->
+    <update id="deleteDealerCategoryItemByEntityVo" parameterType="MajorMaterialDealerItemVo">
+        UPDATE m_majormaterialdealeritem
+        SET    mmdi_status = 1,mmdi_updatetime = #{mmdiUpdatetime}
+        WHERE  mmdi_id = #{mmdiId}
+    </update>
+	
+</mapper>

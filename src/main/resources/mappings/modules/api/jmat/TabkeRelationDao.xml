@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.api.jmat.dao.TabkeRelationDao">
+    
+	<sql id="tabkeRelationColumns">
+		a.tr_id AS "trId",
+		a.tr_type AS "trType",
+		a.tr_oneid AS "trOneid",
+		a.tr_oneidint AS "trOneidint",
+		a.tr_twoid AS "trTwoid",
+		a.tr_twoidint AS "trTwoidint",
+		a.tr_sort AS "trSort",
+		a.tr_status AS "trStatus",
+		a.tr_time AS "trTime"
+	</sql>
+	
+	<sql id="tabkeRelationJoins">
+	</sql>
+    
+	<select id="get" resultType="TabkeRelation">
+		SELECT 
+			<include refid="tabkeRelationColumns"/>
+		FROM v_tabkerelation a
+		<include refid="tabkeRelationJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="TabkeRelation">
+		SELECT 
+			<include refid="tabkeRelationColumns"/>
+		FROM v_tabkerelation a
+		<include refid="tabkeRelationJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="TabkeRelation">
+		SELECT 
+			<include refid="tabkeRelationColumns"/>
+		FROM v_tabkerelation a
+		<include refid="tabkeRelationJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO v_tabkerelation(
+			tr_id,
+			tr_type,
+			tr_oneid,
+			tr_oneidint,
+			tr_twoid,
+			tr_twoidint,
+			tr_sort,
+			tr_status,
+			tr_time
+		) VALUES (
+			#{trId},
+			#{trType},
+			#{trOneid},
+			#{trOneidint},
+			#{trTwoid},
+			#{trTwoidint},
+			#{trSort},
+			#{trStatus},
+			#{trTime}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE v_tabkerelation SET 	
+			tr_id = #{trId},
+			tr_type = #{trType},
+			tr_oneid = #{trOneid},
+			tr_oneidint = #{trOneidint},
+			tr_twoid = #{trTwoid},
+			tr_twoidint = #{trTwoidint},
+			tr_sort = #{trSort},
+			tr_status = #{trStatus},
+			tr_time = #{trTime}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM v_tabkerelation
+		WHERE id = #{id}
+	</update>
+
+    <!-- 材料自定模块的对应ID 获取自定照片板块ID
+    String findIDByTreeFourIDAndBrandID(@Param("treeFourID")String treeFourID,@Param("tspBrandID") String tspBrandID);-->
+    <select id="findIDByTreeFourIDAndBrandID" resultType="String">
+        SELECT tr_ID
+        FROM   V_TabkeRelation
+        WHERE  tr_OneID=#{treeFourID}
+        AND    tr_TwoID=#{tspBrandID}
+        AND    tr_Type=1
+        AND    tr_Status=0
+    </select>
+	
+</mapper>

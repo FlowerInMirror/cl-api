@@ -1,0 +1,31 @@
+﻿/*列表页翻页样式*/
+.pagination {height:24px;line-height:24px;margin:10px 0;text-align:right;}
+.pageInfo {float:left;width:50%;text-align:left;}
+.pageFy {float:right;width:50%;text-align:right;}
+.pagination li{float: left;width: 24px;height: 24px;margin-left:5px;}
+.pagerleft b {padding:0 5px;}
+.pagination .prev, .pagination .current, .pagination a,.pagination .point {border:1px solid #ddd;display:inline-block;height:24px;line-height:24px;min-width:24px;text-align:center;color:#666;border-radius:2px;padding:0 5px;}
+.pagination input {display:none;}
+.pagination .current,.pagination a:hover {background:#3ba0ff;color:#fff;}
+.pagelist{padding: 20px 0;text-align: right;}
+.pagelist a{float: left;width: 22px;height: 22px;line-height: 22px;text-align: center;font-size: 14px;border: 1px solid #dddddd;border-radius: 2px;margin-left:10px;display: inline;color: #666;}
+.pagelist a:hover,.pagelist .current{color: #fff;background: #289be5;border-color: #289be5;}
+
+.pagination li:first-child,.pagination .prev{border-radius: 4px 0 0 4px;}
+.pagination li:last-child,.pagination .next{border-radius: 0 4px 4px 0;}
+.pr15 {
+    padding-right:15px;
+}
+ li.pageactive {
+    background-color: #6CCAE6;
+    color: #fff;
+}
+ .pagination ul {
+    float: right;
+}
+ .toto {
+    float: left;
+}
+ .pagination .reload {
+    display: none;
+}

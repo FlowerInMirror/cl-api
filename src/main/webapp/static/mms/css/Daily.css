@@ -1,0 +1,24 @@
+.absSpan{position: absolute;right: 10px;top: 50%;margin-top: -12.5px;}
+.labelSpan2{display: inline-block;width: 60px;height: 24px;background: #3c9;color: #fff;text-align: center;line-height: 24px;margin-right: 5px;border-radius: 3px;margin-bottom: 5px;cursor: pointer;}
+.uiTable-borderNone{border: none;}
+.ver_t{vertical-align: top;}
+.newblockSubmit{height: 40px;}
+
+.WorkDetail_pleft{width: 80px;line-height: 22px;float: left;color: #999;}
+.WorkDetail_pright{margin-left: 80px;}
+.WorkDetail_span{display: inline-block;min-width: 40px;height: 22px;color: #fff;text-align: center;line-height: 22px;border-radius: 1px;padding: 0 2px;}
+.mtb10{margin: 10px 0;}
+.analyItemCon .WorkDetail_pleft,.analyItemCon .WorkDetail_pright {line-height: 22px;}
+
+
+.WorkDetailsUl{width: 100%;}
+.WorkDetailsUl li{width: 130px;float: left;cursor: pointer;margin-right: 9px;}
+.WorkDetailsUl li .lastLi{margin-right: 0;}
+.Work-imgBox{width: 130px;height: 120px;}
+.Work-img{width: 130px;height:90px;}
+.Work-img img{width: 130px;height:90px;}
+.Work-imgBox p{width: 130px;height: 27px;border:1px solid #e6e6e6;text-align: center;line-height: 27px;color: #000;}
+.WorkBorder_t{border-top: 1px dashed #ccc;padding-top: 10px;}
+
+
+
